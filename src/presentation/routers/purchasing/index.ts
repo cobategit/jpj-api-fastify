@@ -6,6 +6,7 @@ import {
 } from '../..'
 import { EntityUser } from '../../../domain'
 import { upload } from '../../../external'
+import { } from '@jpj-common/module'
 
 export function PurchasingRoute(
   registerUserPurchasingHandler: IRegisterUserPurchasingHandler,
@@ -31,7 +32,7 @@ export function PurchasingRoute(
 
     fastify.post<{ Body: EntityUser }>(
       '/pengajuan-vendor',
-      { logLevel: 'info', preHandler: [upload.single('file_npwp'), upload.single('file_pkp'), upload.single('file_rek_bank')] },
+      { logLevel: 'info', preHandler: [upload.fields([{ name: 'file_npwp', maxCount: 1 }, { name: 'file_pkp', maxCount: 1 }, { name: 'file_rek_bank', maxCount: 1 }])] },
       pengjuanPksCurahHandler.execute.bind(pengjuanPksCurahHandler)
     )
 

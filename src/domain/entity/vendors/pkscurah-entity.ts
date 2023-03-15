@@ -7,4 +7,7 @@ export interface PksCurahEntity {
     file_pkp?: string
     file_rek_bank?: string
     curah?: number
+    jenis_file?: string
+    kategori_file?: string
+    type_file?: string
 }
