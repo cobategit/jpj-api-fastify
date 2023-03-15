@@ -1,6 +1,6 @@
 import { EntityUser } from '../../../domain'
 
 export interface IUsersDataSource {
-  registerUserPurchasing(data?: EntityUser): Promise<any>
-  selectByEmailAndMobileDevice(data?: EntityUser): Promise<EntityUser>
+  registerUserPurchasing(data: EntityUser): Promise<any>
+  selectByEmail(email: string): Promise<EntityUser | null>
 }

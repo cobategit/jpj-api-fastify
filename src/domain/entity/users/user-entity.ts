@@ -4,8 +4,8 @@ export interface EntityUser {
   user_password?: string
   user_name?: string
   user_phone?: string
-  mobile_device?: string
-  kode_access?: string
+  deviced_id?: string
+  kode_akses?: string
   active?: number
   stockpile_id?: number
   purchasing?: number

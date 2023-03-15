@@ -13,20 +13,20 @@ export class UsersDataSource implements IUsersDataSource {
     this.dml = dml
     this.dql = dql
   }
-  async registerUserPurchasing(data?: EntityUser): Promise<any> {
+  async registerUserPurchasing(data: EntityUser): Promise<any> {
     const res = await this.dml.dataManipulation(
       `insert mobile device`,
-      `update ${process.env.TABLE_USER} set mobile_device = ?, kode_access = ? where user_email = ?`,
-      [data?.mobile_device, data?.kode_access, data?.user_email]
+      `update ${process.env.TABLE_USER} set deviced_id = ?, kode_akses = ? where user_email = ?`,
+      [data.deviced_id, data.kode_akses, data.user_email]
     )
 
     return res
   }
 
-  async selectByEmailAndMobileDevice(data?: EntityUser): Promise<EntityUser> {
+  async selectByEmail(email: string): Promise<EntityUser | null> {
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_USER} where user_email = ? and mobile_device = ?`,
-      [data?.user_email, data?.mobile_device]
+      `select * from ${process.env.TABLE_USER} where user_email = ? limit 1`,
+      [email]
     )
 
     return rows[0]

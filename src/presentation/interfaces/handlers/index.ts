@@ -1,1 +1,1 @@
-export * from './interface-user'
+export * from './interface-purchasing'

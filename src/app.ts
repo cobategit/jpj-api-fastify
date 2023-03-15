@@ -1,4 +1,4 @@
-import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import Fastify from 'fastify'
 import pino from 'pino'
 import FastifyAccepts from '@fastify/accepts'
 import { mysqlConn } from './data/database'
@@ -9,15 +9,21 @@ import path from 'path'
 import dotenv from 'dotenv'
 import express from '@fastify/express'
 import xss from 'x-xss-protection'
-import jwt from 'jsonwebtoken'
+import multerFastify from 'fastify-multer'
+import { format } from 'date-fns'
 import {
   DataManipulationLanguage,
   DataQueryLanguage,
   UsersDataSource,
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
-import { RegisterUserPurchasingHandler, UserRoute } from './presentation'
-import { RegisterUserPurchasingUseCase, UserRepository } from './domain'
+import { RegisterUserPurchasingHandler, PurchasingRoute } from './presentation'
+import {
+  LoginUserPurchasingUseCase,
+  PurchasingRepository,
+  RegisterUserPurchasingUseCase,
+} from './domain'
+import { LoginUserPurchasingHandler } from './presentation/handlers/purchasing/login-user'
 
 const app = async () => {
   dotenv.config()
@@ -39,21 +45,27 @@ const app = async () => {
     root: path.join(process.cwd(), 'public'),
     prefix: '/public',
   })
+  server.register(multerFastify.contentParser)
 
   const pool = await mysqlConn()
   const sourcesDml = new DataManipulationLanguage(pool)
   const sourcesDql = new DataQueryLanguage(pool)
 
-  const userRegister = UserRoute(
+  const purchasingRegister = PurchasingRoute(
     new RegisterUserPurchasingHandler(
       new RegisterUserPurchasingUseCase(
-        new UserRepository(new UsersDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql))
+      )
+    ),
+    new LoginUserPurchasingHandler(
+      new LoginUserPurchasingUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql))
       )
     )
   )
 
-  server.register(userRegister, {
-    prefix: `${process.env.PATH_URL}` + '/users',
+  server.register(purchasingRegister, {
+    prefix: `${process.env.PATH_URL}` + '/purchasing',
   })
 
   server.all('/', (req: any, reply: any) => {

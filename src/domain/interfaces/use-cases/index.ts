@@ -1,1 +1,1 @@
-export * from './interface-users-use-case'
+export * from './interface-purchasing-use-case'
