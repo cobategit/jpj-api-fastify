@@ -10,16 +10,17 @@ import dotenv from 'dotenv'
 import express from '@fastify/express'
 import xss from 'x-xss-protection'
 import multerFastify from 'fastify-multer'
-import { format } from 'date-fns'
 import {
   DataManipulationLanguage,
   DataQueryLanguage,
+  PksCurahDataSource,
   UsersDataSource,
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
-import { RegisterUserPurchasingHandler, PurchasingRoute } from './presentation'
+import { RegisterUserPurchasingHandler, PurchasingRoute, PengajuanPksCurahHandler } from './presentation'
 import {
   LoginUserPurchasingUseCase,
+  PengajuanPksCurahUseCase,
   PurchasingRepository,
   RegisterUserPurchasingUseCase,
 } from './domain'
@@ -54,12 +55,17 @@ const app = async () => {
   const purchasingRegister = PurchasingRoute(
     new RegisterUserPurchasingHandler(
       new RegisterUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
       )
     ),
     new LoginUserPurchasingHandler(
       new LoginUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
+      )
+    ),
+    new PengajuanPksCurahHandler(
+      new PengajuanPksCurahUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
       )
     )
   )
