@@ -13,8 +13,8 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async insert(data?: PksCurahEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `insert pengajuan ${data?.curah}`,
-            `insert into ${process.env.TABLE_VENDOR} (vendor_code, vendor_name, vendor_address, stockpile_id, file_npwp, file_pkp, file_rek_bank, curah)`,
-            [data?.vendor_code, data?.vendor_name, data?.vendor_address, data?.stockpile_id, data?.file_npwp, data?.file_pkp, data?.file_rek_bank, data?.curah]
+            `insert into ${process.env.TABLE_VENDOR} (vendor_code, vendor_name, vendor_address, active, entry_date, stockpile_id, file_npwp, file_pkp, file_rek_bank, curah) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+            [data?.vendor_code, data?.vendor_name, data?.vendor_address, data?.active, data?.entry_date, data?.stockpile_id, data?.file_npwp, data?.file_pkp, data?.file_rek_bank, data?.curah]
         )
 
         return res

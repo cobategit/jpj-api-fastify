@@ -67,7 +67,8 @@ const app = async () => {
       new PengajuanPksCurahUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
       )
-    )
+    ),
+    new UsersDataSource(sourcesDml, sourcesDql)
   )
 
   server.register(purchasingRegister, {
