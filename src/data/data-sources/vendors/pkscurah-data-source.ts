@@ -19,4 +19,11 @@ export class PksCurahDataSource implements IPksCurahDataSource {
 
         return res
     }
+
+    async selectAll(): Promise<PksCurahEntity[]> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_VENDOR} limit 10`, []
+        )
+        return rows
+    }
 }

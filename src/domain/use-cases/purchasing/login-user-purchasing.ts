@@ -11,7 +11,7 @@ export class LoginUserPurchasingUseCase implements ILoginUserPurchasingUseCase {
 
   async execute(data: EntityUser): Promise<EntityUser | null> {
     try {
-      let res = await this.purchasingRepo.checkEmail(data.user_email!)
+      let res = await this.purchasingRepo.checkDeviceId(data.deviced_id!)
 
       if (res == null) {
         return null

@@ -31,4 +31,13 @@ export class UsersDataSource implements IUsersDataSource {
 
     return rows[0]
   }
+
+  async selectByDeviceId(deviceId: string): Promise<EntityUser | null> {
+    const [rows, fields] = await this.dql.dataQueryLanguage(
+      `select * from ${process.env.TABLE_USER} where deviced_id = ? limit 1`,
+      [deviceId]
+    )
+
+    return rows[0]
+  }
 }

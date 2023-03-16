@@ -15,16 +15,17 @@ import {
   DataQueryLanguage,
   PksCurahDataSource,
   UsersDataSource,
+  FreightDataSource
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
-import { RegisterUserPurchasingHandler, PurchasingRoute, PengajuanPksCurahHandler } from './presentation'
+import { PurchasingHandler, PurchasingRoute } from './presentation'
 import {
+  GetAllPksCurahUseCase,
   LoginUserPurchasingUseCase,
   PengajuanPksCurahUseCase,
   PurchasingRepository,
   RegisterUserPurchasingUseCase,
 } from './domain'
-import { LoginUserPurchasingHandler } from './presentation/handlers/purchasing/login-user'
 
 const app = async () => {
   dotenv.config()
@@ -53,22 +54,20 @@ const app = async () => {
   const sourcesDql = new DataQueryLanguage(pool)
 
   const purchasingRegister = PurchasingRoute(
-    new RegisterUserPurchasingHandler(
+    new PurchasingHandler(
       new RegisterUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
-      )
-    ),
-    new LoginUserPurchasingHandler(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
+      ),
       new LoginUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
-      )
-    ),
-    new PengajuanPksCurahHandler(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
+      ),
       new PengajuanPksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
+      ),
+      new GetAllPksCurahUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
       )
-    ),
-    new UsersDataSource(sourcesDml, sourcesDql)
+    ), new UsersDataSource(sourcesDml, sourcesDql),
   )
 
   server.register(purchasingRegister, {

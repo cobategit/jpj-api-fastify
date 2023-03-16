@@ -11,3 +11,7 @@ export interface ILoginUserPurchasingUseCase {
 export interface IPengajuanPksCurahUseCase {
   execute(data?: PksCurahEntity): Promise<any>
 }
+
+export interface IGetAllPksCurahUseCase {
+  execute(): Promise<PksCurahEntity[]>
+}
