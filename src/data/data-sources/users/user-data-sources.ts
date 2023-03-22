@@ -16,8 +16,8 @@ export class UsersDataSource implements IUsersDataSource {
   async registerUserPurchasing(data: EntityUser): Promise<any> {
     const res = await this.dml.dataManipulation(
       `insert mobile device`,
-      `update ${process.env.TABLE_USER} set deviced_id = ?, kode_akses = ? where user_email = ?`,
-      [data.deviced_id, data.kode_akses, data.user_email]
+      `insert into ${process.env.TABLE_USER_PURCHASING} (user_id, deviced_id, kode_akses, active, entry_date) values(?,?,?,?,?)`,
+      [data?.user_id, data?.deviced_id, data?.kode_akses, 1, data?.entry_date]
     )
 
     return res
@@ -25,7 +25,17 @@ export class UsersDataSource implements IUsersDataSource {
 
   async selectByEmail(email: string): Promise<EntityUser | null> {
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_USER} where user_email = ? limit 1`,
+      `SELECT
+      u.*,
+      up.deviced_id,
+      up.kode_akses,
+      up.active,
+      up.entry_date
+    FROM
+    ${process.env.TABLE_USER} AS u
+      LEFT JOIN ${process.env.TABLE_USER_PURCHASING} AS up
+        ON up.user_id = u.user_id
+    WHERE u.user_email = ? limit 1`,
       [email]
     )
 
@@ -34,7 +44,19 @@ export class UsersDataSource implements IUsersDataSource {
 
   async selectByDeviceId(deviceId: string): Promise<EntityUser | null> {
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_USER} where deviced_id = ? limit 1`,
+      `SELECT
+        u.*,
+        up.deviced_id,
+        up.kode_akses,
+        up.active,
+        up.entry_date
+      FROM
+      ${process.env.TABLE_USER_PURCHASING} AS up
+        INNER JOIN ${process.env.TABLE_USER} AS u
+          ON u.user_id = up.user_id
+      WHERE up.deviced_id = ? limit 1
+      
+      `,
       [deviceId]
     )
 

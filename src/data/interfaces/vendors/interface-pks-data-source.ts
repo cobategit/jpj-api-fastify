@@ -1,6 +1,7 @@
 import { PksCurahEntity } from "../../../domain";
 
 export interface IPksCurahDataSource {
+    count(): Promise<any>
     insert(data?: PksCurahEntity): Promise<any>
-    selectAll(): Promise<PksCurahEntity[]>
+    selectAll(conf: any): Promise<PksCurahEntity[]>
 }

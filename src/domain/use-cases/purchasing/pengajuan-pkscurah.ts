@@ -9,9 +9,9 @@ export class PengajuanPksCurahUseCase implements IPengajuanPksCurahUseCase {
         this.purchasingRepo = purchasingRepo
     }
 
-    async execute(data?: PksCurahEntity | undefined): Promise<any> {
+    async execute(user_id?: number, data?: PksCurahEntity | undefined): Promise<any> {
         try {
-            const res = await this.purchasingRepo.pengajuanPksCurah(data)
+            const res = await this.purchasingRepo.pengajuanPksCurah(user_id, data)
 
             return res
         } catch (error) {

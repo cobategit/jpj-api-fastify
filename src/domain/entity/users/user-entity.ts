@@ -9,4 +9,5 @@ export interface EntityUser {
   active?: number
   stockpile_id?: number
   purchasing?: number
+  entry_date?: string
 }

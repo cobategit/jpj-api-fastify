@@ -1,10 +1,10 @@
-import { EntityUser, FreightEntity, PksCurahEntity } from '../../entity'
+import { EntityUser, FreightEntity, ParamsEntity, PksCurahEntity } from '../../entity'
 
 export interface IPurchasingRepo {
   registerUserPurchasing(data: EntityUser): Promise<any>
   checkEmail(email: string): Promise<EntityUser | null>
   checkDeviceId(deviceId: string): Promise<EntityUser | null>
-  pengajuanPksCurah(data?: PksCurahEntity): Promise<any>
-  pengajuanFreight(data?: FreightEntity): Promise<any>
-  getPksCurah(): Promise<PksCurahEntity[]>
+  pengajuanPksCurah(user_id?: number, data?: PksCurahEntity): Promise<any>
+  pengajuanFreight(user_id?: number, data?: FreightEntity): Promise<any>
+  findAllPksCurah(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'>): Promise<{ count: number, rows: PksCurahEntity[] }>
 }

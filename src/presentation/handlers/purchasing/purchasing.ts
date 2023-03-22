@@ -1,6 +1,6 @@
-import { ApiResponse, AppError, TokenJWt } from '@jpj-common/module'
+import { ApiResponse, AppError, TokenJWt, setPagination, getPagination } from '@jpj-common/module'
 import { format } from 'date-fns'
-import { EntityUser, IGetAllPksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, PksCurahEntity } from '../../../domain'
+import { EntityUser, FreightEntity, IGetAllPksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
@@ -8,16 +8,20 @@ export class PurchasingHandler implements IPurchasingHandler {
     private loginUserPurchasingUseCase: ILoginUserPurchasingUseCase
     private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
     private getAllPksCurahUseCase: IGetAllPksCurahUseCase
+    private pengajuanFreightUseCase: IPengajuanFreight
 
-    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase) {
+
+    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight) {
         this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
         this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
         this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
         this.getAllPksCurahUseCase = getAllPksCurahUseCase
+        this.pengajuanFreightUseCase = pengajuanFreightUseCase
     }
     async register(request: any, reply: any): Promise<void> {
         try {
             const data: EntityUser = request.body
+            data!.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
 
             const res = await this.registerUserPurchasingUseCase.execute(data)
 
@@ -102,7 +106,7 @@ export class PurchasingHandler implements IPurchasingHandler {
                 data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
             }
 
-            const res = await this.pengajuanPksCurahUseCase.execute(data)
+            const res = await this.pengajuanPksCurahUseCase.execute(request.user.user_id, data)
 
             return ApiResponse.created(request, reply, {
                 success: true,
@@ -113,9 +117,48 @@ export class PurchasingHandler implements IPurchasingHandler {
             throw new AppError(500, false, `${error}`, '501')
         }
     }
+    async pengajuanFreight(request: any, reply: any): Promise<void> {
+        try {
+            const data: FreightEntity = request.body
+            data.id_user_stockpile = request.user.user_id
+            data.active = 2
+
+            if (request.files['file_npwp']) {
+                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+            }
+            if (request.files['file_pkp']) {
+                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+            }
+            if (request.files['file_rek_bank']) {
+                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
+            }
+            if (request.files['file_ktp']) {
+                data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
+            }
+
+            const res = await this.pengajuanFreightUseCase.execute(request.user.user_id, data)
+
+            return ApiResponse.created(request, reply, {
+                success: true,
+                message: `Data pengajuan vendor freight`,
+                id: res[0].insertId,
+            })
+        } catch (error) {
+            throw new AppError(500, false, `${error}`, '501')
+        }
+    }
     async findAllPksCurah(request: any, reply: any): Promise<void> {
         try {
-            const data = await this.getAllPksCurahUseCase.execute()
+            const { page, size, search, vendor_type } = request.query
+            const { limit, offset } = setPagination(page, size, 20)
+            const conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'> = {
+                limit,
+                offset,
+                search,
+                vendor_type
+            }
+            const res = await this.getAllPksCurahUseCase.execute(conf)
+            const data = getPagination(res, page, limit)
 
             return ApiResponse.created(request, reply, {
                 success: true,

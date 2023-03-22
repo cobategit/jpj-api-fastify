@@ -15,13 +15,15 @@ import {
   DataQueryLanguage,
   PksCurahDataSource,
   UsersDataSource,
-  FreightDataSource
+  FreightDataSource,
+  HistoryLogDataSource
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
 import {
   GetAllPksCurahUseCase,
   LoginUserPurchasingUseCase,
+  PengajuanFreightUseCase,
   PengajuanPksCurahUseCase,
   PurchasingRepository,
   RegisterUserPurchasingUseCase,
@@ -56,17 +58,20 @@ const app = async () => {
   const purchasingRegister = PurchasingRoute(
     new PurchasingHandler(
       new RegisterUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new LoginUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanPksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllPksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql))
-      )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
+      new PengajuanFreightUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
     ), new UsersDataSource(sourcesDml, sourcesDql),
   )
 

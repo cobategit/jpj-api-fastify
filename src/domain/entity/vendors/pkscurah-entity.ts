@@ -5,6 +5,8 @@ export interface PksCurahEntity {
     entry_date?: string
     stockpile_id?: number
     active?: number
+    pic?: string
+    phone_pic?: string
     file_npwp?: string
     file_pkp?: string
     file_rek_bank?: string

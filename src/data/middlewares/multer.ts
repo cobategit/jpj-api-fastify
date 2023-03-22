@@ -18,7 +18,7 @@ export const storageMulterFastify = multerFastify.diskStorage({
             cb(
                 null,
                 'npwp-' +
-                req.body.vendor_code +
+                req.body.vendor_name.split(' ')[1] +
                 '-' +
                 `${format(new Date(), 'yyyyMMddmmss')}` +
                 `${path.extname(file.originalname)}`
@@ -28,7 +28,7 @@ export const storageMulterFastify = multerFastify.diskStorage({
             cb(
                 null,
                 'pkp-' +
-                req.body.vendor_code +
+                req.body.vendor_name.split(' ')[1] +
                 '-' +
                 `${format(new Date(), 'yyyyMMddmmss')}` + `${path.extname(file.originalname)}`
             )
@@ -37,7 +37,7 @@ export const storageMulterFastify = multerFastify.diskStorage({
             cb(
                 null,
                 'rek-bank-' +
-                req.body.vendor_code +
+                req.body.vendor_name.split(' ')[1] +
                 '-' +
                 `${format(new Date(), 'yyyyMMddmmss')}` + `${path.extname(file.originalname)}`
             )
@@ -46,7 +46,7 @@ export const storageMulterFastify = multerFastify.diskStorage({
             cb(
                 null,
                 'ktp-' +
-                req.body.vendor_code +
+                req.body.vendor_name.split(' ')[1] +
                 '-' +
                 `${format(new Date(), 'yyyyMMddmmss')}` + `${path.extname(file.originalname)}`
             )

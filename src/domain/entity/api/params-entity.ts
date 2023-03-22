@@ -1,3 +1,8 @@
 export interface ParamsEntity {
-    vendor_type: string
+    search?: string
+    limit?: number
+    offset?: number
+    vendor_type?: string
+    page?: number
+    size?: number
 }

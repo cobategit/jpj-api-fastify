@@ -10,7 +10,7 @@ import {
 } from '../..'
 import { EntityUser, FreightEntity, ParamsEntity, PksCurahEntity } from '../../../domain'
 import { CheckAvailableUser, IUsersDataSource, upload } from '../../../data'
-import { reqAuthToken } from '@jpj-common/module'
+import { ApiResponse, reqAuthToken } from '@jpj-common/module'
 
 export function PurchasingRoute(
   purchasingHandler: IPurchasingHandler,
@@ -49,13 +49,20 @@ export function PurchasingRoute(
         ],
       },
       (request: any, reply: any) => {
+        if (!request.query.vendor_type) {
+          return ApiResponse.badRequest(request, reply, {
+            success: false,
+            message: `Harap masukkan query string 'vendor_type(pkscurah atau freight)'`
+          })
+        }
+
         if (request.query.vendor_type == 'pkscurah') purchasingHandler.pengajuanPksCurah(request, reply)
 
-        if (request.query.vendor_type == 'freight') purchasingHandler.pengajuanPksCurah(request, reply)
+        if (request.query.vendor_type == 'freight') purchasingHandler.pengajuanFreight(request, reply)
       }
     )
 
-    fastify.get(
+    fastify.get<{ Querystring: ParamsEntity }>(
       '/pks-curah',
       {
         logLevel: 'info', preHandler: [
