@@ -22,6 +22,7 @@ import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
 import {
   GetAllPksCurahUseCase,
+  GetOnePksCurahUseCase,
   LoginUserPurchasingUseCase,
   PengajuanFreightUseCase,
   PengajuanPksCurahUseCase,
@@ -67,6 +68,9 @@ const app = async () => {
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllPksCurahUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
+      new GetOnePksCurahUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanFreightUseCase(

@@ -64,4 +64,9 @@ export class PurchasingRepository implements IPurchasingRepo {
     const rows = await this.pksCurahDataSource.selectAll(conf)
     return { count: count.count, rows }
   }
+
+  async findOnePksCurah(id?: number): Promise<PksCurahEntity> {
+    const rows = await this.pksCurahDataSource.selectOne(id)
+    return rows
+  }
 }

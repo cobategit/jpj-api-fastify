@@ -1,6 +1,6 @@
 import { ApiResponse, AppError, TokenJWt, setPagination, getPagination } from '@jpj-common/module'
 import { format } from 'date-fns'
-import { EntityUser, FreightEntity, IGetAllPksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
+import { EntityUser, FreightEntity, IGetAllPksCurahUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
@@ -8,15 +8,17 @@ export class PurchasingHandler implements IPurchasingHandler {
     private loginUserPurchasingUseCase: ILoginUserPurchasingUseCase
     private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
     private getAllPksCurahUseCase: IGetAllPksCurahUseCase
+    private getOnePksCurahUseCase: IGetOnePksCurahUseCase
     private pengajuanFreightUseCase: IPengajuanFreight
 
 
-    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight) {
+    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight) {
         this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
         this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
         this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
         this.getAllPksCurahUseCase = getAllPksCurahUseCase
         this.pengajuanFreightUseCase = pengajuanFreightUseCase
+        this.getOnePksCurahUseCase = getOnePksCurahUseCase
     }
     async register(request: any, reply: any): Promise<void> {
         try {
@@ -164,6 +166,23 @@ export class PurchasingHandler implements IPurchasingHandler {
                 success: true,
                 message: 'Data ditemukan',
                 data
+            })
+        } catch (error) {
+            throw new AppError(400, false, `${error}`, '401')
+        }
+    }
+
+    async findOnePksCurah(request: any, reply: any): Promise<void> {
+        try {
+            console.log(`params ${request.params.vendor_id}`)
+            const res = await this.getOnePksCurahUseCase.execute(request.params.vendor_id)
+
+            if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+            return ApiResponse.created(request, reply, {
+                success: true,
+                message: 'Data ditemukan',
+                data: res
             })
         } catch (error) {
             throw new AppError(400, false, `${error}`, '401')

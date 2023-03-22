@@ -1,4 +1,5 @@
 export interface PksCurahEntity {
+    id?: number
     vendor_code?: string
     vendor_name?: string
     vendor_address?: string

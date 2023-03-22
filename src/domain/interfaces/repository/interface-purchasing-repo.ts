@@ -7,4 +7,5 @@ export interface IPurchasingRepo {
   pengajuanPksCurah(user_id?: number, data?: PksCurahEntity): Promise<any>
   pengajuanFreight(user_id?: number, data?: FreightEntity): Promise<any>
   findAllPksCurah(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'>): Promise<{ count: number, rows: PksCurahEntity[] }>
+  findOnePksCurah(id?: number): Promise<PksCurahEntity>
 }

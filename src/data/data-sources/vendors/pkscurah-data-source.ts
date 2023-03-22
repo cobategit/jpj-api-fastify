@@ -39,4 +39,14 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         )
         return rows
     }
+
+    async selectOne(id?: number): Promise<PksCurahEntity> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_VENDOR} where vendor_id = ?`,
+            [id]
+        )
+
+        return rows[0]
+    }
+
 }

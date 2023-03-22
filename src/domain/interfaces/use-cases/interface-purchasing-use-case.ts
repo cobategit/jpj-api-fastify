@@ -19,3 +19,7 @@ export interface IPengajuanFreight {
 export interface IGetAllPksCurahUseCase {
   execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'>): Promise<{ count: number, rows: PksCurahEntity[] }>
 }
+
+export interface IGetOnePksCurahUseCase {
+  execute(id?: number): Promise<PksCurahEntity | null>
+}

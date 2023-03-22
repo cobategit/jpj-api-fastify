@@ -74,6 +74,19 @@ export function PurchasingRoute(
       purchasingHandler.findAllPksCurah.bind(purchasingHandler)
     )
 
+    fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      '/pks-curah/detail/:vendor_id',
+      {
+        logLevel: 'info', preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
+
+        ],
+      },
+      purchasingHandler.findOnePksCurah.bind(purchasingHandler)
+    )
+
+
     done()
   }
 
