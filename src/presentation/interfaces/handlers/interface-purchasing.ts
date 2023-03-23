@@ -6,4 +6,8 @@ export interface IPurchasingHandler {
   findAllPksCurah(request: any, reply: any): Promise<void>
   findOnePksCurah(request: any, reply: any): Promise<void>
   updatePksCurah(request: any, reply: any): Promise<void>
+  findAllFreight(request: any, reply: any): Promise<void>
+  findOneFreight(request: any, reply: any): Promise<void>
+  updateFreight(request: any, reply: any): Promise<void>
+
 }

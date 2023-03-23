@@ -27,3 +27,15 @@ export interface IGetOnePksCurahUseCase {
 export interface IUpdatePksCurahUseCase {
   execute(id: number, user_id: number, data?: PksCurahEntity): Promise<any>
 }
+
+export interface IGetAllFreightUseCase {
+  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: FreightEntity[] }>
+}
+
+export interface IGetOneFreightUseCase {
+  execute(id?: number): Promise<FreightEntity | null>
+}
+
+export interface IUpdateFreightUseCase {
+  execute(id: number, user_id: number, data?: FreightEntity): Promise<any>
+}

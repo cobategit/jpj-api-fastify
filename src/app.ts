@@ -21,13 +21,16 @@ import {
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
 import {
+  GetAllFreightUseCase,
   GetAllPksCurahUseCase,
+  GetOneFreightUseCase,
   GetOnePksCurahUseCase,
   LoginUserPurchasingUseCase,
   PengajuanFreightUseCase,
   PengajuanPksCurahUseCase,
   PurchasingRepository,
   RegisterUserPurchasingUseCase,
+  UpdateFreightUseCase,
   UpdatePksCurahUseCase,
 } from './domain'
 
@@ -78,6 +81,15 @@ const app = async () => {
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new UpdatePksCurahUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
+      new GetAllFreightUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
+      new GetOneFreightUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
+      new UpdateFreightUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
     ), new UsersDataSource(sourcesDml, sourcesDql),

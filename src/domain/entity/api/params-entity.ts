@@ -4,6 +4,7 @@ export interface ParamsEntity {
     offset?: number
     vendor_type?: string
     vendor_id?: number
+    freight_id?: number
     page?: number
     size?: number
 }

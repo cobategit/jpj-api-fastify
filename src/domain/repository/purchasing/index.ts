@@ -84,4 +84,29 @@ export class PurchasingRepository implements IPurchasingRepo {
 
     return res
   }
+
+  async findAllFreight(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: FreightEntity[] }> {
+    const count = await this.freightDataSource.count()
+    const rows = await this.freightDataSource.selectAll(conf)
+    return { count: count.count, rows }
+  }
+
+  async findOneFreight(id?: number): Promise<PksCurahEntity> {
+    const rows = await this.freightDataSource.selectOne(id)
+    return rows
+  }
+
+  async updateFreight(id: number, user_id: number, data?: FreightEntity): Promise<any> {
+    const res = await this.freightDataSource.update(id, data)
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `UPDATE PENGAJUAN VENDOR FREIGHT`,
+      cud: 'UPDATE',
+      isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.freight_supplier}`,
+      user_id: user_id
+    }
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return res
+  }
 }

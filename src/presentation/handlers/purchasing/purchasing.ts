@@ -1,6 +1,6 @@
 import { ApiResponse, AppError, TokenJWt, setPagination, getPagination } from '@jpj-common/module'
 import { format } from 'date-fns'
-import { EntityUser, FreightEntity, IGetAllPksCurahUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, IUpdatePksCurahUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
+import { EntityUser, FreightEntity, IGetAllFreightUseCase, IGetAllPksCurahUseCase, IGetOneFreightUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, IUpdateFreightUseCase, IUpdatePksCurahUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
@@ -11,9 +11,12 @@ export class PurchasingHandler implements IPurchasingHandler {
     private getOnePksCurahUseCase: IGetOnePksCurahUseCase
     private pengajuanFreightUseCase: IPengajuanFreight
     private updatePksCurahUseCase: IUpdatePksCurahUseCase
+    private getAllFreightUseCase: IGetAllFreightUseCase
+    private getOneFreightUseCase: IGetOneFreightUseCase
+    private updateFreightUseCase: IUpdateFreightUseCase
 
 
-    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight, updatePksCurahUseCase: IUpdatePksCurahUseCase) {
+    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight, updatePksCurahUseCase: IUpdatePksCurahUseCase, getAllFreightUseCase: IGetAllFreightUseCase, getOneFreightUseCase: IGetOneFreightUseCase, updateFreightUseCase: IUpdateFreightUseCase) {
         this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
         this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
         this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
@@ -21,6 +24,9 @@ export class PurchasingHandler implements IPurchasingHandler {
         this.pengajuanFreightUseCase = pengajuanFreightUseCase
         this.getOnePksCurahUseCase = getOnePksCurahUseCase
         this.updatePksCurahUseCase = updatePksCurahUseCase
+        this.getAllFreightUseCase = getAllFreightUseCase
+        this.getOneFreightUseCase = getOneFreightUseCase
+        this.updateFreightUseCase = updateFreightUseCase
     }
     async register(request: any, reply: any): Promise<void> {
         try {
@@ -176,7 +182,6 @@ export class PurchasingHandler implements IPurchasingHandler {
 
     async findOnePksCurah(request: any, reply: any): Promise<void> {
         try {
-            console.log(`params ${request.params.vendor_id}`)
             const res = await this.getOnePksCurahUseCase.execute(request.params.vendor_id)
 
             if (res === null) throw new AppError(404, false, `Data kosong`, '401')
@@ -211,6 +216,74 @@ export class PurchasingHandler implements IPurchasingHandler {
             return ApiResponse.created(request, reply, {
                 success: true,
                 message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
+                id: res[0].insertId,
+            })
+        } catch (error) {
+            throw new AppError(500, false, `${error}`, '501')
+        }
+    }
+
+    async findAllFreight(request: any, reply: any): Promise<void> {
+        try {
+            const { page, size, search } = request.query
+            const { limit, offset } = setPagination(page, size, 20)
+            const conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> = {
+                limit,
+                offset,
+                search
+            }
+            const res = await this.getAllFreightUseCase.execute(conf)
+            const data = getPagination(res, page, limit)
+
+            return ApiResponse.created(request, reply, {
+                success: true,
+                message: 'Data ditemukan',
+                data
+            })
+        } catch (error) {
+            throw new AppError(400, false, `${error}`, '401')
+        }
+    }
+
+    async findOneFreight(request: any, reply: any): Promise<void> {
+        try {
+            const res = await this.getOneFreightUseCase.execute(request.params.freight_id)
+
+            if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+            return ApiResponse.created(request, reply, {
+                success: true,
+                message: 'Data ditemukan',
+                data: res
+            })
+        } catch (error) {
+            throw new AppError(400, false, `${error}`, '401')
+        }
+    }
+
+    async updateFreight(request: any, reply: any): Promise<void> {
+        try {
+            const data: FreightEntity = request.body
+            data.id_user_stockpile = request.user.user_id
+
+            if (request.files['file_npwp']) {
+                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+            }
+            if (request.files['file_pkp']) {
+                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+            }
+            if (request.files['file_rek_bank']) {
+                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
+            }
+            if (request.files['file_ktp']) {
+                data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_ktp'][0].filename}`
+            }
+
+            const res = await this.updateFreightUseCase.execute(request.params.freight_id, request.user.user_id, data)
+
+            return ApiResponse.created(request, reply, {
+                success: true,
+                message: `Data update vendor freight berhasil diinput`,
                 id: res[0].insertId,
             })
         } catch (error) {

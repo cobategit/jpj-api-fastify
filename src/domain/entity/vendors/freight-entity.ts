@@ -3,6 +3,8 @@ export interface FreightEntity {
     freight_supplier?: string
     freight_address?: string
     id_user_stockpile?: number
+    pic?: string
+    phone_pic?: string
     active?: number
     file_npwp?: string
     file_pkp?: string

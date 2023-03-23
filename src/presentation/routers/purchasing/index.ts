@@ -72,6 +72,20 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findAllPksCurah.bind(purchasingHandler)
+    ).patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      '/pks-curah/:vendor_id',
+      {
+        logLevel: 'info', preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
+          upload.fields([
+            { name: 'file_npwp', maxCount: 1 },
+            { name: 'file_pkp', maxCount: 1 },
+            { name: 'file_rek_bank', maxCount: 1 }
+          ]),
+        ],
+      },
+      purchasingHandler.updatePksCurah.bind(purchasingHandler)
     )
 
     fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
@@ -85,8 +99,18 @@ export function PurchasingRoute(
       purchasingHandler.findOnePksCurah.bind(purchasingHandler)
     )
 
-    fastify.patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'vendor_id'> }>(
-      '/pks-curah/update/:vendor_id',
+    fastify.get<{ Querystring: ParamsEntity }>(
+      '/freight',
+      {
+        logLevel: 'info', preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
+
+        ],
+      },
+      purchasingHandler.findAllFreight.bind(purchasingHandler)
+    ).patch<{ Body: FreightEntity, Params: Pick<ParamsEntity, 'freight_id'> }>(
+      '/freight/:freight_id',
       {
         logLevel: 'info', preHandler: [
           reqAuthToken,
@@ -99,7 +123,18 @@ export function PurchasingRoute(
           ]),
         ],
       },
-      purchasingHandler.updatePksCurah.bind(purchasingHandler)
+      purchasingHandler.updateFreight.bind(purchasingHandler)
+    )
+
+    fastify.get<{ Params: Pick<ParamsEntity, 'freight_id'> }>(
+      '/freight/detail/:freight_id',
+      {
+        logLevel: 'info', preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done)
+        ],
+      },
+      purchasingHandler.findOneFreight.bind(purchasingHandler)
     )
 
 
