@@ -69,4 +69,19 @@ export class PurchasingRepository implements IPurchasingRepo {
     const rows = await this.pksCurahDataSource.selectOne(id)
     return rows
   }
+
+  async updatePksCurah(id: number, user_id: number, data?: PksCurahEntity): Promise<any> {
+    const res = await this.pksCurahDataSource.update(id, data)
+    let vendor_type = data?.curah == 0 ? 'PKS' : 'CURAH'
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `UPDATE PENGAJUAN VENDOR ${vendor_type}`,
+      cud: 'UPDATE',
+      isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
+      user_id: user_id
+    }
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return res
+  }
 }

@@ -14,43 +14,37 @@ export const storageMulterFastify = multerFastify.diskStorage({
         )
     },
     filename: (req: any, file: any, cb: any) => {
+        let revisi = ''
+        let nameFile = ''
+
+        if (req.routeOptions.method == 'PATCH') revisi = 'revisi'
+
         if (req.files['file_npwp']) {
-            cb(
-                null,
-                'npwp-' +
+            nameFile = `npwp-${revisi}` +
                 req.body.vendor_name.split(' ')[1] +
                 '-' +
                 `${format(new Date(), 'yyyyMMddmmss')}` +
                 `${path.extname(file.originalname)}`
-            )
         }
         if (req.files['file_pkp']) {
-            cb(
-                null,
-                'pkp-' +
+            nameFile = `pkp-${revisi}` +
                 req.body.vendor_name.split(' ')[1] +
                 '-' +
-                `${format(new Date(), 'yyyyMMddmmss')}` + `${path.extname(file.originalname)}`
-            )
+                `${format(new Date(), 'yyyyMMddmmss')}` +
+                `${path.extname(file.originalname)}`
         }
         if (req.files['file_rek_bank']) {
-            cb(
-                null,
-                'rek-bank-' +
+            nameFile = `bank-${revisi}` +
                 req.body.vendor_name.split(' ')[1] +
                 '-' +
-                `${format(new Date(), 'yyyyMMddmmss')}` + `${path.extname(file.originalname)}`
-            )
+                `${format(new Date(), 'yyyyMMddmmss')}` +
+                `${path.extname(file.originalname)}`
         }
-        if (req.files['file_ktp']) {
-            cb(
-                null,
-                'ktp-' +
-                req.body.vendor_name.split(' ')[1] +
-                '-' +
-                `${format(new Date(), 'yyyyMMddmmss')}` + `${path.extname(file.originalname)}`
-            )
-        }
+
+        cb(
+            null,
+            `${nameFile}`
+        )
     },
 })
 
@@ -58,7 +52,8 @@ export const upload = multerFastify({
     storage: storageMulterFastify,
     limits: {
         fileSize: 600000000,
-        files: 10
+        files: 10,
+        parts: 10,
     },
     fileFilter(req, file, cb) {
         if (!file.originalname.match(/\.(png|jpg|jepg|docx|pdf)$/)) {

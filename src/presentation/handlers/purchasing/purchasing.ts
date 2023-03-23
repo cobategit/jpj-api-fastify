@@ -1,6 +1,6 @@
 import { ApiResponse, AppError, TokenJWt, setPagination, getPagination } from '@jpj-common/module'
 import { format } from 'date-fns'
-import { EntityUser, FreightEntity, IGetAllPksCurahUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
+import { EntityUser, FreightEntity, IGetAllPksCurahUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, IUpdatePksCurahUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
@@ -10,15 +10,17 @@ export class PurchasingHandler implements IPurchasingHandler {
     private getAllPksCurahUseCase: IGetAllPksCurahUseCase
     private getOnePksCurahUseCase: IGetOnePksCurahUseCase
     private pengajuanFreightUseCase: IPengajuanFreight
+    private updatePksCurahUseCase: IUpdatePksCurahUseCase
 
 
-    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight) {
+    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight, updatePksCurahUseCase: IUpdatePksCurahUseCase) {
         this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
         this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
         this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
         this.getAllPksCurahUseCase = getAllPksCurahUseCase
         this.pengajuanFreightUseCase = pengajuanFreightUseCase
         this.getOnePksCurahUseCase = getOnePksCurahUseCase
+        this.updatePksCurahUseCase = updatePksCurahUseCase
     }
     async register(request: any, reply: any): Promise<void> {
         try {
@@ -112,7 +114,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
             return ApiResponse.created(request, reply, {
                 success: true,
-                message: `Data pengajuan vendor berhasil diinput ${data.curah}`,
+                message: `Data pengajuan vendor pkscurah berhasil diinput ${data.curah}`,
                 id: res[0].insertId,
             })
         } catch (error) {
@@ -186,6 +188,33 @@ export class PurchasingHandler implements IPurchasingHandler {
             })
         } catch (error) {
             throw new AppError(400, false, `${error}`, '401')
+        }
+    }
+
+    async updatePksCurah(request: any, reply: any): Promise<void> {
+        try {
+            const data: PksCurahEntity = request.body
+            data.stockpile_id = request.user.user_id
+
+            if (request.files['file_npwp']) {
+                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+            }
+            if (request.files['file_pkp']) {
+                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+            }
+            if (request.files['file_rek_bank']) {
+                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
+            }
+
+            const res = await this.updatePksCurahUseCase.execute(request.params.vendor_id, request.user.user_id, data)
+
+            return ApiResponse.created(request, reply, {
+                success: true,
+                message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
+                id: res[0].insertId,
+            })
+        } catch (error) {
+            throw new AppError(500, false, `${error}`, '501')
         }
     }
 }

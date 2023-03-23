@@ -23,3 +23,7 @@ export interface IGetAllPksCurahUseCase {
 export interface IGetOnePksCurahUseCase {
   execute(id?: number): Promise<PksCurahEntity | null>
 }
+
+export interface IUpdatePksCurahUseCase {
+  execute(id: number, user_id: number, data?: PksCurahEntity): Promise<any>
+}

@@ -5,4 +5,5 @@ export interface IPurchasingHandler {
   pengajuanFreight(request: any, reply: any): Promise<void>
   findAllPksCurah(request: any, reply: any): Promise<void>
   findOnePksCurah(request: any, reply: any): Promise<void>
+  updatePksCurah(request: any, reply: any): Promise<void>
 }

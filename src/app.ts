@@ -28,6 +28,7 @@ import {
   PengajuanPksCurahUseCase,
   PurchasingRepository,
   RegisterUserPurchasingUseCase,
+  UpdatePksCurahUseCase,
 } from './domain'
 
 const app = async () => {
@@ -74,6 +75,9 @@ const app = async () => {
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanFreightUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+      ),
+      new UpdatePksCurahUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
       ),
     ), new UsersDataSource(sourcesDml, sourcesDql),

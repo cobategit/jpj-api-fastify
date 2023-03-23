@@ -79,11 +79,27 @@ export function PurchasingRoute(
       {
         logLevel: 'info', preHandler: [
           reqAuthToken,
-          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
-
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done)
         ],
       },
       purchasingHandler.findOnePksCurah.bind(purchasingHandler)
+    )
+
+    fastify.patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      '/pks-curah/update/:vendor_id',
+      {
+        logLevel: 'info', preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
+          upload.fields([
+            { name: 'file_npwp', maxCount: 1 },
+            { name: 'file_pkp', maxCount: 1 },
+            { name: 'file_rek_bank', maxCount: 1 },
+            { name: 'file_ktp', maxCount: 1 }
+          ]),
+        ],
+      },
+      purchasingHandler.updatePksCurah.bind(purchasingHandler)
     )
 
 
