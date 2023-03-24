@@ -5,6 +5,7 @@ export interface IPksCurahDataSource {
     insert(data?: PksCurahEntity): Promise<any>
     insertBank(data?: PksCurahBankEntity): Promise<any>
     update(id?: number, data?: PksCurahEntity): Promise<any>
+    updateBank(id?: number, data?: PksCurahBankEntity): Promise<any>
     selectAll(conf: any): Promise<PksCurahEntity[]>
     selectOne(id?: number): Promise<PksCurahEntity>
 }

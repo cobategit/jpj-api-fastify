@@ -49,6 +49,16 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return res
     }
 
+    async updateBank(id?: number, data?: PksCurahBankEntity): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `update pengajuan pkscurah bank`,
+            `update ${process.env.TABLE_VENDOR_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where vendor_id = ?`,
+            [data?.bank_name, data?.account_no, data?.file_rekbank, id!]
+        )
+
+        return res
+    }
+
     async selectAll(conf: ParamsEntity): Promise<PksCurahEntity[]> {
         let where = ``;
         if (conf.vendor_type == 'pks') where = `where curah = 0`

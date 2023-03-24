@@ -35,8 +35,6 @@ export class RegisterUserPurchasingUseCase
       data!.user_id = checkEmail.user_id
       const res = await this.purchasingRepo.registerUserPurchasing(data)
 
-      console.log(`data input ${JSON.stringify(checkEmail)}`)
-
       return res
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')

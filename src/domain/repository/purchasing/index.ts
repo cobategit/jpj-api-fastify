@@ -50,8 +50,6 @@ export class PurchasingRepository implements IPurchasingRepo {
           active: 2
         }
 
-        console.log(`data bank: ${dataBank}`)
-
         await this.pksCurahDataSource.insertBank(dataBank)
       })]
     )
@@ -88,6 +86,7 @@ export class PurchasingRepository implements IPurchasingRepo {
 
   async updatePksCurah(id: number, user_id: number, data?: PksCurahEntity): Promise<any> {
     const res = await this.pksCurahDataSource.update(id, data)
+
     let vendor_type = data?.curah == 0 ? 'PKS' : 'CURAH'
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
@@ -96,6 +95,19 @@ export class PurchasingRepository implements IPurchasingRepo {
       isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
       user_id: user_id
     }
+
+    Promise.all(
+      [data?.file_rekbank?.forEach(async (val: string) => {
+        const dataBank: PksCurahBankEntity = {
+          vendor_id: res[0].insertId,
+          file_rekbank: val,
+          active: 2
+        }
+
+        await this.pksCurahDataSource.updateBank(dataBank.vendor_id, dataBank)
+      })]
+    )
+
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res

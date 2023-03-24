@@ -214,6 +214,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
     async updatePksCurah(request: any, reply: any): Promise<void> {
         try {
+            let dataBank: string[] = []
             const data: PksCurahEntity = request.body
             data.stockpile_id = request.user.user_id
 
@@ -223,6 +224,16 @@ export class PurchasingHandler implements IPurchasingHandler {
             if (request.files['file_pkp']) {
                 data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
             }
+            if (request.files['file_rekbank']) {
+                Promise.all(
+                    [request.files['file_rekbank'].forEach((val: any) => {
+                        let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+                        dataBank.push(file)
+                    })]
+                )
+            }
+
+            data.file_rekbank = dataBank
 
             const res = await this.updatePksCurahUseCase.execute(request.params.vendor_id, request.user.user_id, data)
 
