@@ -1,5 +1,5 @@
 import { IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IUsersDataSource } from '../../../data'
-import { EntityUser, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from '../../entity'
+import { EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -68,6 +68,19 @@ export class PurchasingRepository implements IPurchasingRepo {
       isitransaksi_baru: `MENGAJUKAN VENDOR BARU DENGAN NAMA ${data?.freight_supplier}`,
       user_id: user_id
     }
+
+    Promise.all(
+      [data?.file_rekbank?.forEach(async (val: string) => {
+        const dataBank: FreightBankEntity = {
+          freight_id: res[0].insertId,
+          file_rekbank: val,
+          active: 2
+        }
+
+        await this.freightDataSource.insertBank(dataBank)
+      })]
+    )
+
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
@@ -133,6 +146,19 @@ export class PurchasingRepository implements IPurchasingRepo {
       isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.freight_supplier}`,
       user_id: user_id
     }
+
+    Promise.all(
+      [data?.file_rekbank?.forEach(async (val: string) => {
+        const dataBank: FreightBankEntity = {
+          freight_id: res[0].insertId,
+          file_rekbank: val,
+          active: 2
+        }
+
+        await this.freightDataSource.updateBank(dataBank.freight_id, dataBank)
+      })]
+    )
+
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
