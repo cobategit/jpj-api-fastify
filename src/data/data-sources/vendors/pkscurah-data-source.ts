@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage, IPksCurahDataSource } from "../..";
-import { ParamsEntity, PksCurahEntity } from "../../../domain";
+import { ParamsEntity, PksCurahBankEntity, PksCurahEntity } from "../../../domain";
 
 export class PksCurahDataSource implements IPksCurahDataSource {
     private dml: DataManipulationLanguage
@@ -22,8 +22,18 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async insert(data?: PksCurahEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `insert pengajuan ${data?.curah}`,
-            `insert into ${process.env.TABLE_VENDOR} (vendor_code, vendor_name, vendor_address, active, entry_date, stockpile_id, pic, phone_pic, file_npwp, file_pkp, file_rek_bank, curah) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-            [data?.vendor_code, data?.vendor_name, data?.vendor_address, data?.active, data?.entry_date, data?.stockpile_id, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.file_rek_bank, data?.curah]
+            `insert into ${process.env.TABLE_VENDOR} (vendor_code, vendor_name, vendor_address, active, entry_date, stockpile_id, pic, phone_pic, file_npwp, file_pkp, curah, notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [data?.vendor_code, data?.vendor_name, data?.vendor_address, data?.active, data?.entry_date, data?.stockpile_id, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.curah, data?.notes]
+        )
+
+        return res
+    }
+
+    async insertBank(data?: PksCurahBankEntity): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `insert pengajuan bank pkscurah`,
+            `insert into ${process.env.TABLE_VENDOR_BANK} (vendor_id, bank_name, account_no, active, file_rekbank) VALUES (?,?,?,?,?)`,
+            [data?.vendor_id, data?.bank_name, data?.account_no, data?.active, data?.file_rekbank]
         )
 
         return res
@@ -32,8 +42,8 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async update(id?: number, data?: PksCurahEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `update pengajuan ${data?.curah}`,
-            `update ${process.env.TABLE_VENDOR} set vendor_name = ?, vendor_address = ?, pic = ?, phone_pic = ?, file_npwp = ?, file_pkp = ?, file_rek_bank = ? where vendor_id = ?`,
-            [data?.vendor_name, data?.vendor_address, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.file_rek_bank, id!]
+            `update ${process.env.TABLE_VENDOR} set vendor_name = ?, vendor_address = ?, pic = ?, phone_pic = ?, file_npwp = ?, file_pkp = ?, notes = ? where vendor_id = ?`,
+            [data?.vendor_name, data?.vendor_address, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.notes, id!]
         )
 
         return res

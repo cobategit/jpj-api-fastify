@@ -8,8 +8,25 @@ export interface FreightEntity {
     active?: number
     file_npwp?: string
     file_pkp?: string
-    file_rek_bank?: string
     file_ktp?: string
+    file_rekbank?: string[]
     jenis_file?: string
     kategori_file?: string
+    notes?: string
+}
+
+export interface FreightBankEntity {
+    f_bank_id?: number
+    freight_id?: number
+    bank_name?: string
+    account_no?: string
+    active?: number
+    file_rekbank?: string
+}
+
+export interface FreightGroupEntity {
+    vendor_group_id?: number
+    group_name?: string
+    entry_by?: number
+    entry_date?: string
 }

@@ -1,6 +1,6 @@
 import { ApiResponse, AppError, TokenJWt, setPagination, getPagination } from '@jpj-common/module'
 import { format } from 'date-fns'
-import { EntityUser, FreightEntity, IGetAllFreightUseCase, IGetAllPksCurahUseCase, IGetOneFreightUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreight, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, IUpdateFreightUseCase, IUpdatePksCurahUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
+import { EntityUser, FreightEntity, IGetAllFreightUseCase, IGetAllPksCurahUseCase, IGetOneFreightUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreightUseCase, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, IUpdateFreightUseCase, IUpdatePksCurahUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
@@ -9,14 +9,14 @@ export class PurchasingHandler implements IPurchasingHandler {
     private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
     private getAllPksCurahUseCase: IGetAllPksCurahUseCase
     private getOnePksCurahUseCase: IGetOnePksCurahUseCase
-    private pengajuanFreightUseCase: IPengajuanFreight
+    private pengajuanFreightUseCase: IPengajuanFreightUseCase
     private updatePksCurahUseCase: IUpdatePksCurahUseCase
     private getAllFreightUseCase: IGetAllFreightUseCase
     private getOneFreightUseCase: IGetOneFreightUseCase
     private updateFreightUseCase: IUpdateFreightUseCase
 
 
-    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreight, updatePksCurahUseCase: IUpdatePksCurahUseCase, getAllFreightUseCase: IGetAllFreightUseCase, getOneFreightUseCase: IGetOneFreightUseCase, updateFreightUseCase: IUpdateFreightUseCase) {
+    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreightUseCase, updatePksCurahUseCase: IUpdatePksCurahUseCase, getAllFreightUseCase: IGetAllFreightUseCase, getOneFreightUseCase: IGetOneFreightUseCase, updateFreightUseCase: IUpdateFreightUseCase) {
         this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
         this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
         this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
@@ -101,6 +101,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
     async pengajuanPksCurah(request: any, reply: any): Promise<void> {
         try {
+            let dataBank: string[] = []
             const data: PksCurahEntity = request.body
             data.stockpile_id = request.user.user_id
             data.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
@@ -112,9 +113,16 @@ export class PurchasingHandler implements IPurchasingHandler {
             if (request.files['file_pkp']) {
                 data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
             }
-            if (request.files['file_rek_bank']) {
-                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
+            if (request.files['file_rekbank']) {
+                Promise.all(
+                    [request.files['file_rekbank'].forEach((val: any) => {
+                        let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+                        dataBank.push(file)
+                    })]
+                )
             }
+
+            data.file_rekbank = dataBank
 
             const res = await this.pengajuanPksCurahUseCase.execute(request.user.user_id, data)
 
@@ -129,6 +137,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
     async pengajuanFreight(request: any, reply: any): Promise<void> {
         try {
+            let dataBank: string[] = []
             const data: FreightEntity = request.body
             data.id_user_stockpile = request.user.user_id
             data.active = 2
@@ -139,12 +148,19 @@ export class PurchasingHandler implements IPurchasingHandler {
             if (request.files['file_pkp']) {
                 data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
             }
-            if (request.files['file_rek_bank']) {
-                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
-            }
             if (request.files['file_ktp']) {
-                data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
+                data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_rekbank'][0].filename}`
             }
+            if (request.files['file_rekbank']) {
+                Promise.all(
+                    [request.files['file_rekbank'].forEach((val: any) => {
+                        let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+                        dataBank.push(file)
+                    })]
+                )
+            }
+
+            data.file_rekbank = dataBank
 
             const res = await this.pengajuanFreightUseCase.execute(request.user.user_id, data)
 
@@ -207,9 +223,6 @@ export class PurchasingHandler implements IPurchasingHandler {
             if (request.files['file_pkp']) {
                 data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
             }
-            if (request.files['file_rek_bank']) {
-                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
-            }
 
             const res = await this.updatePksCurahUseCase.execute(request.params.vendor_id, request.user.user_id, data)
 
@@ -271,9 +284,6 @@ export class PurchasingHandler implements IPurchasingHandler {
             }
             if (request.files['file_pkp']) {
                 data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
-            }
-            if (request.files['file_rek_bank']) {
-                data!.file_rek_bank = `${process.env.URL_FILE}/purchasing/${request.files['file_rek_bank'][0].filename}`
             }
             if (request.files['file_ktp']) {
                 data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_ktp'][0].filename}`

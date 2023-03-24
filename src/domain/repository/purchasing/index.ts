@@ -1,5 +1,5 @@
 import { IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IUsersDataSource } from '../../../data'
-import { EntityUser, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahEntity } from '../../entity'
+import { EntityUser, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -32,6 +32,7 @@ export class PurchasingRepository implements IPurchasingRepo {
 
   async pengajuanPksCurah(user_id?: number, data?: PksCurahEntity | undefined): Promise<any> {
     const res = await this.pksCurahDataSource.insert(data)
+
     let vendor_type = data?.curah == 0 ? 'PKS' : 'CURAH'
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
@@ -40,6 +41,21 @@ export class PurchasingRepository implements IPurchasingRepo {
       isitransaksi_baru: `MENGAJUKAN VENDOR BARU DENGAN NAMA ${data?.vendor_name}`,
       user_id: user_id
     }
+
+    Promise.all(
+      [data?.file_rekbank?.forEach(async (val: string) => {
+        const dataBank: PksCurahBankEntity = {
+          vendor_id: res[0].insertId,
+          file_rekbank: val,
+          active: 2
+        }
+
+        console.log(`data bank: ${dataBank}`)
+
+        await this.pksCurahDataSource.insertBank(dataBank)
+      })]
+    )
+
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res

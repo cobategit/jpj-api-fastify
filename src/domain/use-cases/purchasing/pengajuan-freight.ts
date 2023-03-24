@@ -1,8 +1,8 @@
 import { AppError } from "@jpj-common/module";
 import { PksCurahEntity } from "../../entity";
-import { IPurchasingRepo, IPengajuanFreight } from "../../interfaces";
+import { IPurchasingRepo, IPengajuanFreightUseCase } from "../../interfaces";
 
-export class PengajuanFreightUseCase implements IPengajuanFreight {
+export class PengajuanFreightUseCase implements IPengajuanFreightUseCase {
     private purchasingRepo: IPurchasingRepo
 
     constructor(purchasingRepo: IPurchasingRepo) {

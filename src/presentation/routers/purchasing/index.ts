@@ -43,7 +43,7 @@ export function PurchasingRoute(
           upload.fields([
             { name: 'file_npwp', maxCount: 1 },
             { name: 'file_pkp', maxCount: 1 },
-            { name: 'file_rek_bank', maxCount: 1 },
+            { name: 'file_rekbank' },
             { name: 'file_ktp', maxCount: 1 }
           ]),
         ],
@@ -81,7 +81,7 @@ export function PurchasingRoute(
           upload.fields([
             { name: 'file_npwp', maxCount: 1 },
             { name: 'file_pkp', maxCount: 1 },
-            { name: 'file_rek_bank', maxCount: 1 }
+            { name: 'file_rekbank' },
           ]),
         ],
       },
@@ -118,7 +118,7 @@ export function PurchasingRoute(
           upload.fields([
             { name: 'file_npwp', maxCount: 1 },
             { name: 'file_pkp', maxCount: 1 },
-            { name: 'file_rek_bank', maxCount: 1 },
+            { name: 'file_rekbank' },
             { name: 'file_ktp', maxCount: 1 }
           ]),
         ],

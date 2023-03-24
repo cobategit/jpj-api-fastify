@@ -12,7 +12,7 @@ export interface IPengajuanPksCurahUseCase {
   execute(user_id?: number, data?: PksCurahEntity): Promise<any>
 }
 
-export interface IPengajuanFreight {
+export interface IPengajuanFreightUseCase {
   execute(user_id?: number, data?: FreightEntity): Promise<any>
 }
 

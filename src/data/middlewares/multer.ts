@@ -23,21 +23,28 @@ export const storageMulterFastify = multerFastify.diskStorage({
             nameFile = `npwp-${revisi}` +
                 req.body.vendor_name.split(' ')[1] +
                 '-' +
-                `${format(new Date(), 'yyyyMMddmmss')}` +
+                `${Date.now()}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_pkp']) {
             nameFile = `pkp-${revisi}` +
                 req.body.vendor_name.split(' ')[1] +
                 '-' +
-                `${format(new Date(), 'yyyyMMddmmss')}` +
+                `${Date.now()}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_rek_bank']) {
+        if (req.files['file_rekbank']) {
             nameFile = `bank-${revisi}` +
                 req.body.vendor_name.split(' ')[1] +
                 '-' +
-                `${format(new Date(), 'yyyyMMddmmss')}` +
+                `${Date.now()}` +
+                `${path.extname(file.originalname)}`
+        }
+        if (req.files['file_ktp']) {
+            nameFile = `ktp-${revisi}` +
+                req.body.vendor_name.split(' ')[1] +
+                '-' +
+                `${Date.now()}` +
                 `${path.extname(file.originalname)}`
         }
 
@@ -52,8 +59,6 @@ export const upload = multerFastify({
     storage: storageMulterFastify,
     limits: {
         fileSize: 600000000,
-        files: 10,
-        parts: 10,
     },
     fileFilter(req, file, cb) {
         if (!file.originalname.match(/\.(png|jpg|jepg|docx|pdf)$/)) {
