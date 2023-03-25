@@ -1,314 +1,417 @@
-import { ApiResponse, AppError, TokenJWt, setPagination, getPagination } from '@jpj-common/module'
+import {
+  ApiResponse,
+  AppError,
+  TokenJWt,
+  setPagination,
+  getPagination,
+} from '@jpj-common/module'
 import { format } from 'date-fns'
-import { EntityUser, FreightEntity, IGetAllFreightUseCase, IGetAllPksCurahUseCase, IGetOneFreightUseCase, IGetOnePksCurahUseCase, ILoginUserPurchasingUseCase, IPengajuanFreightUseCase, IPengajuanPksCurahUseCase, IRegisterUserPurchasingUseCase, IUpdateFreightUseCase, IUpdatePksCurahUseCase, ParamsEntity, PksCurahEntity } from '../../../domain'
+import {
+  EntityUser,
+  FreightEntity,
+  IGetAllCurrencyUseCase,
+  IGetAllFreightBankUseCase,
+  IGetAllFreightUseCase,
+  IGetAllPksCurahUseCase,
+  IGetOneFreightUseCase,
+  IGetOnePksCurahUseCase,
+  ILoginUserPurchasingUseCase,
+  IPengajuanFreightUseCase,
+  IPengajuanPksCurahUseCase,
+  IRegisterUserPurchasingUseCase,
+  IUpdateFreightUseCase,
+  IUpdatePksCurahUseCase,
+  ParamsEntity,
+  PksCurahEntity,
+} from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
-    private registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase
-    private loginUserPurchasingUseCase: ILoginUserPurchasingUseCase
-    private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
-    private getAllPksCurahUseCase: IGetAllPksCurahUseCase
-    private getOnePksCurahUseCase: IGetOnePksCurahUseCase
-    private pengajuanFreightUseCase: IPengajuanFreightUseCase
-    private updatePksCurahUseCase: IUpdatePksCurahUseCase
-    private getAllFreightUseCase: IGetAllFreightUseCase
-    private getOneFreightUseCase: IGetOneFreightUseCase
-    private updateFreightUseCase: IUpdateFreightUseCase
+  private registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase
+  private loginUserPurchasingUseCase: ILoginUserPurchasingUseCase
+  private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
+  private getAllPksCurahUseCase: IGetAllPksCurahUseCase
+  private getOnePksCurahUseCase: IGetOnePksCurahUseCase
+  private pengajuanFreightUseCase: IPengajuanFreightUseCase
+  private updatePksCurahUseCase: IUpdatePksCurahUseCase
+  private getAllFreightUseCase: IGetAllFreightUseCase
+  private getOneFreightUseCase: IGetOneFreightUseCase
+  private updateFreightUseCase: IUpdateFreightUseCase
+  private getAllCurrencyUseCase: IGetAllCurrencyUseCase
+  private getAllFreightBankUseCase: IGetAllFreightBankUseCase
 
+  constructor(
+    registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
+    loginUserPurchasingUseCase: ILoginUserPurchasingUseCase,
+    pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase,
+    getAllPksCurahUseCase: IGetAllPksCurahUseCase,
+    getOnePksCurahUseCase: IGetOnePksCurahUseCase,
+    pengajuanFreightUseCase: IPengajuanFreightUseCase,
+    updatePksCurahUseCase: IUpdatePksCurahUseCase,
+    getAllFreightUseCase: IGetAllFreightUseCase,
+    getOneFreightUseCase: IGetOneFreightUseCase,
+    updateFreightUseCase: IUpdateFreightUseCase,
+    getAllCurrencyUseCase: IGetAllCurrencyUseCase,
+    getAllFreightBankUseCase: IGetAllFreightBankUseCase
+  ) {
+    this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
+    this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
+    this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
+    this.getAllPksCurahUseCase = getAllPksCurahUseCase
+    this.pengajuanFreightUseCase = pengajuanFreightUseCase
+    this.getOnePksCurahUseCase = getOnePksCurahUseCase
+    this.updatePksCurahUseCase = updatePksCurahUseCase
+    this.getAllFreightUseCase = getAllFreightUseCase
+    this.getOneFreightUseCase = getOneFreightUseCase
+    this.updateFreightUseCase = updateFreightUseCase
+    this.getAllCurrencyUseCase = getAllCurrencyUseCase
+    this.getAllFreightBankUseCase = getAllFreightBankUseCase
+  }
 
-    constructor(registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase, loginUserPurchasingUseCase: ILoginUserPurchasingUseCase, pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase, getAllPksCurahUseCase: IGetAllPksCurahUseCase, getOnePksCurahUseCase: IGetOnePksCurahUseCase, pengajuanFreightUseCase: IPengajuanFreightUseCase, updatePksCurahUseCase: IUpdatePksCurahUseCase, getAllFreightUseCase: IGetAllFreightUseCase, getOneFreightUseCase: IGetOneFreightUseCase, updateFreightUseCase: IUpdateFreightUseCase) {
-        this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
-        this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
-        this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
-        this.getAllPksCurahUseCase = getAllPksCurahUseCase
-        this.pengajuanFreightUseCase = pengajuanFreightUseCase
-        this.getOnePksCurahUseCase = getOnePksCurahUseCase
-        this.updatePksCurahUseCase = updatePksCurahUseCase
-        this.getAllFreightUseCase = getAllFreightUseCase
-        this.getOneFreightUseCase = getOneFreightUseCase
-        this.updateFreightUseCase = updateFreightUseCase
+  async register(request: any, reply: any): Promise<void> {
+    try {
+      const data: EntityUser = request.body
+      data!.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
+
+      const res = await this.registerUserPurchasingUseCase.execute(data)
+
+      if (res.invalidEmail)
+        throw new AppError(404, false, `Email tidak terdaftar`, '401')
+
+      if (res.existDeviceId)
+        throw new AppError(404, false, `DeviceId anda sudah terdaftar`, '401')
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data deviced id berhasil diinput',
+        changed: res[0].changedRows,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
-    async register(request: any, reply: any): Promise<void> {
-        try {
-            const data: EntityUser = request.body
-            data!.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
+  }
+  async login(request: any, reply: any): Promise<void> {
+    try {
+      const dataUser: EntityUser = request.body!
+      const res = await this.loginUserPurchasingUseCase.execute(dataUser)
 
-            const res = await this.registerUserPurchasingUseCase.execute(data)
+      const objectToken: Pick<
+        EntityUser,
+        'user_id' | 'user_email' | 'deviced_id'
+      > = {
+        user_id: res?.user_id,
+        user_email: res?.user_email,
+        deviced_id: res?.deviced_id,
+      }
+      const token = await TokenJWt.generateJwt(objectToken, null)
 
-            if (res.invalidEmail)
-                throw new AppError(404, false, `Email tidak terdaftar`, '401')
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
 
-            if (res.existDeviceId)
-                throw new AppError(404, false, `DeviceId anda sudah terdaftar`, '401')
+      if (res.deviced_id == 'Kosong') {
+        throw new AppError(404, false, `Data device id anda tidak ada`, '401')
+      }
 
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: 'Data deviced id berhasil diinput',
-                changed: res[0].changedRows,
-            })
-        } catch (error) {
-            throw new AppError(500, false, `${error}`, '501')
-        }
+      if (res.deviced_id == 'Tidak cocok') {
+        throw new AppError(404, false, `Device id anda tidak cocok`, '401')
+      }
+
+      if (res.kode_akses == 'Salah')
+        throw new AppError(401, false, `Password anda salah`, '401')
+
+      const user: Pick<
+        EntityUser,
+        'user_id' | 'user_email' | 'user_name' | 'deviced_id' | 'stockpile_id'
+      > = {
+        user_id: res.user_id,
+        user_email: res.user_email,
+        deviced_id: res.deviced_id,
+        stockpile_id: res.stockpile_id,
+        user_name: res.user_name,
+      }
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Login berhasil',
+        token,
+        user,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
-    async login(request: any, reply: any): Promise<void> {
-        try {
-            const dataUser: EntityUser = request.body!
-            const res = await this.loginUserPurchasingUseCase.execute(dataUser)
+  }
+  async pengajuanPksCurah(request: any, reply: any): Promise<void> {
+    try {
+      let dataBank: string[] = []
+      const data: PksCurahEntity = request.body
+      data.stockpile_id = request.user.user_id
+      data.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
+      data.active = 2
 
-            const objectToken: Pick<
-                EntityUser,
-                'user_id' | 'user_email' | 'deviced_id'
-            > = {
-                user_id: res?.user_id,
-                user_email: res?.user_email,
-                deviced_id: res?.deviced_id
-            }
-            const token = await TokenJWt.generateJwt(objectToken, null)
+      if (request.files['file_npwp']) {
+        data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+      }
+      if (request.files['file_pkp']) {
+        data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+      }
+      if (request.files['file_rekbank']) {
+        Promise.all([
+          request.files['file_rekbank'].forEach((val: any) => {
+            let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+            dataBank.push(file)
+          }),
+        ])
+      }
 
-            if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+      data.file_rekbank = dataBank
 
-            if (res.deviced_id == 'Kosong') {
-                throw new AppError(404, false, `Data device id anda tidak ada`, '401')
-            }
+      const res = await this.pengajuanPksCurahUseCase.execute(
+        request.user.user_id,
+        data
+      )
 
-            if (res.deviced_id == 'Tidak cocok') {
-                throw new AppError(404, false, `Device id anda tidak cocok`, '401')
-            }
-
-            if (res.kode_akses == 'Salah')
-                throw new AppError(401, false, `Password anda salah`, '401')
-
-            const user: Pick<
-                EntityUser,
-                'user_id' | 'user_email' | 'user_name' | 'deviced_id' | 'stockpile_id'
-            > = {
-                user_id: res.user_id,
-                user_email: res.user_email,
-                deviced_id: res.deviced_id,
-                stockpile_id: res.stockpile_id,
-                user_name: res.user_name
-            }
-
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: 'Login berhasil',
-                token,
-                user,
-            })
-        } catch (error) {
-            throw new AppError(400, false, `${error}`, '401')
-        }
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: `Data pengajuan vendor pkscurah berhasil diinput ${data.curah}`,
+        id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
-    async pengajuanPksCurah(request: any, reply: any): Promise<void> {
-        try {
-            let dataBank: string[] = []
-            const data: PksCurahEntity = request.body
-            data.stockpile_id = request.user.user_id
-            data.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
-            data.active = 2
+  }
+  async pengajuanFreight(request: any, reply: any): Promise<void> {
+    try {
+      let dataBank: string[] = []
+      const data: FreightEntity = request.body
+      data.id_user_stockpile = request.user.user_id
+      data.active = 2
 
-            if (request.files['file_npwp']) {
-                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
-            }
-            if (request.files['file_pkp']) {
-                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
-            }
-            if (request.files['file_rekbank']) {
-                Promise.all(
-                    [request.files['file_rekbank'].forEach((val: any) => {
-                        let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
-                        dataBank.push(file)
-                    })]
-                )
-            }
+      if (request.files['file_npwp']) {
+        data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+      }
+      if (request.files['file_pkp']) {
+        data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+      }
+      if (request.files['file_ktp']) {
+        data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_rekbank'][0].filename}`
+      }
+      if (request.files['file_rekbank']) {
+        Promise.all([
+          request.files['file_rekbank'].forEach((val: any) => {
+            let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+            dataBank.push(file)
+          }),
+        ])
+      }
 
-            data.file_rekbank = dataBank
+      data.file_rekbank = dataBank
 
-            const res = await this.pengajuanPksCurahUseCase.execute(request.user.user_id, data)
+      const res = await this.pengajuanFreightUseCase.execute(
+        request.user.user_id,
+        data
+      )
 
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: `Data pengajuan vendor pkscurah berhasil diinput ${data.curah}`,
-                id: res[0].insertId,
-            })
-        } catch (error) {
-            throw new AppError(500, false, `${error}`, '501')
-        }
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: `Data pengajuan vendor freight`,
+        id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
-    async pengajuanFreight(request: any, reply: any): Promise<void> {
-        try {
-            let dataBank: string[] = []
-            const data: FreightEntity = request.body
-            data.id_user_stockpile = request.user.user_id
-            data.active = 2
+  }
+  async findAllPksCurah(request: any, reply: any): Promise<void> {
+    try {
+      const { page, size, search, vendor_type } = request.query
+      const { limit, offset } = setPagination(page, size, 20)
+      const conf: Pick<
+        ParamsEntity,
+        'limit' | 'offset' | 'search' | 'vendor_type'
+      > = {
+        limit,
+        offset,
+        search,
+        vendor_type,
+      }
+      const res = await this.getAllPksCurahUseCase.execute(conf)
+      const data = getPagination(res, page, limit)
 
-            if (request.files['file_npwp']) {
-                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
-            }
-            if (request.files['file_pkp']) {
-                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
-            }
-            if (request.files['file_ktp']) {
-                data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_rekbank'][0].filename}`
-            }
-            if (request.files['file_rekbank']) {
-                Promise.all(
-                    [request.files['file_rekbank'].forEach((val: any) => {
-                        let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
-                        dataBank.push(file)
-                    })]
-                )
-            }
-
-            data.file_rekbank = dataBank
-
-            const res = await this.pengajuanFreightUseCase.execute(request.user.user_id, data)
-
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: `Data pengajuan vendor freight`,
-                id: res[0].insertId,
-            })
-        } catch (error) {
-            throw new AppError(500, false, `${error}`, '501')
-        }
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
-    async findAllPksCurah(request: any, reply: any): Promise<void> {
-        try {
-            const { page, size, search, vendor_type } = request.query
-            const { limit, offset } = setPagination(page, size, 20)
-            const conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'> = {
-                limit,
-                offset,
-                search,
-                vendor_type
-            }
-            const res = await this.getAllPksCurahUseCase.execute(conf)
-            const data = getPagination(res, page, limit)
+  }
 
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: 'Data ditemukan',
-                data
-            })
-        } catch (error) {
-            throw new AppError(400, false, `${error}`, '401')
-        }
+  async findOnePksCurah(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getOnePksCurahUseCase.execute(
+        request.params.vendor_id
+      )
+
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data: res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
+  }
 
-    async findOnePksCurah(request: any, reply: any): Promise<void> {
-        try {
-            const res = await this.getOnePksCurahUseCase.execute(request.params.vendor_id)
+  async updatePksCurah(request: any, reply: any): Promise<void> {
+    try {
+      let dataBank: string[] = []
+      const data: PksCurahEntity = request.body
+      data.stockpile_id = request.user.user_id
 
-            if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+      if (request.files['file_npwp']) {
+        data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+      }
+      if (request.files['file_pkp']) {
+        data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+      }
+      if (request.files['file_rekbank']) {
+        Promise.all([
+          request.files['file_rekbank'].forEach((val: any) => {
+            let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+            dataBank.push(file)
+          }),
+        ])
+      }
 
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: 'Data ditemukan',
-                data: res
-            })
-        } catch (error) {
-            throw new AppError(400, false, `${error}`, '401')
-        }
+      data.file_rekbank = dataBank
+
+      const res = await this.updatePksCurahUseCase.execute(
+        request.params.vendor_id,
+        request.user.user_id,
+        data
+      )
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
+        id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
+  }
 
-    async updatePksCurah(request: any, reply: any): Promise<void> {
-        try {
-            let dataBank: string[] = []
-            const data: PksCurahEntity = request.body
-            data.stockpile_id = request.user.user_id
+  async findAllFreight(request: any, reply: any): Promise<void> {
+    try {
+      const { page, size, search } = request.query
+      const { limit, offset } = setPagination(page, size, 20)
+      const conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> = {
+        limit,
+        offset,
+        search,
+      }
+      const res = await this.getAllFreightUseCase.execute(conf)
+      const data = getPagination(res, page, limit)
 
-            if (request.files['file_npwp']) {
-                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
-            }
-            if (request.files['file_pkp']) {
-                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
-            }
-            if (request.files['file_rekbank']) {
-                Promise.all(
-                    [request.files['file_rekbank'].forEach((val: any) => {
-                        let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
-                        dataBank.push(file)
-                    })]
-                )
-            }
-
-            data.file_rekbank = dataBank
-
-            const res = await this.updatePksCurahUseCase.execute(request.params.vendor_id, request.user.user_id, data)
-
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
-                id: res[0].insertId,
-            })
-        } catch (error) {
-            throw new AppError(500, false, `${error}`, '501')
-        }
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
+  }
 
-    async findAllFreight(request: any, reply: any): Promise<void> {
-        try {
-            const { page, size, search } = request.query
-            const { limit, offset } = setPagination(page, size, 20)
-            const conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> = {
-                limit,
-                offset,
-                search
-            }
-            const res = await this.getAllFreightUseCase.execute(conf)
-            const data = getPagination(res, page, limit)
+  async findOneFreight(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getOneFreightUseCase.execute(
+        request.params.freight_id
+      )
 
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: 'Data ditemukan',
-                data
-            })
-        } catch (error) {
-            throw new AppError(400, false, `${error}`, '401')
-        }
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data: res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
+  }
 
-    async findOneFreight(request: any, reply: any): Promise<void> {
-        try {
-            const res = await this.getOneFreightUseCase.execute(request.params.freight_id)
+  async updateFreight(request: any, reply: any): Promise<void> {
+    try {
+      const data: FreightEntity = request.body
+      data.id_user_stockpile = request.user.user_id
 
-            if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+      if (request.files['file_npwp']) {
+        data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
+      }
+      if (request.files['file_pkp']) {
+        data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
+      }
+      if (request.files['file_ktp']) {
+        data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_ktp'][0].filename}`
+      }
 
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: 'Data ditemukan',
-                data: res
-            })
-        } catch (error) {
-            throw new AppError(400, false, `${error}`, '401')
-        }
+      const res = await this.updateFreightUseCase.execute(
+        request.params.freight_id,
+        request.user.user_id,
+        data
+      )
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: `Data update vendor freight berhasil diinput`,
+        id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
+  }
 
-    async updateFreight(request: any, reply: any): Promise<void> {
-        try {
-            const data: FreightEntity = request.body
-            data.id_user_stockpile = request.user.user_id
+  async findAllCurrency(request: any, reply: any): Promise<void> {
+    try {
+      const { page, size } = request.query
+      const { limit, offset } = setPagination(page, size, 20)
+      const conf: Pick<ParamsEntity, 'limit' | 'offset'> = {
+        limit,
+        offset,
+      }
+      const res = await this.getAllCurrencyUseCase.execute(conf)
+      const data = getPagination(res, page, limit)
 
-            if (request.files['file_npwp']) {
-                data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
-            }
-            if (request.files['file_pkp']) {
-                data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
-            }
-            if (request.files['file_ktp']) {
-                data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_ktp'][0].filename}`
-            }
-
-            const res = await this.updateFreightUseCase.execute(request.params.freight_id, request.user.user_id, data)
-
-            return ApiResponse.created(request, reply, {
-                success: true,
-                message: `Data update vendor freight berhasil diinput`,
-                id: res[0].insertId,
-            })
-        } catch (error) {
-            throw new AppError(500, false, `${error}`, '501')
-        }
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
+  }
+
+  async findAllFreightBank(request: any, reply: any): Promise<void> {
+    try {
+      const { page, size } = request.query
+      const { limit, offset } = setPagination(page, size, 20)
+      const conf: Pick<ParamsEntity, 'limit' | 'offset'> = {
+        limit,
+        offset,
+      }
+      const res = await this.getAllFreightBankUseCase.execute(conf)
+      const data = getPagination(res, page, limit)
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
 }

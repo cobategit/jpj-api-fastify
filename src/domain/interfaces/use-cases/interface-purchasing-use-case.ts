@@ -1,4 +1,4 @@
-import { EntityUser, FreightEntity, ParamsEntity, PksCurahEntity } from '../../entity'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, ParamsEntity, PksCurahEntity } from '../../entity'
 
 export interface IRegisterUserPurchasingUseCase {
   execute(data: EntityUser): Promise<any>
@@ -38,4 +38,12 @@ export interface IGetOneFreightUseCase {
 
 export interface IUpdateFreightUseCase {
   execute(id: number, user_id: number, data?: FreightEntity): Promise<any>
+}
+
+export interface IGetAllCurrencyUseCase {
+  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }>
+}
+
+export interface IGetAllFreightBankUseCase {
+  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }>
 }

@@ -1,5 +1,5 @@
-import { IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IUsersDataSource } from '../../../data'
-import { EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from '../../entity'
+import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IUsersDataSource } from '../../../data'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -8,12 +8,14 @@ export class PurchasingRepository implements IPurchasingRepo {
   private pksCurahDataSource: IPksCurahDataSource
   private freightDataSource: IFreighDataSource
   private historyLogDataSource: IHistoryLogDataSource
+  private currencyDataSource: ICurrencyDataSource
 
-  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource) {
+  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource) {
     this.userDataSource = userDataSource
     this.pksCurahDataSource = pksCurahDataSource
     this.freightDataSource = freightDataSource
     this.historyLogDataSource = historyLogDataSource
+    this.currencyDataSource = currencyDataSource
   }
   async registerUserPurchasing(data: EntityUser): Promise<any> {
     const res = await this.userDataSource.registerUserPurchasing(data!)
@@ -162,5 +164,17 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async findAllCurrency(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }> {
+    const count = await this.currencyDataSource.count()
+    const rows = await this.currencyDataSource.selectAll(conf)
+    return { count: count.count, rows }
+  }
+
+  async findAllFreightBank(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }> {
+    const count = await this.freightDataSource.count()
+    const rows = await this.freightDataSource.selectAllBank(conf)
+    return { count: count.count, rows }
   }
 }

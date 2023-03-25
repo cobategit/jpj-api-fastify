@@ -16,11 +16,14 @@ import {
   PksCurahDataSource,
   UsersDataSource,
   FreightDataSource,
-  HistoryLogDataSource
+  HistoryLogDataSource,
+  CurrencyDataSource,
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
 import {
+  GetAllCurrencyUseCase,
+  GetAllFreightBankUseCase,
   GetAllFreightUseCase,
   GetAllPksCurahUseCase,
   GetOneFreightUseCase,
@@ -63,36 +66,115 @@ const app = async () => {
   const purchasingRegister = PurchasingRoute(
     new PurchasingHandler(
       new RegisterUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new LoginUserPurchasingUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new PengajuanPksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new GetAllPksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new GetOnePksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new PengajuanFreightUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new UpdatePksCurahUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new GetAllFreightUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new GetOneFreightUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
       new UpdateFreightUseCase(
-        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql))
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
       ),
-    ), new UsersDataSource(sourcesDml, sourcesDql),
+      new GetAllCurrencyUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
+      ),
+      new GetAllFreightBankUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql)
+        )
+      )
+    ),
+    new UsersDataSource(sourcesDml, sourcesDql)
   )
 
   server.register(purchasingRegister, {

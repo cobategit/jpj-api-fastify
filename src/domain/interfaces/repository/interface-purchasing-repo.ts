@@ -1,4 +1,4 @@
-import { EntityUser, FreightEntity, ParamsEntity, PksCurahEntity } from '../../entity'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, ParamsEntity, PksCurahEntity } from '../../entity'
 
 export interface IPurchasingRepo {
   registerUserPurchasing(data: EntityUser): Promise<any>
@@ -12,4 +12,6 @@ export interface IPurchasingRepo {
   findAllFreight(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: FreightEntity[] }>
   findOneFreight(id?: number): Promise<FreightEntity>
   updateFreight(id: number, user_id: number, data?: FreightEntity): Promise<any>
+  findAllCurrency(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }>
+  findAllFreightBank(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }>
 }

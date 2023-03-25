@@ -30,7 +30,7 @@ export class FreightDataSource implements IFreighDataSource {
     async insertBank(data?: FreightBankEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `insert pengajuan bank freight`,
-            `insert into ${process.env.TABLE_VENDOR_BANK} (vendor_id, bank_name, account_no, active, file_rekbank) VALUES (?,?,?,?,?)`,
+            `insert into ${process.env.TABLE_FREIGHT_BANK} (vendor_id, bank_name, account_no, active, file_rekbank) VALUES (?,?,?,?,?)`,
             [data?.freight_id, data?.bank_name, data?.account_no, data?.active, data?.file_rekbank]
         )
 
@@ -50,7 +50,7 @@ export class FreightDataSource implements IFreighDataSource {
     async updateBank(id?: number, data?: FreightBankEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `update pengajuan freight bank`,
-            `update ${process.env.TABLE_VENDOR_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where vendor_id = ?`,
+            `update ${process.env.TABLE_FREIGHT_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where vendor_id = ?`,
             [data?.bank_name, data?.account_no, data?.file_rekbank, id!]
         )
 
@@ -63,6 +63,14 @@ export class FreightDataSource implements IFreighDataSource {
         )
         return rows
     }
+
+    async selectAllBank(conf: any): Promise<FreightBankEntity[]> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_FREIGHT_BANK} order by f_bank_id desc limit ${conf.offset}, ${conf.limit}`, []
+        )
+        return rows
+    }
+
     async selectOne(id?: number | undefined): Promise<FreightEntity> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_FREIGHT} where freight_id = ?`,

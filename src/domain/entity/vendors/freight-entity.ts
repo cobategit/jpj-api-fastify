@@ -1,4 +1,5 @@
 export interface FreightEntity {
+    freight_id?: number
     freight_code?: string
     freight_supplier?: string
     freight_address?: string
@@ -25,7 +26,7 @@ export interface FreightBankEntity {
 }
 
 export interface FreightGroupEntity {
-    vendor_group_id?: number
+    master_group_id?: number
     group_name?: string
     entry_by?: number
     entry_date?: string

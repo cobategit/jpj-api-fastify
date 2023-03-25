@@ -7,5 +7,6 @@ export interface IFreighDataSource {
     update(id?: number, data?: FreightEntity): Promise<any>
     updateBank(id?: number, data?: FreightBankEntity): Promise<any>
     selectAll(conf: any): Promise<FreightEntity[]>
+    selectAllBank(conf: any): Promise<FreightBankEntity[]>
     selectOne(id?: number): Promise<FreightEntity>
 }
