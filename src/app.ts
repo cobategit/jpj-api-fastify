@@ -18,6 +18,7 @@ import {
   FreightDataSource,
   HistoryLogDataSource,
   CurrencyDataSource,
+  StockpileDataSource,
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
@@ -26,6 +27,7 @@ import {
   GetAllFreightBankUseCase,
   GetAllFreightUseCase,
   GetAllPksCurahUseCase,
+  GetAllStockpileUseCase,
   GetOneFreightUseCase,
   GetOnePksCurahUseCase,
   LoginUserPurchasingUseCase,
@@ -71,7 +73,8 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
         )
       ),
       new LoginUserPurchasingUseCase(
@@ -80,7 +83,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new PengajuanPksCurahUseCase(
@@ -89,7 +94,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new GetAllPksCurahUseCase(
@@ -98,7 +105,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new GetOnePksCurahUseCase(
@@ -107,7 +116,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new PengajuanFreightUseCase(
@@ -116,7 +127,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new UpdatePksCurahUseCase(
@@ -125,7 +138,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new GetAllFreightUseCase(
@@ -134,7 +149,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new GetOneFreightUseCase(
@@ -143,7 +160,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new UpdateFreightUseCase(
@@ -152,7 +171,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new GetAllCurrencyUseCase(
@@ -161,7 +182,9 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       ),
       new GetAllFreightBankUseCase(
@@ -170,7 +193,20 @@ const app = async () => {
           new PksCurahDataSource(sourcesDml, sourcesDql),
           new FreightDataSource(sourcesDml, sourcesDql),
           new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql)
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
+        )
+      ),
+      new GetAllStockpileUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+
         )
       )
     ),

@@ -168,6 +168,19 @@ export function PurchasingRoute(
     )
 
     fastify.get<{ Querystring: ParamsEntity }>(
+      '/stockpile',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findAllStockpile.bind(purchasingHandler)
+    )
+
+    fastify.get<{ Querystring: ParamsEntity }>(
       '/currency',
       {
         logLevel: 'info',

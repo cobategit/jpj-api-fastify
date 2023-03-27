@@ -1,5 +1,5 @@
-import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IUsersDataSource } from '../../../data'
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from '../../entity'
+import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IStockpileDataSource, IUsersDataSource } from '../../../data'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity, StockpileEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -9,13 +9,15 @@ export class PurchasingRepository implements IPurchasingRepo {
   private freightDataSource: IFreighDataSource
   private historyLogDataSource: IHistoryLogDataSource
   private currencyDataSource: ICurrencyDataSource
+  private stockpileDataSource: IStockpileDataSource
 
-  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource) {
+  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource) {
     this.userDataSource = userDataSource
     this.pksCurahDataSource = pksCurahDataSource
     this.freightDataSource = freightDataSource
     this.historyLogDataSource = historyLogDataSource
     this.currencyDataSource = currencyDataSource
+    this.stockpileDataSource = stockpileDataSource
   }
   async registerUserPurchasing(data: EntityUser): Promise<any> {
     const res = await this.userDataSource.registerUserPurchasing(data!)
@@ -175,6 +177,12 @@ export class PurchasingRepository implements IPurchasingRepo {
   async findAllFreightBank(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }> {
     const count = await this.freightDataSource.count()
     const rows = await this.freightDataSource.selectAllBank(conf)
+    return { count: count.count, rows }
+  }
+
+  async findAllStockpile(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: StockpileEntity[] }> {
+    const count = await this.stockpileDataSource.count()
+    const rows = await this.stockpileDataSource.selectAll(conf)
     return { count: count.count, rows }
   }
 }

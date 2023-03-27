@@ -21,6 +21,7 @@ import {
   IRegisterUserPurchasingUseCase,
   IUpdateFreightUseCase,
   IUpdatePksCurahUseCase,
+  IGetAllStockpileUseCase,
   ParamsEntity,
   PksCurahEntity,
 } from '../../../domain'
@@ -39,6 +40,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private updateFreightUseCase: IUpdateFreightUseCase
   private getAllCurrencyUseCase: IGetAllCurrencyUseCase
   private getAllFreightBankUseCase: IGetAllFreightBankUseCase
+  private getAllStockpileUseCase: IGetAllStockpileUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -52,7 +54,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     getOneFreightUseCase: IGetOneFreightUseCase,
     updateFreightUseCase: IUpdateFreightUseCase,
     getAllCurrencyUseCase: IGetAllCurrencyUseCase,
-    getAllFreightBankUseCase: IGetAllFreightBankUseCase
+    getAllFreightBankUseCase: IGetAllFreightBankUseCase,
+    getAllStockpileUseCase: IGetAllStockpileUseCase
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
     this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
@@ -66,6 +69,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.updateFreightUseCase = updateFreightUseCase
     this.getAllCurrencyUseCase = getAllCurrencyUseCase
     this.getAllFreightBankUseCase = getAllFreightBankUseCase
+    this.getAllStockpileUseCase = getAllStockpileUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -222,7 +226,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   async findAllPksCurah(request: any, reply: any): Promise<void> {
     try {
       const { page, size, search, vendor_type } = request.query
-      const { limit, offset } = setPagination(page, size, 20)
+      const { limit, offset } = setPagination(page, size, 100)
       const conf: Pick<
         ParamsEntity,
         'limit' | 'offset' | 'search' | 'vendor_type'
@@ -305,7 +309,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   async findAllFreight(request: any, reply: any): Promise<void> {
     try {
       const { page, size, search } = request.query
-      const { limit, offset } = setPagination(page, size, 20)
+      const { limit, offset } = setPagination(page, size, 100)
       const conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> = {
         limit,
         offset,
@@ -373,15 +377,15 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
   }
 
-  async findAllCurrency(request: any, reply: any): Promise<void> {
+  async findAllFreightBank(request: any, reply: any): Promise<void> {
     try {
       const { page, size } = request.query
-      const { limit, offset } = setPagination(page, size, 20)
+      const { limit, offset } = setPagination(page, size, 100)
       const conf: Pick<ParamsEntity, 'limit' | 'offset'> = {
         limit,
         offset,
       }
-      const res = await this.getAllCurrencyUseCase.execute(conf)
+      const res = await this.getAllFreightBankUseCase.execute(conf)
       const data = getPagination(res, page, limit)
 
       return ApiResponse.created(request, reply, {
@@ -394,15 +398,36 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
   }
 
-  async findAllFreightBank(request: any, reply: any): Promise<void> {
+  async findAllStockpile(request: any, reply: any): Promise<void> {
     try {
       const { page, size } = request.query
-      const { limit, offset } = setPagination(page, size, 20)
+      const { limit, offset } = setPagination(page, size, 100)
       const conf: Pick<ParamsEntity, 'limit' | 'offset'> = {
         limit,
         offset,
       }
-      const res = await this.getAllFreightBankUseCase.execute(conf)
+      const res = await this.getAllStockpileUseCase.execute(conf)
+      const data = getPagination(res, page, limit)
+
+      return ApiResponse.created(request, reply, {
+        success: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findAllCurrency(request: any, reply: any): Promise<void> {
+    try {
+      const { page, size } = request.query
+      const { limit, offset } = setPagination(page, size, 100)
+      const conf: Pick<ParamsEntity, 'limit' | 'offset'> = {
+        limit,
+        offset,
+      }
+      const res = await this.getAllCurrencyUseCase.execute(conf)
       const data = getPagination(res, page, limit)
 
       return ApiResponse.created(request, reply, {

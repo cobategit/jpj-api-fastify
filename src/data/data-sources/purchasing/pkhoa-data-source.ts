@@ -37,7 +37,22 @@ export class PkhoaDataSource implements IPkhoaDataSource {
     }
 
     async selectAll(conf: any): Promise<PkhoaEntity[]> {
-        throw new Error("Method not implemented.");
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `SELECT
+              f.freight_supplier,
+              c.currency_code,
+              fc.*
+            FROM
+            ${process.env.TABLE_FREIGHT_COST} AS fc
+              LEFT JOIN ${process.env.TABLE_FREIGHT} AS f
+                ON fc.freight_id = f.freight_id
+              LEFT JOIN ${process.env.TABLE_CURRENCY} AS c
+                ON c.currency_id = fc.currency_id
+            ORDER BY fc.freight_cost_id DESC limit ${conf.offset}, ${conf.limit}`,
+            []
+        )
+
+        return rows
     }
 
     async selectOne(id?: number | undefined): Promise<PkhoaEntity> {
