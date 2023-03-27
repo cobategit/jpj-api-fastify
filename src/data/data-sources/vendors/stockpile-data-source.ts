@@ -43,8 +43,11 @@ export class StockpileDataSource implements IStockpileDataSource {
   }
 
   async selectAll(conf: any): Promise<StockpileEntity[]> {
+    let limit = ''
+
+    if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_STOCKPILE} limit ${conf.offset}, ${conf.limit}`,
+      `select * from ${process.env.TABLE_STOCKPILE} ${limit}`,
       []
     )
 

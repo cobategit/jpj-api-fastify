@@ -37,8 +37,11 @@ export class CurrencyDataSource implements ICurrencyDataSource {
     }
 
     async selectAll(conf: any): Promise<CurrencyEntity[]> {
+        let limit = ''
+
+        if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_CURRENCY} limit ${conf.offset}, ${conf.limit}`, []
+            `select * from ${process.env.TABLE_CURRENCY} ${limit}`, []
         )
 
         return rows
