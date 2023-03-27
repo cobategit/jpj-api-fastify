@@ -48,6 +48,10 @@ export interface IGetAllFreightBankUseCase {
   execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }>
 }
 
+export interface IGetOneStockpileUseCase {
+  execute(id?: number): Promise<StockpileEntity | null>
+}
+
 export interface IGetAllStockpileUseCase {
   execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: StockpileEntity[] }>
 }

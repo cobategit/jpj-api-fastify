@@ -188,6 +188,11 @@ export class PurchasingRepository implements IPurchasingRepo {
     return { count: count.count, rows }
   }
 
+  async findOneStockpile(id?: number): Promise<StockpileEntity> {
+    const rows = await this.stockpileDataSource.selectOne(id)
+    return rows
+  }
+
   async findAllStockpile(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: StockpileEntity[] }> {
     const count = await this.stockpileDataSource.count()
     const rows = await this.stockpileDataSource.selectAll(conf)

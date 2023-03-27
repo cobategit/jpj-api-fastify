@@ -8,4 +8,5 @@ export interface ParamsEntity {
     freight_cost_id?: number
     page?: number
     size?: number
+    stockpile_id?: number
 }

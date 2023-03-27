@@ -30,6 +30,7 @@ import {
   IGetAllPkhoaUseCase,
   IUpdatePkhoaUseCase,
   IGetOnePkhoaUseCase,
+  IGetOneStockpileUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -52,6 +53,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getAllPkhoaUseCase: IGetAllPkhoaUseCase
   private updatePkhoaUseCase: IUpdatePkhoaUseCase
   private getOnePkhoaUseCase: IGetOnePkhoaUseCase
+  private getOneStockpileUseCase: IGetOneStockpileUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -71,7 +73,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase,
     getAllPkhoaUseCase: IGetAllPkhoaUseCase,
     updatePkhoaUseCase: IUpdatePkhoaUseCase,
-    getOnePkhoaUseCase: IGetOnePkhoaUseCase
+    getOnePkhoaUseCase: IGetOnePkhoaUseCase,
+    getOneStockpileUseCase: IGetOneStockpileUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -92,6 +95,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getAllPkhoaUseCase = getAllPkhoaUseCase
     this.updatePkhoaUseCase = updatePkhoaUseCase
     this.getOnePkhoaUseCase = getOnePkhoaUseCase
+    this.getOneStockpileUseCase = getOneStockpileUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -443,6 +447,24 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const res = await this.getBankByFreightIdUseCase.execute(
         request.params.freight_id
+      )
+
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findOneStockpile(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getOneStockpileUseCase.execute(
+        request.params.stockpile_id
       )
 
       if (res === null) throw new AppError(404, false, `Data kosong`, '401')

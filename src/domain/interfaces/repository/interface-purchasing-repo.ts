@@ -35,6 +35,7 @@ export interface IPurchasingRepo {
   findAllFreightBank(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: FreightBankEntity[] }>
+  findOneStockpile(id?: number): Promise<StockpileEntity>
   findAllStockpile(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: StockpileEntity[] }>

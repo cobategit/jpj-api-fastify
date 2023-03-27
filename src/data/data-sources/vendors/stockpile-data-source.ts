@@ -52,6 +52,11 @@ export class StockpileDataSource implements IStockpileDataSource {
   }
 
   async selectOne(id?: number | undefined): Promise<StockpileEntity> {
-    throw new Error('Method not implemented.')
+    const [rows, fields] = await this.dql.dataQueryLanguage(
+      `select * from ${process.env.TABLE_STOCKPILE} where stockpile_id = ?`,
+      [id!]
+    )
+
+    return rows[0]
   }
 }
