@@ -28,6 +28,7 @@ import {
   PkhoaEntity,
   IPengajuanPkhoaUseCase,
   IGetAllPkhoaUseCase,
+  IUpdatePkhoaUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -48,6 +49,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getBankByFreightIdUseCase: IGetBankByFreightIdUseCase
   private pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase
   private getAllPkhoaUseCase: IGetAllPkhoaUseCase
+  private updatePkhoaUseCase: IUpdatePkhoaUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -65,7 +67,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     getAllStockpileUseCase: IGetAllStockpileUseCase,
     getBankByFreightIdUseCase: IGetBankByFreightIdUseCase,
     pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase,
-    getAllPkhoaUseCase: IGetAllPkhoaUseCase
+    getAllPkhoaUseCase: IGetAllPkhoaUseCase,
+    updatePkhoaUseCase: IUpdatePkhoaUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -84,6 +87,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getBankByFreightIdUseCase = getBankByFreightIdUseCase
     this.pengajuanPkhoaUseCase = pengajuanPkhoaUseCase
     this.getAllPkhoaUseCase = getAllPkhoaUseCase
+    this.updatePkhoaUseCase = updatePkhoaUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -547,6 +551,30 @@ export class PurchasingHandler implements IPurchasingHandler {
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async updatePkhoa(request: any, reply: any): Promise<void> {
+    try {
+      const data: PkhoaEntity = request.body
+
+      if (request.files['file_pkhoa']) {
+        data!.file = `${process.env.URL_FILE}/purchasing/${request.files['file_pkhoa'][0].filename}`
+      }
+
+      const res = await this.updatePkhoaUseCase.execute(
+        request.params.freight_cost_id,
+        request.user.user_id,
+        data
+      )
+
+      return ApiResponse.created(request, reply, {
+        status: true,
+        message: `Data update pkhoa berhasil diinput`,
+        id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
   }
 

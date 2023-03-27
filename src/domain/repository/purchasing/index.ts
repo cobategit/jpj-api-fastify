@@ -112,7 +112,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${res[0].insertId}`,
       cud: 'UPDATE',
-      isitransaksi_baru: `MENGUBAH VENDOR ${vendor_type} BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
+      isitransaksi_lama: `MENGUBAH VENDOR ${vendor_type} BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
       user_id: user_id
     }
 
@@ -150,7 +150,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${res[0].insertId}`,
       cud: 'UPDATE',
-      isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.freight_supplier}`,
+      isitransaksi_lama: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.freight_supplier}`,
       user_id: user_id
     }
 
@@ -214,5 +214,21 @@ export class PurchasingRepository implements IPurchasingRepo {
     const count = await this.pkhoaDataSource.count()
     const rows = await this.pkhoaDataSource.selectAll(conf)
     return { count: count.count, rows }
+  }
+
+  async updatePkhoa(id: number, user_id: number, data?: PkhoaEntity): Promise<any> {
+    const res = await this.pkhoaDataSource.update(id, data)
+
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${res[0].insertId}`,
+      cud: 'UPDATE',
+      isitransaksi_lama: `MENGUBAH PENGAJUAN PKHOA BARU YANG DIAJUKAN DENGAN`,
+      user_id: user_id
+    }
+
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return res
   }
 }

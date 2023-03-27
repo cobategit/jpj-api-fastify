@@ -5,6 +5,7 @@ export interface ParamsEntity {
     vendor_type?: string
     vendor_id?: number
     freight_id?: number
+    freight_cost_id?: number
     page?: number
     size?: number
 }

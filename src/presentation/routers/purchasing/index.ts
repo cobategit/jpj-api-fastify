@@ -234,6 +234,20 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findAllPkhoa.bind(purchasingHandler)
+    ).patch<{ Body: PkhoaEntity; Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+      '/pkhoa/:freight_cost_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+          upload.fields([
+            { name: 'file_pkhoa', maxCount: 1 },
+          ]),
+        ],
+      },
+      purchasingHandler.updatePkhoa.bind(purchasingHandler)
     )
 
     done()

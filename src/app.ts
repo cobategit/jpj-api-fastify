@@ -40,6 +40,7 @@ import {
   PurchasingRepository,
   RegisterUserPurchasingUseCase,
   UpdateFreightUseCase,
+  UpdatePkhoaUseCase,
   UpdatePksCurahUseCase,
 } from './domain'
 
@@ -237,6 +238,17 @@ const app = async () => {
         )
       ),
       new GetAllPkhoaUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+          new PkhoaDataSource(sourcesDml, sourcesDql),
+        )
+      ),
+      new UpdatePkhoaUseCase(
         new PurchasingRepository(
           new UsersDataSource(sourcesDml, sourcesDql),
           new PksCurahDataSource(sourcesDml, sourcesDql),

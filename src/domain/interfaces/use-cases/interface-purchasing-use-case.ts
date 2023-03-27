@@ -63,3 +63,7 @@ export interface IPengajuanPkhoaUseCase {
 export interface IGetAllPkhoaUseCase {
   execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: PkhoaEntity[] }>
 }
+
+export interface IUpdatePkhoaUseCase {
+  execute(id: number, user_id: number, data?: PkhoaEntity): Promise<any>
+}

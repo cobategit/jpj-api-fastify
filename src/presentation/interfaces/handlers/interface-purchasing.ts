@@ -15,4 +15,5 @@ export interface IPurchasingHandler {
   findBankByFreightId(request: any, reply: any): Promise<void>
   pengajuanPkhoa(request: any, reply: any): Promise<void>
   findAllPkhoa(request: any, reply: any): Promise<void>
+  updatePkhoa(request: any, reply: any): Promise<void>
 }
