@@ -12,4 +12,6 @@ export interface IPurchasingHandler {
   findAllCurrency(request: any, reply: any): Promise<void>
   findAllFreightBank(request: any, reply: any): Promise<void>
   findAllStockpile(request: any, reply: any): Promise<void>
+  findBankByFreightId(request: any, reply: any): Promise<void>
+  pengajuanPkhoa(request: any, reply: any): Promise<void>
 }

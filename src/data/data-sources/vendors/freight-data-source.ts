@@ -58,15 +58,21 @@ export class FreightDataSource implements IFreighDataSource {
     }
 
     async selectAll(conf: any): Promise<FreightEntity[]> {
+        let limit = ``
+
+        if (conf.limit || conf.offset) limit = `limit ${conf.offset}, ${conf.limit}`
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_FREIGHT} order by freight_id desc limit ${conf.offset}, ${conf.limit}`, []
+            `select * from ${process.env.TABLE_FREIGHT} order by freight_id desc ${limit}`, []
         )
         return rows
     }
 
     async selectAllBank(conf: any): Promise<FreightBankEntity[]> {
+        let limit = ``
+
+        if (conf.limit || conf.offset) limit = `limit ${conf.offset}, ${conf.limit}`
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_FREIGHT_BANK} order by f_bank_id desc limit ${conf.offset}, ${conf.limit}`, []
+            `select * from ${process.env.TABLE_FREIGHT_BANK} order by f_bank_id desc ${limit}`, []
         )
         return rows
     }
@@ -78,5 +84,14 @@ export class FreightDataSource implements IFreighDataSource {
         )
 
         return rows[0]
+    }
+
+    async selectBankByFreightId(id?: number | undefined): Promise<FreightBankEntity[]> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_FREIGHT_BANK} where freight_id = ?`,
+            [id]
+        )
+
+        return rows
     }
 }

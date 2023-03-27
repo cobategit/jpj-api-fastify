@@ -9,4 +9,5 @@ export interface IFreighDataSource {
     selectAll(conf: any): Promise<FreightEntity[]>
     selectAllBank(conf: any): Promise<FreightBankEntity[]>
     selectOne(id?: number): Promise<FreightEntity>
+    selectBankByFreightId(id?: number): Promise<FreightBankEntity[]>
 }

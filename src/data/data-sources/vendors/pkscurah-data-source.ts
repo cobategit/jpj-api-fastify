@@ -60,12 +60,14 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     }
 
     async selectAll(conf: ParamsEntity): Promise<PksCurahEntity[]> {
-        let where = ``;
+        let where = ``
+        let limit = ``
         if (conf.vendor_type == 'pks') where = `where curah = 0`
         if (conf.vendor_type == 'curah') where = `where curah = 1`
+        if (conf.limit || conf.offset) limit = `limit ${conf.offset}, ${conf.limit}`
 
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_VENDOR} ${where} order by vendor_id desc limit ${conf.offset}, ${conf.limit}`, []
+            `select * from ${process.env.TABLE_VENDOR} ${where} order by vendor_id desc ${limit}`, []
         )
         return rows
     }

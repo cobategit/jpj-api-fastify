@@ -4,6 +4,7 @@ import {
   FreightBankEntity,
   FreightEntity,
   ParamsEntity,
+  PkhoaEntity,
   PksCurahEntity,
   StockpileEntity,
 } from '../../entity'
@@ -37,4 +38,6 @@ export interface IPurchasingRepo {
   findAllStockpile(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: StockpileEntity[] }>
+  findBankByFreightId(id?: number): Promise<FreightBankEntity[]>
+  pengajuanPkhoa(user_id?: number, data?: PkhoaEntity): Promise<any>
 }

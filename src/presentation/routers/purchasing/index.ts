@@ -167,6 +167,19 @@ export function PurchasingRoute(
       purchasingHandler.findAllFreightBank.bind(purchasingHandler)
     )
 
+    fastify.get<{ Params: Pick<ParamsEntity, 'freight_id'> }>(
+      '/freight/bank/detail/:freight_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findBankByFreightId.bind(purchasingHandler)
+    )
+
     fastify.get<{ Querystring: ParamsEntity }>(
       '/stockpile',
       {
@@ -191,6 +204,26 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findAllCurrency.bind(purchasingHandler)
+    )
+
+    fastify.post<{
+      Body: PksCurahEntity | FreightEntity
+      Querystring: ParamsEntity
+    }>(
+      '/pkhoa',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+          upload.fields([
+            { name: 'file_pkhoa', maxCount: 1 },
+          ]),
+        ],
+      },
+      purchasingHandler.pengajuanPkhoa.bind(purchasingHandler)
+
     )
 
     done()

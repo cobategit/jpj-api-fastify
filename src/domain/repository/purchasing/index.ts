@@ -1,5 +1,5 @@
-import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPksCurahDataSource, IStockpileDataSource, IUsersDataSource } from '../../../data'
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity, StockpileEntity } from '../../entity'
+import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPkhoaDataSource, IPksCurahDataSource, IStockpileDataSource, IUsersDataSource } from '../../../data'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PkhoaEntity, PksCurahBankEntity, PksCurahEntity, StockpileEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -10,15 +10,18 @@ export class PurchasingRepository implements IPurchasingRepo {
   private historyLogDataSource: IHistoryLogDataSource
   private currencyDataSource: ICurrencyDataSource
   private stockpileDataSource: IStockpileDataSource
+  private pkhoaDataSource: IPkhoaDataSource
 
-  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource) {
+  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource, pkhoaDataSource: IPkhoaDataSource) {
     this.userDataSource = userDataSource
     this.pksCurahDataSource = pksCurahDataSource
     this.freightDataSource = freightDataSource
     this.historyLogDataSource = historyLogDataSource
     this.currencyDataSource = currencyDataSource
     this.stockpileDataSource = stockpileDataSource
+    this.pkhoaDataSource = pkhoaDataSource
   }
+
   async registerUserPurchasing(data: EntityUser): Promise<any> {
     const res = await this.userDataSource.registerUserPurchasing(data!)
     return res
@@ -40,9 +43,9 @@ export class PurchasingRepository implements IPurchasingRepo {
     let vendor_type = data?.curah == 0 ? 'PKS' : 'CURAH'
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `CREATE PENGAJUAN VENDOR ${vendor_type}`,
+      transaksi: `${res[0].insertId}`,
       cud: 'CREATE',
-      isitransaksi_baru: `MENGAJUKAN VENDOR BARU DENGAN NAMA ${data?.vendor_name}`,
+      isitransaksi_baru: `MENGAJUKAN VENDOR ${vendor_type} BARU DENGAN NAMA ${data?.vendor_name}`,
       user_id: user_id
     }
 
@@ -67,7 +70,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     const res = await this.freightDataSource.insert(data)
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `CREATE PENGAJUAN VENDOR TRANSPORTER`,
+      transaksi: `${res[0].insertId}`,
       cud: 'CREATE',
       isitransaksi_baru: `MENGAJUKAN VENDOR BARU DENGAN NAMA ${data?.freight_supplier}`,
       user_id: user_id
@@ -107,9 +110,9 @@ export class PurchasingRepository implements IPurchasingRepo {
     let vendor_type = data?.curah == 0 ? 'PKS' : 'CURAH'
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `UPDATE PENGAJUAN VENDOR ${vendor_type}`,
+      transaksi: `${res[0].insertId}`,
       cud: 'UPDATE',
-      isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
+      isitransaksi_baru: `MENGUBAH VENDOR ${vendor_type} BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
       user_id: user_id
     }
 
@@ -145,7 +148,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     const res = await this.freightDataSource.update(id, data)
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `UPDATE PENGAJUAN VENDOR FREIGHT`,
+      transaksi: `${res[0].insertId}`,
       cud: 'UPDATE',
       isitransaksi_baru: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.freight_supplier}`,
       user_id: user_id
@@ -168,15 +171,20 @@ export class PurchasingRepository implements IPurchasingRepo {
     return res
   }
 
-  async findAllCurrency(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }> {
-    const count = await this.currencyDataSource.count()
-    const rows = await this.currencyDataSource.selectAll(conf)
-    return { count: count.count, rows }
-  }
-
   async findAllFreightBank(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }> {
     const count = await this.freightDataSource.count()
     const rows = await this.freightDataSource.selectAllBank(conf)
+    return { count: count.count, rows }
+  }
+
+  async findBankByFreightId(id?: number | undefined): Promise<FreightBankEntity[]> {
+    const rows = await this.freightDataSource.selectBankByFreightId(id)
+    return rows
+  }
+
+  async findAllCurrency(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }> {
+    const count = await this.currencyDataSource.count()
+    const rows = await this.currencyDataSource.selectAll(conf)
     return { count: count.count, rows }
   }
 
@@ -184,5 +192,21 @@ export class PurchasingRepository implements IPurchasingRepo {
     const count = await this.stockpileDataSource.count()
     const rows = await this.stockpileDataSource.selectAll(conf)
     return { count: count.count, rows }
+  }
+
+  async pengajuanPkhoa(user_id?: number, data?: PkhoaEntity): Promise<any> {
+    const res = await this.pkhoaDataSource.insert(data)
+
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${res[0].insertId}`,
+      cud: 'CREATE',
+      isitransaksi_baru: `MENGAJUKAN PKHOA`,
+      user_id: user_id
+    }
+
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return res
   }
 }

@@ -47,6 +47,12 @@ export const storageMulterFastify = multerFastify.diskStorage({
                 `${Date.now()}` +
                 `${path.extname(file.originalname)}`
         }
+        if (req.files['file_pkhoa']) {
+            nameFile = `pkhoa-${revisi}` +
+                '-' +
+                `${Date.now()}` +
+                `${path.extname(file.originalname)}`
+        }
 
         cb(
             null,
