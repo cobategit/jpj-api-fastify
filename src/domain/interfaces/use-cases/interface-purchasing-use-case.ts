@@ -59,3 +59,7 @@ export interface IGetBankByFreightIdUseCase {
 export interface IPengajuanPkhoaUseCase {
   execute(user_id?: number, data?: PkhoaEntity): Promise<any>
 }
+
+export interface IGetAllPkhoaUseCase {
+  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: PkhoaEntity[] }>
+}

@@ -27,7 +27,7 @@
     "@fastify/helmet": "^10.1.0",
     "@fastify/rate-limit": "^7.6.0",
     "@fastify/static": "^6.6.0",
-    "@jpj-common/module": "^1.0.3",
+    "@jpj-common/module": "^1.0.5",
     "@types/amqplib": "^0.10.1",
     "@types/axios": "^0.14.0",
     "@types/bcryptjs": "^2.4.2",

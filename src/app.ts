@@ -27,6 +27,7 @@ import {
   GetAllCurrencyUseCase,
   GetAllFreightBankUseCase,
   GetAllFreightUseCase,
+  GetAllPkhoaUseCase,
   GetAllPksCurahUseCase,
   GetAllStockpileUseCase,
   GetBankByFreightIdUseCase,
@@ -225,6 +226,17 @@ const app = async () => {
         )
       ),
       new PengajuanPkhoaUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+          new PkhoaDataSource(sourcesDml, sourcesDql),
+        )
+      ),
+      new GetAllPkhoaUseCase(
         new PurchasingRepository(
           new UsersDataSource(sourcesDml, sourcesDql),
           new PksCurahDataSource(sourcesDml, sourcesDql),

@@ -37,6 +37,9 @@ export class PkhoaDataSource implements IPkhoaDataSource {
     }
 
     async selectAll(conf: any): Promise<PkhoaEntity[]> {
+        let limit = ``
+
+        if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `SELECT
               f.freight_supplier,
@@ -48,7 +51,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
                 ON fc.freight_id = f.freight_id
               LEFT JOIN ${process.env.TABLE_CURRENCY} AS c
                 ON c.currency_id = fc.currency_id
-            ORDER BY fc.freight_cost_id DESC limit ${conf.offset}, ${conf.limit}`,
+            ORDER BY fc.freight_cost_id DESC ${limit}`,
             []
         )
 

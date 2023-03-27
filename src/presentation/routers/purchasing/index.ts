@@ -4,6 +4,7 @@ import {
   EntityUser,
   FreightEntity,
   ParamsEntity,
+  PkhoaEntity,
   PksCurahEntity,
 } from '../../../domain'
 import { CheckAvailableUser, IUsersDataSource, upload } from '../../../data'
@@ -207,8 +208,7 @@ export function PurchasingRoute(
     )
 
     fastify.post<{
-      Body: PksCurahEntity | FreightEntity
-      Querystring: ParamsEntity
+      Body: PkhoaEntity
     }>(
       '/pkhoa',
       {
@@ -223,7 +223,17 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.pengajuanPkhoa.bind(purchasingHandler)
-
+    ).get<{ Querystring: ParamsEntity }>(
+      '/pkhoa',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findAllPkhoa.bind(purchasingHandler)
     )
 
     done()

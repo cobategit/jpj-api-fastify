@@ -209,4 +209,10 @@ export class PurchasingRepository implements IPurchasingRepo {
 
     return res
   }
+
+  async findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: PkhoaEntity[] }> {
+    const count = await this.pkhoaDataSource.count()
+    const rows = await this.pkhoaDataSource.selectAll(conf)
+    return { count: count.count, rows }
+  }
 }
