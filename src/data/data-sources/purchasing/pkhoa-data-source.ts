@@ -63,7 +63,12 @@ export class PkhoaDataSource implements IPkhoaDataSource {
     }
 
     async selectOne(id?: number | undefined): Promise<PkhoaEntity> {
-        throw new Error("Method not implemented.");
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_FREIGHT_COST} where freight_cost_id = ?`,
+            [id]
+        )
+
+        return rows[0]
     }
 
 }

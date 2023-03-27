@@ -250,6 +250,19 @@ export function PurchasingRoute(
       purchasingHandler.updatePkhoa.bind(purchasingHandler)
     )
 
+    fastify.get<{ Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+      '/pkhoa/detail/:freight_cost_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findOnePkhoa.bind(purchasingHandler)
+    )
+
     done()
   }
 

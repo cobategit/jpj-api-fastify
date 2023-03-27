@@ -29,6 +29,7 @@ import {
   IPengajuanPkhoaUseCase,
   IGetAllPkhoaUseCase,
   IUpdatePkhoaUseCase,
+  IGetOnePkhoaUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -50,6 +51,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase
   private getAllPkhoaUseCase: IGetAllPkhoaUseCase
   private updatePkhoaUseCase: IUpdatePkhoaUseCase
+  private getOnePkhoaUseCase: IGetOnePkhoaUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -68,7 +70,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     getBankByFreightIdUseCase: IGetBankByFreightIdUseCase,
     pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase,
     getAllPkhoaUseCase: IGetAllPkhoaUseCase,
-    updatePkhoaUseCase: IUpdatePkhoaUseCase
+    updatePkhoaUseCase: IUpdatePkhoaUseCase,
+    getOnePkhoaUseCase: IGetOnePkhoaUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -88,6 +91,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.pengajuanPkhoaUseCase = pengajuanPkhoaUseCase
     this.getAllPkhoaUseCase = getAllPkhoaUseCase
     this.updatePkhoaUseCase = updatePkhoaUseCase
+    this.getOnePkhoaUseCase = getOnePkhoaUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -151,7 +155,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         user_name: res.user_name,
       }
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Login berhasil',
         token,
@@ -264,7 +268,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.getAllPksCurahUseCase.execute(conf)
       const data = getPagination(res, page, limitNumber)
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data,
@@ -282,7 +286,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
       if (res === null) throw new AppError(404, false, `Data kosong`, '401')
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data: res,
@@ -321,7 +325,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
         id: res[0].insertId,
@@ -349,7 +353,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.getAllFreightUseCase.execute(conf)
       const data = getPagination(res, page, limitNumber)
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data,
@@ -367,7 +371,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
       if (res === null) throw new AppError(404, false, `Data kosong`, '401')
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data: res,
@@ -398,7 +402,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: `Data update vendor freight berhasil diinput`,
         id: res[0].insertId,
@@ -425,7 +429,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.getAllFreightBankUseCase.execute(conf)
       const data = getPagination(res, page, limitNumber)
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data,
@@ -443,7 +447,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
       if (res === null) throw new AppError(404, false, `Data kosong`, '401')
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data: res,
@@ -471,7 +475,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.getAllStockpileUseCase.execute(conf)
       const data = getPagination(res, page, limitNumber)
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data,
@@ -492,7 +496,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.getAllCurrencyUseCase.execute(conf)
       const data = getPagination(res, page, limit)
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data,
@@ -544,10 +548,28 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.getAllPkhoaUseCase.execute(conf)
       const data = getPagination(res, page, limitNumber)
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
         data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findOnePkhoa(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getOnePkhoaUseCase.execute(
+        request.params.freight_cost_id
+      )
+
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -568,7 +590,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: `Data update pkhoa berhasil diinput`,
         id: res[0].insertId,

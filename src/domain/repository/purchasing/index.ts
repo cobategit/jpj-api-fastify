@@ -216,6 +216,11 @@ export class PurchasingRepository implements IPurchasingRepo {
     return { count: count.count, rows }
   }
 
+  async findOnePkhoa(id?: number): Promise<PkhoaEntity> {
+    const rows = await this.pkhoaDataSource.selectOne(id)
+    return rows
+  }
+
   async updatePkhoa(id: number, user_id: number, data?: PkhoaEntity): Promise<any> {
     const res = await this.pkhoaDataSource.update(id, data)
 
