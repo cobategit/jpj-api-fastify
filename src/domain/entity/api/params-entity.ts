@@ -9,4 +9,5 @@ export interface ParamsEntity {
     page?: number
     size?: number
     stockpile_id?: number
+    currency_id?: number
 }

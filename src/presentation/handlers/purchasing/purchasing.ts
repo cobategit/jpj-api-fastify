@@ -31,6 +31,7 @@ import {
   IUpdatePkhoaUseCase,
   IGetOnePkhoaUseCase,
   IGetOneStockpileUseCase,
+  IGetOneCurrencyUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -54,6 +55,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private updatePkhoaUseCase: IUpdatePkhoaUseCase
   private getOnePkhoaUseCase: IGetOnePkhoaUseCase
   private getOneStockpileUseCase: IGetOneStockpileUseCase
+  private getOneCurrencyUseCase: IGetOneCurrencyUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -74,7 +76,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     getAllPkhoaUseCase: IGetAllPkhoaUseCase,
     updatePkhoaUseCase: IUpdatePkhoaUseCase,
     getOnePkhoaUseCase: IGetOnePkhoaUseCase,
-    getOneStockpileUseCase: IGetOneStockpileUseCase
+    getOneStockpileUseCase: IGetOneStockpileUseCase,
+    getOneCurrencyUseCase: IGetOneCurrencyUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -96,6 +99,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.updatePkhoaUseCase = updatePkhoaUseCase
     this.getOnePkhoaUseCase = getOnePkhoaUseCase
     this.getOneStockpileUseCase = getOneStockpileUseCase
+    this.getOneCurrencyUseCase = getOneCurrencyUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -522,6 +526,24 @@ export class PurchasingHandler implements IPurchasingHandler {
         status: true,
         message: 'Data ditemukan',
         data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findOneCurrency(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getOneCurrencyUseCase.execute(
+        request.params.currency_id
+      )
+
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')

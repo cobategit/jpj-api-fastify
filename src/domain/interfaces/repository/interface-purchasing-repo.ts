@@ -32,6 +32,7 @@ export interface IPurchasingRepo {
   findAllCurrency(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: CurrencyEntity[] }>
+  findOneCurrency(id?: number): Promise<CurrencyEntity>
   findAllFreightBank(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: FreightBankEntity[] }>

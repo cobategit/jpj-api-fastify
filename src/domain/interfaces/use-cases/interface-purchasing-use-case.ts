@@ -44,6 +44,10 @@ export interface IGetAllCurrencyUseCase {
   execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }>
 }
 
+export interface IGetOneCurrencyUseCase {
+  execute(id?: number): Promise<CurrencyEntity | null>
+}
+
 export interface IGetAllFreightBankUseCase {
   execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }>
 }

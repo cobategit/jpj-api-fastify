@@ -220,6 +220,19 @@ export function PurchasingRoute(
       purchasingHandler.findAllCurrency.bind(purchasingHandler)
     )
 
+    fastify.get<{ Querystring: ParamsEntity }>(
+      '/currency/detail/:currency_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findOneCurrency.bind(purchasingHandler)
+    )
+
     fastify.post<{
       Body: PkhoaEntity
     }>(
