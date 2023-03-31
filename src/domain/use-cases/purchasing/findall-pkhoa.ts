@@ -1,4 +1,4 @@
-import { AppError } from "@jpj-common/module";
+import { AppError, getPagination, setPagination } from "@jpj-common/module";
 import { ParamsEntity, PkhoaEntity } from "../../entity";
 import { IGetAllPkhoaUseCase, IPurchasingRepo } from "../../interfaces";
 
@@ -9,11 +9,23 @@ export class GetAllPkhoaUseCase implements IGetAllPkhoaUseCase {
         this.purchasingRepo = purchasingRepo
     }
 
-    async execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> | undefined): Promise<{ count: number, rows: PkhoaEntity[] }> {
+    async execute(conf?: ParamsEntity | undefined): Promise<Record<string, any>> {
         try {
-            const res = await this.purchasingRepo.findAllPkhoa(conf)
+            let limitNumber: number = 0
 
-            return res
+            if (conf!.page || conf!.size) {
+                const { limit, offset } = setPagination(conf?.page!, conf?.size!, 100)
+                conf = {
+                    limit,
+                    offset,
+                    search: conf?.search,
+                }
+                limitNumber = limit
+            }
+            const res = await this.purchasingRepo.findAllPkhoa(conf)
+            const data = getPagination(res, conf?.page!, limitNumber)
+
+            return data
         } catch (error) {
             throw new AppError(500, false, `${error}`, '501')
         }

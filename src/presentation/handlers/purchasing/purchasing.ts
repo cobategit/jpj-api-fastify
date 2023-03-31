@@ -331,26 +331,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllFreight(request: any, reply: any): Promise<void> {
     try {
-      let conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> = {}
-      let limitNumber: number = 0
-      const { page, size, search } = request.query
-
-      if (page || size) {
-        const { limit, offset } = setPagination(page, size, 100)
-        conf = {
-          limit,
-          offset,
-          search,
-        }
-        limitNumber = limit
-      }
-      const res = await this.getAllFreightUseCase.execute(conf)
-      const data = getPagination(res, page, limitNumber)
+      const res = await this.getAllFreightUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        data,
+        res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -408,25 +394,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllFreightBank(request: any, reply: any): Promise<void> {
     try {
-      let conf: Pick<ParamsEntity, 'limit' | 'offset'> = {}
-      let limitNumber: number = 0
-      const { page, size } = request.query
-
-      if (page || size) {
-        const { limit, offset } = setPagination(page, size, 100)
-        conf = {
-          limit,
-          offset
-        }
-        limitNumber = limit
-      }
-      const res = await this.getAllFreightBankUseCase.execute(conf)
-      const data = getPagination(res, page, limitNumber)
+      const res = await this.getAllFreightBankUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        data,
+        res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -471,26 +444,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllStockpile(request: any, reply: any): Promise<void> {
     try {
-      let conf: Pick<ParamsEntity, 'limit' | 'offset'> = {}
-      let limitNumber: number = 0
-      const { page, size } = request.query
-
-      if (page || size) {
-        const { limit, offset } = setPagination(page, size, 100)
-        conf = {
-          limit,
-          offset
-        }
-        limitNumber = limit
-      }
-
-      const res = await this.getAllStockpileUseCase.execute(conf)
-      const data = getPagination(res, page, limitNumber)
+      const res = await this.getAllStockpileUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        data,
+        res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -499,19 +458,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllCurrency(request: any, reply: any): Promise<void> {
     try {
-      const { page, size } = request.query
-      const { limit, offset } = setPagination(page, size, 100)
-      const conf: Pick<ParamsEntity, 'limit' | 'offset'> = {
-        limit,
-        offset,
-      }
-      const res = await this.getAllCurrencyUseCase.execute(conf)
-      const data = getPagination(res, page, limit)
+      const res = await this.getAllCurrencyUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        data,
+        res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -562,26 +514,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllPkhoa(request: any, reply: any): Promise<void> {
     try {
-      let conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> = {}
-      let limitNumber: number = 0
-      const { page, size } = request.query
-
-      if (page || size) {
-        const { limit, offset } = setPagination(page, size, 100)
-        conf = {
-          limit,
-          offset
-        }
-        limitNumber = limit
-      }
-
-      const res = await this.getAllPkhoaUseCase.execute(conf)
-      const data = getPagination(res, page, limitNumber)
+      const res = await this.getAllPkhoaUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        data,
+        res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')

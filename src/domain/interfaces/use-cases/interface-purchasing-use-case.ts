@@ -29,7 +29,7 @@ export interface IUpdatePksCurahUseCase {
 }
 
 export interface IGetAllFreightUseCase {
-  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: FreightEntity[] }>
+  execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
 
 export interface IGetOneFreightUseCase {
@@ -41,7 +41,7 @@ export interface IUpdateFreightUseCase {
 }
 
 export interface IGetAllCurrencyUseCase {
-  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: CurrencyEntity[] }>
+  execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
 
 export interface IGetOneCurrencyUseCase {
@@ -49,7 +49,7 @@ export interface IGetOneCurrencyUseCase {
 }
 
 export interface IGetAllFreightBankUseCase {
-  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }>
+  execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
 
 export interface IGetOneStockpileUseCase {
@@ -57,7 +57,7 @@ export interface IGetOneStockpileUseCase {
 }
 
 export interface IGetAllStockpileUseCase {
-  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: StockpileEntity[] }>
+  execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
 
 export interface IGetBankByFreightIdUseCase {
@@ -69,7 +69,7 @@ export interface IPengajuanPkhoaUseCase {
 }
 
 export interface IGetAllPkhoaUseCase {
-  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: PkhoaEntity[] }>
+  execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
 
 export interface IGetOnePkhoaUseCase {
