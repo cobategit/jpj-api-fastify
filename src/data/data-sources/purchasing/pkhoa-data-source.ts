@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage } from "../..";
-import { PkhoaEntity } from "../../../domain";
+import { ParamsEntity, PkhoaEntity } from "../../../domain";
 import { IPkhoaDataSource } from "../../interfaces/purchasing";
 
 export class PkhoaDataSource implements IPkhoaDataSource {
@@ -40,10 +40,13 @@ export class PkhoaDataSource implements IPkhoaDataSource {
         )
     }
 
-    async selectAll(conf: any): Promise<PkhoaEntity[]> {
+    async selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<PkhoaEntity[]> {
         let limit = ``
+        let where = ``
 
-        if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
+        if (conf!.search) where = `where (f.freight_supplier LIKE '%${conf!.search}%' or v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+        if (conf!.offset || conf!.limit) limit = `limit ${conf?.offset}, ${conf?.limit}`
+
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `SELECT
               f.freight_supplier,
@@ -53,8 +56,13 @@ export class PkhoaDataSource implements IPkhoaDataSource {
             ${process.env.TABLE_FREIGHT_COST} AS fc
               LEFT JOIN ${process.env.TABLE_FREIGHT} AS f
                 ON fc.freight_id = f.freight_id
+              LEFT JOIN ${process.env.TABLE_VENDOR} AS v
+                ON fc.vendor_id = f.vendor_id
+              LEFT JOIN ${process.env.TABLE_STOCKPILE} AS s
+                ON fc.stockpile_id = s.stockpile_id
               LEFT JOIN ${process.env.TABLE_CURRENCY} AS c
-                ON c.currency_id = fc.currency_id
+                ON fc.currency_id = c.currency_id
+            ${where}
             ORDER BY fc.freight_cost_id DESC ${limit}`,
             []
         )

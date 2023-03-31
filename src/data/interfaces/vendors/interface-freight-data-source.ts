@@ -1,4 +1,4 @@
-import { FreightBankEntity, FreightEntity } from "../../../domain";
+import { FreightBankEntity, FreightEntity, ParamsEntity } from "../../../domain";
 
 export interface IFreighDataSource {
     count(): Promise<any>
@@ -6,7 +6,7 @@ export interface IFreighDataSource {
     insertBank(data?: FreightBankEntity): Promise<any>
     update(id?: number, data?: FreightEntity): Promise<any>
     updateBank(id?: number, data?: FreightBankEntity): Promise<any>
-    selectAll(conf: any): Promise<FreightEntity[]>
+    selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<FreightEntity[]>
     selectAllBank(conf: any): Promise<FreightBankEntity[]>
     selectOne(id?: number): Promise<FreightEntity>
     selectBankByFreightId(id?: number): Promise<FreightBankEntity[]>

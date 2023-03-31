@@ -20,6 +20,10 @@ import {
   CurrencyDataSource,
   StockpileDataSource,
   PkhoaDataSource,
+  PurchasingDataSource,
+  PoPksDataSource,
+  VendorKontrakDataSource,
+  SetupsDataSource,
 } from './data'
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
@@ -38,6 +42,7 @@ import {
   GetOneStockpileUseCase,
   LoginUserPurchasingUseCase,
   PengajuanFreightUseCase,
+  PengajuanKontrakPksUseCase,
   PengajuanPkhoaUseCase,
   PengajuanPksCurahUseCase,
   PurchasingRepository,
@@ -46,10 +51,13 @@ import {
   UpdatePkhoaUseCase,
   UpdatePksCurahUseCase,
 } from './domain'
+import cluster from 'cluster'
+import os from 'os'
 
 const app = async () => {
   dotenv.config()
   LoggersApp.configureLogger()
+  const numCpus = os.cpus().length
 
   const server = Fastify({
     logger: pino({ level: 'info' }),
@@ -84,6 +92,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new LoginUserPurchasingUseCase(
@@ -95,6 +107,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new PengajuanPksCurahUseCase(
@@ -106,6 +122,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetAllPksCurahUseCase(
@@ -117,6 +137,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetOnePksCurahUseCase(
@@ -128,6 +152,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new PengajuanFreightUseCase(
@@ -139,6 +167,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new UpdatePksCurahUseCase(
@@ -150,6 +182,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetAllFreightUseCase(
@@ -161,6 +197,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetOneFreightUseCase(
@@ -172,6 +212,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new UpdateFreightUseCase(
@@ -183,6 +227,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetAllCurrencyUseCase(
@@ -194,6 +242,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetAllFreightBankUseCase(
@@ -205,6 +257,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetAllStockpileUseCase(
@@ -216,6 +272,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetBankByFreightIdUseCase(
@@ -227,6 +287,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new PengajuanPkhoaUseCase(
@@ -238,6 +302,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetAllPkhoaUseCase(
@@ -249,6 +317,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new UpdatePkhoaUseCase(
@@ -260,6 +332,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetOnePkhoaUseCase(
@@ -271,6 +347,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetOneStockpileUseCase(
@@ -282,6 +362,10 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       ),
       new GetOneCurrencyUseCase(
@@ -293,6 +377,25 @@ const app = async () => {
           new CurrencyDataSource(sourcesDml, sourcesDql),
           new StockpileDataSource(sourcesDml, sourcesDql),
           new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
+        )
+      ),
+      new PengajuanKontrakPksUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+          new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
         )
       )
     ),
@@ -317,13 +420,30 @@ const app = async () => {
 
   server.setErrorHandler(ApiResponse.errorCatch)
 
-  server.listen({ port: Number(process.env.PORT) }, function (err, address) {
-    if (err) {
-      server.log.error(err)
-      process.exit(1)
+  if (cluster.isPrimary) {
+    console.log(`Master ${process.pid} is running`);
+
+    // Fork workers.
+    for (let i = 0; i < numCpus; i++) {
+      cluster.fork();
     }
-    server.log.info(`server listening on ${address}`)
-  })
+
+    cluster.on('exit', (worker, code, signal) => {
+      console.log(`worker ${worker.process.pid} died`);
+    });
+  } else {
+    // Workers can share any TCP connection
+    // In this case it is an HTTP server
+    server.listen({ port: Number(process.env.PORT) }, function (err, address) {
+      if (err) {
+        server.log.error(err)
+        process.exit(1)
+      }
+      server.log.info(`server listening on ${address}`)
+    })
+
+    console.log(`Worker ${process.pid} started`);
+  }
 }
 
 app()

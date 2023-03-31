@@ -1,5 +1,5 @@
-import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPkhoaDataSource, IPksCurahDataSource, IStockpileDataSource, IUsersDataSource } from '../../../data'
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PkhoaEntity, PksCurahBankEntity, PksCurahEntity, StockpileEntity } from '../../entity'
+import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPkhoaDataSource, IPksCurahDataSource, IPoPksDataSource, IPurchasingDataSource, ISetupsDataSource, IStockpileDataSource, IUsersDataSource, IVendorKontrakDataSource } from '../../../data'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PkhoaEntity, PksCurahBankEntity, PksCurahEntity, PoPksEntity, PurchasingEntity, StockpileEntity, VendorKontrakEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -11,8 +11,12 @@ export class PurchasingRepository implements IPurchasingRepo {
   private currencyDataSource: ICurrencyDataSource
   private stockpileDataSource: IStockpileDataSource
   private pkhoaDataSource: IPkhoaDataSource
+  private purchasingDataSource: IPurchasingDataSource
+  private poPksDataSource: IPoPksDataSource
+  private vendorKontrakDataSource: IVendorKontrakDataSource
+  private setupsDataSource: ISetupsDataSource
 
-  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource, pkhoaDataSource: IPkhoaDataSource) {
+  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource, pkhoaDataSource: IPkhoaDataSource, purchasingDataSource: IPurchasingDataSource, poPksDataSource: IPoPksDataSource, vendorKontrakDataSource: IVendorKontrakDataSource, setupsDataSource: ISetupsDataSource) {
     this.userDataSource = userDataSource
     this.pksCurahDataSource = pksCurahDataSource
     this.freightDataSource = freightDataSource
@@ -20,6 +24,10 @@ export class PurchasingRepository implements IPurchasingRepo {
     this.currencyDataSource = currencyDataSource
     this.stockpileDataSource = stockpileDataSource
     this.pkhoaDataSource = pkhoaDataSource
+    this.purchasingDataSource = purchasingDataSource
+    this.poPksDataSource = poPksDataSource
+    this.vendorKontrakDataSource = vendorKontrakDataSource
+    this.setupsDataSource = setupsDataSource
   }
 
   async registerUserPurchasing(data: EntityUser): Promise<any> {
@@ -238,12 +246,75 @@ export class PurchasingRepository implements IPurchasingRepo {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${res[0].insertId}`,
       cud: 'UPDATE',
-      isitransaksi_lama: `MENGUBAH PENGAJUAN PKHOA BARU YANG DIAJUKAN DENGAN`,
+      isitransaksi_lama: `MENGUBAH PENGAJUAN PKHOA BARU YANG DIAJUKAN`,
       user_id: user_id
     }
 
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any> {
+    let pricePoPks: number = data?.price!
+    const resPurchasing = await this.purchasingDataSource.insert(data)
+    const resPpn = await this.setupsDataSource.selectByNama('ppn 11%')
+
+    if (data?.ppn == 1) {
+      pricePoPks = data?.price! / (1 + resPpn.nilai!)
+    }
+    let dataPoPks: PoPksEntity = {
+      purchasing_id: resPurchasing[0].insertId,
+      stockpile_id: data?.stockpile_id,
+      vendor_id: data?.vendor_id,
+      currency_id: 1,
+      exchange_rate: 1,
+      price: pricePoPks,
+      final_status: 4,
+    }
+    const resPoPks = await this.poPksDataSource.insert(dataPoPks)
+
+    if (data?.freight == 2) {
+      let dataVendorKontrak: VendorKontrakEntity = {
+        po_pks_id: resPoPks[0].insertId,
+        freight_cost_id: data?.freight_cost_id,
+        quantity: data?.quantity,
+        status: 1
+      }
+      const resVendorKontrak = await this.vendorKontrakDataSource.insert(dataVendorKontrak)
+
+      const dataHistoryLogVendorKontrak: HistoryLogEntity = {
+        tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+        transaksi: `${resVendorKontrak![0].insertId}`,
+        cud: 'CREATE',
+        isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table vendor kontrak )`,
+        user_id: user_id
+      }
+      await this.historyLogDataSource.insert(dataHistoryLogVendorKontrak)
+    }
+
+    const dataHistoryLogPurchasing: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${resPurchasing[0].insertId}`,
+      cud: 'CREATE',
+      isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table purchasing )`,
+      user_id: user_id
+    }
+    const dataHistoryLogPoPks: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${resPoPks[0].insertId}`,
+      cud: 'CREATE',
+      isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table vendor kontrak )`,
+      user_id: user_id
+    }
+
+    await Promise.all(
+      [
+        this.historyLogDataSource.insert(dataHistoryLogPurchasing),
+        this.historyLogDataSource.insert(dataHistoryLogPoPks),
+      ]
+    )
+
+    return resPurchasing
   }
 }

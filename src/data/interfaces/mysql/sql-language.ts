@@ -2,10 +2,10 @@ export interface IDml {
     dataManipulation(
         type: string,
         query: string,
-        queryConfig: any[]
+        queryConfig?: any[]
     ): Promise<any>
 }
 
 export interface IDql {
-    dataQueryLanguage(query: string, queryConfig: any[]): Promise<any>
+    dataQueryLanguage(query: string, queryConfig?: any[]): Promise<any>
 }

@@ -6,7 +6,10 @@ import {
   ParamsEntity,
   PkhoaEntity,
   PksCurahEntity,
+  PoPksEntity,
+  PurchasingEntity,
   StockpileEntity,
+  VendorKontrakEntity,
 } from '../../entity'
 
 export interface IPurchasingRepo {
@@ -49,4 +52,5 @@ export interface IPurchasingRepo {
     user_id: number,
     data?: PkhoaEntity
   ): Promise<any>
+  pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any>
 }

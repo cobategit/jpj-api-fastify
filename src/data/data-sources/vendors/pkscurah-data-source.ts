@@ -59,12 +59,25 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return res
     }
 
-    async selectAll(conf: ParamsEntity): Promise<PksCurahEntity[]> {
+    async selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'>): Promise<PksCurahEntity[]> {
         let where = ``
         let limit = ``
-        if (conf.vendor_type == 'pks') where = `where curah = 0`
-        if (conf.vendor_type == 'curah') where = `where curah = 1`
-        if (conf.limit || conf.offset) limit = `limit ${conf.offset}, ${conf.limit}`
+
+        if (conf?.search) {
+            where = `where vendor_name Like '%${conf.search}%'`
+        } else if (conf?.vendor_type == 'pks') {
+            if (!conf.search) {
+                where = `where curah = 0 and (vendor_name Like '%${conf.search}%')`
+            }
+            where = `where curah = 0`
+        } else if (conf?.vendor_type == 'curah') {
+            if (!conf.search) {
+                where = `where curah = 1 and (vendor_name Like '%${conf.search}%')`
+            }
+            where = `where curah = 1`
+        }
+
+        if (conf?.limit || conf?.offset) limit = `limit ${conf.offset}, ${conf.limit}`
 
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_VENDOR} ${where} order by vendor_id desc ${limit}`, []

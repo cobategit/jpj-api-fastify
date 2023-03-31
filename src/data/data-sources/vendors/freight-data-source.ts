@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage, IFreighDataSource } from "../..";
-import { FreightBankEntity, FreightEntity } from "../../../domain";
+import { FreightBankEntity, FreightEntity, ParamsEntity } from "../../../domain";
 
 export class FreightDataSource implements IFreighDataSource {
     private dml: DataManipulationLanguage
@@ -57,12 +57,14 @@ export class FreightDataSource implements IFreighDataSource {
         return res
     }
 
-    async selectAll(conf: any): Promise<FreightEntity[]> {
+    async selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<FreightEntity[]> {
         let limit = ``
+        let where = ``
 
-        if (conf.limit || conf.offset) limit = `limit ${conf.offset}, ${conf.limit}`
+        if (conf?.search) where = `freight_supplier LIKE '%${conf.search}%'`
+        if (conf?.limit || conf?.offset) limit = `limit ${conf.offset}, ${conf.limit}`
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_FREIGHT} order by freight_id desc ${limit}`, []
+            `select * from ${process.env.TABLE_FREIGHT} ${where} order by freight_id desc ${limit}`, []
         )
         return rows
     }

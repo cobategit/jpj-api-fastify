@@ -32,6 +32,8 @@ import {
   IGetOnePkhoaUseCase,
   IGetOneStockpileUseCase,
   IGetOneCurrencyUseCase,
+  PurchasingEntity,
+  IPengajuanKontrakPksUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -56,6 +58,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getOnePkhoaUseCase: IGetOnePkhoaUseCase
   private getOneStockpileUseCase: IGetOneStockpileUseCase
   private getOneCurrencyUseCase: IGetOneCurrencyUseCase
+  private pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -77,7 +80,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     updatePkhoaUseCase: IUpdatePkhoaUseCase,
     getOnePkhoaUseCase: IGetOnePkhoaUseCase,
     getOneStockpileUseCase: IGetOneStockpileUseCase,
-    getOneCurrencyUseCase: IGetOneCurrencyUseCase
+    getOneCurrencyUseCase: IGetOneCurrencyUseCase,
+    pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -100,6 +104,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getOnePkhoaUseCase = getOnePkhoaUseCase
     this.getOneStockpileUseCase = getOneStockpileUseCase
     this.getOneCurrencyUseCase = getOneCurrencyUseCase
+    this.pengajuanKontrakPksUseCase = pengajuanKontrakPksUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -255,31 +260,12 @@ export class PurchasingHandler implements IPurchasingHandler {
   }
   async findAllPksCurah(request: any, reply: any): Promise<void> {
     try {
-      let conf: Pick<
-        ParamsEntity,
-        'limit' | 'offset' | 'search' | 'vendor_type'
-      > = {}
-      let limitNumber: number = 0
-      const { page, size, search, vendor_type } = request.query
-
-      if (page || size) {
-        const { limit, offset } = setPagination(page, size, 100)
-        conf = {
-          limit,
-          offset,
-          search,
-          vendor_type,
-        }
-        limitNumber = limit
-      }
-
-      const res = await this.getAllPksCurahUseCase.execute(conf)
-      const data = getPagination(res, page, limitNumber)
+      const res = await this.getAllPksCurahUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        data,
+        res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -553,7 +539,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   async pengajuanPkhoa(request: any, reply: any): Promise<void> {
     try {
       const data: PkhoaEntity = request.body
-      data.status = 2
+      data.status = 4
 
       if (request.files['file_pkhoa']) {
         data!.file = `${process.env.URL_FILE}/purchasing/${request.files['file_pkhoa'][0].filename}`
@@ -637,6 +623,45 @@ export class PurchasingHandler implements IPurchasingHandler {
       return ApiResponse.ok(request, reply, {
         status: true,
         message: `Data update pkhoa berhasil diinput`,
+        id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async pengajuanKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const data: PurchasingEntity = request.body
+      data.status = 0
+
+      if (request.files['file_popks1']) {
+        data!.upload_file = `${process.env.URL_FILE}/purchasing/${request.files['file_popks1'][0].filename}`
+      }
+      if (request.files['file_popks2']) {
+        data!.approval_file = `${process.env.URL_FILE}/purchasing/${request.files['file_popks2'][0].filename}`
+      }
+      if (request.files['file_popks3']) {
+        data!.upload_file1 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks3'][0].filename}`
+      }
+      if (request.files['file_popks4']) {
+        data!.upload_file2 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks4'][0].filename}`
+      }
+      if (request.files['file_popks5']) {
+        data!.upload_file3 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks5'][0].filename}`
+      }
+      if (request.files['file_popks6']) {
+        data!.upload_file4 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks6'][0].filename}`
+      }
+
+      const res = await this.pengajuanKontrakPksUseCase.execute(
+        request.user.user_id,
+        data
+      )
+
+      return ApiResponse.created(request, reply, {
+        status: true,
+        message: `Data pengajuan kontrak pks`,
         id: res[0].insertId,
       })
     } catch (error) {
