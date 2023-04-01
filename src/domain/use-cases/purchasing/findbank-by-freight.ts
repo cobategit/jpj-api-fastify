@@ -11,7 +11,7 @@ export class GetBankByFreightIdUseCase implements IGetBankByFreightIdUseCase {
 
     async execute(id?: number): Promise<FreightBankEntity[]> {
         try {
-            const res = await this.purchasingRepo.findBankByFreightId(id)
+            const res = await this.purchasingRepo.findBankByFreightId([id!])
 
             return res
         } catch (error) {

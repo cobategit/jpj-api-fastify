@@ -88,9 +88,9 @@ export class FreightDataSource implements IFreighDataSource {
         return rows[0]
     }
 
-    async selectBankByFreightId(id?: number | undefined): Promise<FreightBankEntity[]> {
+    async selectBankByFreightId(id?: number[] | undefined): Promise<FreightBankEntity[]> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_FREIGHT_BANK} where freight_id = ?`,
+            `select * from ${process.env.TABLE_FREIGHT_BANK} where freight_id IN (?)`,
             [id]
         )
 

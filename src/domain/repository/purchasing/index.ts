@@ -107,6 +107,17 @@ export class PurchasingRepository implements IPurchasingRepo {
     return { count: count.count, rows }
   }
 
+  async findAllPksCurahBank(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: PksCurahBankEntity[] }> {
+    const count = await this.pksCurahDataSource.count()
+    const rows = await this.pksCurahDataSource.selectAllBank(conf)
+    return { count: count.count, rows }
+  }
+
+  async findBankByPksCurahId(id?: number[] | undefined): Promise<PksCurahBankEntity[]> {
+    const rows = await this.pksCurahDataSource.selectBankByPksCurahId(id)
+    return rows
+  }
+
   async findOnePksCurah(id?: number): Promise<PksCurahEntity> {
     const rows = await this.pksCurahDataSource.selectOne(id)
     return rows
@@ -185,7 +196,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return { count: count.count, rows }
   }
 
-  async findBankByFreightId(id?: number | undefined): Promise<FreightBankEntity[]> {
+  async findBankByFreightId(id?: number[] | undefined): Promise<FreightBankEntity[]> {
     const rows = await this.freightDataSource.selectBankByFreightId(id)
     return rows
   }

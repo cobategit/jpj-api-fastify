@@ -1,5 +1,5 @@
 import { AppError, getPagination, setPagination } from "@jpj-common/module";
-import { ParamsEntity, PksCurahEntity } from "../../entity";
+import { FreightBankEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from "../../entity";
 import { IGetAllPksCurahUseCase, IPurchasingRepo } from "../../interfaces";
 
 export class GetAllPksCurahUseCase implements IGetAllPksCurahUseCase {
@@ -11,6 +11,7 @@ export class GetAllPksCurahUseCase implements IGetAllPksCurahUseCase {
 
     async execute(conf?: ParamsEntity | undefined): Promise<Record<string, any>> {
         try {
+            let tmpVendorId: number[] = []
             let limitNumber: number = 0
 
             if (conf!.page || conf!.size) {
@@ -24,6 +25,30 @@ export class GetAllPksCurahUseCase implements IGetAllPksCurahUseCase {
                 limitNumber = limit
             }
             const res = await this.purchasingRepo.findAllPksCurah(conf)
+
+            await Promise.all(
+                res.rows.map(async (val: PksCurahEntity) => {
+                    tmpVendorId.push(val.vendor_id!)
+                })
+            )
+
+            const resBank = await this.purchasingRepo.findBankByPksCurahId(tmpVendorId)
+
+            await Promise.all(
+                res.rows.map((val1: PksCurahEntity) => {
+                    const arr: Record<string, any>[] = []
+                    resBank.map((val2: PksCurahBankEntity) => {
+                        if (val1.vendor_id === val2.vendor_id) {
+                            let obj: Pick<PksCurahBankEntity, 'file_rekbank'> = {
+                                file_rekbank: val2.file_rekbank
+                            }
+                            arr.push(obj)
+                        }
+                    })
+                    val1.bank = arr
+                })
+            )
+
             const data = getPagination(res, conf?.page!, limitNumber)
 
             return data

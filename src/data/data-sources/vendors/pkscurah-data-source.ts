@@ -85,6 +85,25 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return rows
     }
 
+    async selectAllBank(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'> | undefined): Promise<PksCurahBankEntity[]> {
+        let limit = ``
+
+        if (conf!.limit || conf!.offset) limit = `limit ${conf!.offset}, ${conf!.limit}`
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_VENDOR_BANK} order by v_bank_id desc ${limit}`, []
+        )
+        return rows
+    }
+
+    async selectBankByPksCurahId(id?: number[] | undefined, conf?: Record<string, any> | undefined): Promise<PksCurahBankEntity[]> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_VENDOR_BANK} where vendor_id IN (?)`,
+            [id]
+        )
+
+        return rows
+    }
+
     async selectOne(id?: number): Promise<PksCurahEntity> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_VENDOR} where vendor_id = ?`,

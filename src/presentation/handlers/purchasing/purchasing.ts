@@ -34,6 +34,7 @@ import {
   IGetOneCurrencyUseCase,
   PurchasingEntity,
   IPengajuanKontrakPksUseCase,
+  IGetAllPksCurahBankUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -59,6 +60,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getOneStockpileUseCase: IGetOneStockpileUseCase
   private getOneCurrencyUseCase: IGetOneCurrencyUseCase
   private pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase
+  private getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -81,7 +83,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     getOnePkhoaUseCase: IGetOnePkhoaUseCase,
     getOneStockpileUseCase: IGetOneStockpileUseCase,
     getOneCurrencyUseCase: IGetOneCurrencyUseCase,
-    pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase
+    pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase,
+    getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -105,6 +108,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getOneStockpileUseCase = getOneStockpileUseCase
     this.getOneCurrencyUseCase = getOneCurrencyUseCase
     this.pengajuanKontrakPksUseCase = pengajuanKontrakPksUseCase
+    this.getAllPksCurahBankUseCase = getAllPksCurahBankUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -261,6 +265,20 @@ export class PurchasingHandler implements IPurchasingHandler {
   async findAllPksCurah(request: any, reply: any): Promise<void> {
     try {
       const res = await this.getAllPksCurahUseCase.execute(request.query)
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findAllPksCurahBank(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getAllPksCurahBankUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,

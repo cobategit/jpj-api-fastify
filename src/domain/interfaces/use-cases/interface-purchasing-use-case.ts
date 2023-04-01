@@ -20,6 +20,10 @@ export interface IGetAllPksCurahUseCase {
   execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
 
+export interface IGetAllPksCurahBankUseCase {
+  execute(conf?: ParamsEntity): Promise<Record<string, any>>
+}
+
 export interface IGetOnePksCurahUseCase {
   execute(id?: number): Promise<PksCurahEntity | null>
 }

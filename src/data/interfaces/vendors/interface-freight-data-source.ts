@@ -9,5 +9,5 @@ export interface IFreighDataSource {
     selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<FreightEntity[]>
     selectAllBank(conf: any): Promise<FreightBankEntity[]>
     selectOne(id?: number): Promise<FreightEntity>
-    selectBankByFreightId(id?: number): Promise<FreightBankEntity[]>
+    selectBankByFreightId(id?: number[]): Promise<FreightBankEntity[]>
 }

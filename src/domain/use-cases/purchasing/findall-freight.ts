@@ -1,5 +1,5 @@
 import { AppError, getPagination, setPagination } from "@jpj-common/module";
-import { ParamsEntity, FreightEntity } from "../../entity";
+import { FreightBankEntity, FreightEntity, ParamsEntity } from "../../entity";
 import { IGetAllFreightUseCase, IPurchasingRepo } from "../../interfaces";
 
 export class GetAllFreightUseCase implements IGetAllFreightUseCase {
@@ -11,6 +11,7 @@ export class GetAllFreightUseCase implements IGetAllFreightUseCase {
 
     async execute(conf?: ParamsEntity | undefined): Promise<Record<string, any>> {
         try {
+            let tmpFreightId: number[] = []
             let limitNumber: number = 0
 
             if (conf!.page || conf!.size) {
@@ -23,6 +24,27 @@ export class GetAllFreightUseCase implements IGetAllFreightUseCase {
                 limitNumber = limit
             }
             const res = await this.purchasingRepo.findAllFreight(conf)
+            await Promise.all(
+                res.rows.map((val: FreightEntity) => {
+                    tmpFreightId.push(val.freight_id!)
+                })
+            )
+
+            const resBank = await this.purchasingRepo.findBankByFreightId(tmpFreightId)
+            await Promise.all(
+                res.rows.map((val1: FreightEntity) => {
+                    let arr: Record<string, any>[] = []
+                    resBank.map((val2: FreightBankEntity) => {
+                        if (val1.freight_id == val2.freight_id) {
+                            let obj: Pick<FreightBankEntity, 'file_rekbank'> = {
+                                file_rekbank: val2.file_rekbank
+                            }
+                            arr.push(obj)
+                        }
+                    })
+                    val1.bank = arr
+                })
+            )
             const data = getPagination(res, conf?.page!, limitNumber)
 
             return data

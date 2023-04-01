@@ -1,5 +1,5 @@
 export interface PksCurahEntity {
-    id?: number
+    vendor_id?: number
     vendor_code?: string
     vendor_name?: string
     vendor_address?: string
@@ -15,6 +15,7 @@ export interface PksCurahEntity {
     jenis_file?: string
     kategori_file?: string
     notes?: string
+    bank?: PksCurahBankEntity[]
 }
 
 export interface PksCurahBankEntity {

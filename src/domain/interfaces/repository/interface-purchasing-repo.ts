@@ -5,11 +5,10 @@ import {
   FreightEntity,
   ParamsEntity,
   PkhoaEntity,
+  PksCurahBankEntity,
   PksCurahEntity,
-  PoPksEntity,
   PurchasingEntity,
   StockpileEntity,
-  VendorKontrakEntity,
 } from '../../entity'
 
 export interface IPurchasingRepo {
@@ -21,6 +20,10 @@ export interface IPurchasingRepo {
   findAllPksCurah(
     conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'vendor_type'>
   ): Promise<{ count: number; rows: PksCurahEntity[] }>
+  findAllPksCurahBank(
+    conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>
+  ): Promise<{ count: number; rows: PksCurahBankEntity[] }>
+  findBankByPksCurahId(id?: number[]): Promise<PksCurahBankEntity[]>
   findOnePksCurah(id?: number): Promise<PksCurahEntity>
   updatePksCurah(
     id: number,
@@ -43,7 +46,7 @@ export interface IPurchasingRepo {
   findAllStockpile(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: StockpileEntity[] }>
-  findBankByFreightId(id?: number): Promise<FreightBankEntity[]>
+  findBankByFreightId(id?: number[]): Promise<FreightBankEntity[]>
   pengajuanPkhoa(user_id?: number, data?: PkhoaEntity): Promise<any>
   findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number; rows: PkhoaEntity[] }>
   findOnePkhoa(id?: number): Promise<PkhoaEntity>

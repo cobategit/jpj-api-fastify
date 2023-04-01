@@ -10,6 +10,7 @@ import dotenv from 'dotenv'
 import express from '@fastify/express'
 import xss from 'x-xss-protection'
 import multerFastify from 'fastify-multer'
+import rateLimit from '@fastify/rate-limit'
 import {
   DataManipulationLanguage,
   DataQueryLanguage,
@@ -32,6 +33,7 @@ import {
   GetAllFreightBankUseCase,
   GetAllFreightUseCase,
   GetAllPkhoaUseCase,
+  GetAllPksCurahBankUseCase,
   GetAllPksCurahUseCase,
   GetAllStockpileUseCase,
   GetBankByFreightIdUseCase,
@@ -63,6 +65,20 @@ const app = async () => {
     logger: pino({ level: 'info' }),
   })
   await server.register(express)
+  await server.register(rateLimit, {
+    max: 10,
+    timeWindow: 12000,
+    cache: 10000,
+    errorResponseBuilder: function (request, context) {
+      return {
+        code: 429,
+        error: 'Too Many Requests Api',
+        message: `I only allow ${context.max} requests per ${context.after} to this Website. Try again soon.`,
+        date: Date.now(),
+        expiresIn: context.ttl // milliseconds
+      }
+    }
+  })
 
   server.register(FastifyAccepts)
   server.use(xss())
@@ -384,6 +400,21 @@ const app = async () => {
         )
       ),
       new PengajuanKontrakPksUseCase(
+        new PurchasingRepository(
+          new UsersDataSource(sourcesDml, sourcesDql),
+          new PksCurahDataSource(sourcesDml, sourcesDql),
+          new FreightDataSource(sourcesDml, sourcesDql),
+          new HistoryLogDataSource(sourcesDml, sourcesDql),
+          new CurrencyDataSource(sourcesDml, sourcesDql),
+          new StockpileDataSource(sourcesDml, sourcesDql),
+          new PkhoaDataSource(sourcesDml, sourcesDql),
+          new PurchasingDataSource(sourcesDml, sourcesDql),
+          new PoPksDataSource(sourcesDml, sourcesDql),
+          new VendorKontrakDataSource(sourcesDml, sourcesDql),
+          new SetupsDataSource(sourcesDml, sourcesDql)
+        )
+      ),
+      new GetAllPksCurahBankUseCase(
         new PurchasingRepository(
           new UsersDataSource(sourcesDml, sourcesDql),
           new PksCurahDataSource(sourcesDml, sourcesDql),
