@@ -302,6 +302,30 @@ export function PurchasingRoute(
       purchasingHandler.findOnePkhoa.bind(purchasingHandler)
     )
 
+    fastify.post<{
+      Body: PksCurahEntity | FreightEntity
+      Querystring: ParamsEntity
+    }>(
+      '/pengajuan-kontrak-pks',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+          upload.fields([
+            { name: 'file_popks1', maxCount: 1 },
+            { name: 'file_popks2', maxCount: 1 },
+            { name: 'file_popks3', maxCount: 1 },
+            { name: 'file_popks4', maxCount: 1 },
+            { name: 'file_popks5', maxCount: 1 },
+            { name: 'file_popks6', maxCount: 1 },
+          ]),
+        ],
+      },
+      purchasingHandler.pengajuanKontrakPks.bind(purchasingHandler)
+    )
+
     done()
   }
 
