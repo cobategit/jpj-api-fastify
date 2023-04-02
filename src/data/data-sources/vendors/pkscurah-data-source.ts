@@ -39,11 +39,11 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return res
     }
 
-    async update(id?: number, data?: PksCurahEntity): Promise<any> {
+    async update(id?: number, data?: PksCurahEntity, active: number = 2): Promise<any> {
         const res = await this.dml.dataManipulation(
             `update pengajuan ${data?.curah}`,
-            `update ${process.env.TABLE_VENDOR} set vendor_name = ?, vendor_address = ?, pic = ?, phone_pic = ?, file_npwp = ?, file_pkp = ?, notes = ? where vendor_id = ?`,
-            [data?.vendor_name, data?.vendor_address, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.notes, id!]
+            `update ${process.env.TABLE_VENDOR} set vendor_name = ?, vendor_address = ?, pic = ?, phone_pic = ?, file_npwp = ?, file_pkp = ?, notes = ? where vendor_id = ? and active = ?`,
+            [data?.vendor_name, data?.vendor_address, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.notes, id!, active]
         )
 
         return res
@@ -113,11 +113,11 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return rows[0]
     }
 
-    async delete(id?: number): Promise<any> {
+    async delete(id?: number, active: number = 2): Promise<any> {
         const res = await this.dml.dataManipulation(
             `delete pengajuan vendor`,
-            `update ${process.env.TABLE_VENDOR} set active = ? where vendor_id = ?`,
-            [3, id!]
+            `update ${process.env.TABLE_VENDOR} set active = ? where vendor_id = ? and where active = ?`,
+            [3, id!, active]
         )
 
         return res

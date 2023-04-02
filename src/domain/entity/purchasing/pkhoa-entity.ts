@@ -1,5 +1,5 @@
 export interface PkhoaEntity {
-    id?: number
+    freight_cost_id?: number
     contract_pkhoa?: string
     stockpile_id?: number
     freight_id?: number
