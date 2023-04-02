@@ -113,4 +113,13 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return rows[0]
     }
 
+    async delete(id?: number): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `delete pengajuan vendor`,
+            `update ${process.env.TABLE_VENDOR} set active = ? where vendor_id = ?`,
+            [3, id!]
+        )
+
+        return res
+    }
 }

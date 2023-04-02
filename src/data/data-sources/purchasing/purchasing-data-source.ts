@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage } from "../..";
-import { PurchasingEntity } from "../../../domain";
+import { ParamsEntity, PurchasingEntity } from "../../../domain";
 import { IPurchasingDataSource } from "../../interfaces/purchasing";
 
 export class PurchasingDataSource implements IPurchasingDataSource {
@@ -54,6 +54,15 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         )
 
         return rows[0]
+    }
+
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PurchasingEntity[]> {
+        const [rows, fileds] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_PURCHASING} where ${conf?.tableCol1} = ?`,
+            [conf?.tableVal1]
+        )
+
+        return rows
     }
 
 }

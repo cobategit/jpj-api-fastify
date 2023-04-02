@@ -32,6 +32,10 @@ export interface IUpdatePksCurahUseCase {
   execute(id: number, user_id: number, data?: PksCurahEntity): Promise<any>
 }
 
+export interface IDeletePksCurahUseCase {
+  execute(id: number, user_id: number): Promise<any>
+}
+
 export interface IGetAllFreightUseCase {
   execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }
@@ -42,6 +46,10 @@ export interface IGetOneFreightUseCase {
 
 export interface IUpdateFreightUseCase {
   execute(id: number, user_id: number, data?: FreightEntity): Promise<any>
+}
+
+export interface IDeleteFreightUseCase {
+  execute(id: number, user_id: number): Promise<any>
 }
 
 export interface IGetAllCurrencyUseCase {

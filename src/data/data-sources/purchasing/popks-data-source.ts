@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage } from "../..";
-import { PoPksEntity } from "../../../domain";
+import { ParamsEntity, PoPksEntity } from "../../../domain";
 import { IPoPksDataSource } from "../../interfaces/purchasing";
 
 export class PoPksDataSource implements IPoPksDataSource {
@@ -54,6 +54,15 @@ export class PoPksDataSource implements IPoPksDataSource {
         )
 
         return rows[0]
+    }
+
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PoPksEntity[]> {
+        const [rows, fileds] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_POPKS} where ${conf?.tableCol1} = ?`,
+            [conf?.tableVal1]
+        )
+
+        return rows
     }
 
 }

@@ -29,6 +29,8 @@ import {
 import { ApiResponse, LoggersApp } from '@jpj-common/module'
 import { PurchasingHandler, PurchasingRoute } from './presentation'
 import {
+  DeleteFreightUseCase,
+  DeletePksCurahUseCase,
   GetAllCurrencyUseCase,
   GetAllFreightBankUseCase,
   GetAllFreightUseCase,
@@ -100,334 +102,76 @@ const app = async () => {
   const purchasingRegister = PurchasingRoute(
     new PurchasingHandler(
       new RegisterUserPurchasingUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new LoginUserPurchasingUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanPksCurahUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllPksCurahUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetOnePksCurahUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanFreightUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new UpdatePksCurahUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllFreightUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetOneFreightUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new UpdateFreightUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllCurrencyUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllFreightBankUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllStockpileUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetBankByFreightIdUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanPkhoaUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllPkhoaUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new UpdatePkhoaUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetOnePkhoaUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetOneStockpileUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetOneCurrencyUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new PengajuanKontrakPksUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetAllPksCurahBankUseCase(
-        new PurchasingRepository(
-          new UsersDataSource(sourcesDml, sourcesDql),
-          new PksCurahDataSource(sourcesDml, sourcesDql),
-          new FreightDataSource(sourcesDml, sourcesDql),
-          new HistoryLogDataSource(sourcesDml, sourcesDql),
-          new CurrencyDataSource(sourcesDml, sourcesDql),
-          new StockpileDataSource(sourcesDml, sourcesDql),
-          new PkhoaDataSource(sourcesDml, sourcesDql),
-          new PurchasingDataSource(sourcesDml, sourcesDql),
-          new PoPksDataSource(sourcesDml, sourcesDql),
-          new VendorKontrakDataSource(sourcesDml, sourcesDql),
-          new SetupsDataSource(sourcesDml, sourcesDql)
-        )
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
+      ),
+      new DeletePksCurahUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
+      ),
+      new DeleteFreightUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       )
     ),
     new UsersDataSource(sourcesDml, sourcesDql)

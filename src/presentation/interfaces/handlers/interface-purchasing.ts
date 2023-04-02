@@ -7,15 +7,17 @@ export interface IPurchasingHandler {
   findAllPksCurahBank(request: any, reply: any): Promise<void>
   findOnePksCurah(request: any, reply: any): Promise<void>
   updatePksCurah(request: any, reply: any): Promise<void>
+  deletePksCurah(request: any, reply: any): Promise<void>
   findAllFreight(request: any, reply: any): Promise<void>
   findOneFreight(request: any, reply: any): Promise<void>
   updateFreight(request: any, reply: any): Promise<void>
+  deleteFreight(request: any, reply: any): Promise<void>
+  findAllFreightBank(request: any, reply: any): Promise<void>
+  findBankByFreightId(request: any, reply: any): Promise<void>
   findAllCurrency(request: any, reply: any): Promise<void>
   findOneCurrency(request: any, reply: any): Promise<void>
-  findAllFreightBank(request: any, reply: any): Promise<void>
   findOneStockpile(request: any, reply: any): Promise<void>
   findAllStockpile(request: any, reply: any): Promise<void>
-  findBankByFreightId(request: any, reply: any): Promise<void>
   pengajuanPkhoa(request: any, reply: any): Promise<void>
   findAllPkhoa(request: any, reply: any): Promise<void>
   findOnePkhoa(request: any, reply: any): Promise<void>

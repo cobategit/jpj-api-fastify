@@ -110,6 +110,19 @@ export function PurchasingRoute(
       purchasingHandler.findOnePksCurah.bind(purchasingHandler)
     )
 
+    fastify.delete<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      '/pks-curah/delete/:vendor_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.deletePksCurah.bind(purchasingHandler)
+    )
+
     fastify.get<{ Querystring: ParamsEntity }>(
       '/pks-curah/bank',
       {
@@ -166,6 +179,19 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findOneFreight.bind(purchasingHandler)
+    )
+
+    fastify.delete<{ Params: Pick<ParamsEntity, 'freight_id'> }>(
+      '/freight/delete/:freight_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.deleteFreight.bind(purchasingHandler)
     )
 
     fastify.get<{ Querystring: ParamsEntity }>(

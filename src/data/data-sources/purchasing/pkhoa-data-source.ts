@@ -79,4 +79,13 @@ export class PkhoaDataSource implements IPkhoaDataSource {
         return rows[0]
     }
 
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PkhoaEntity[]> {
+        const [rows, fileds] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_FREIGHT_COST} where ${conf?.tableCol1} = ?`,
+            [conf?.tableVal1]
+        )
+
+        return rows
+    }
+
 }

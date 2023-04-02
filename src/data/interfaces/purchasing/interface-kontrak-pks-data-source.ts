@@ -1,4 +1,4 @@
-import { PoPksEntity, PurchasingEntity, VendorKontrakEntity } from "../../../domain"
+import { ParamsEntity, PoPksEntity, PurchasingEntity, VendorKontrakEntity } from "../../../domain"
 
 export interface IPurchasingDataSource {
     count(): Promise<any>
@@ -6,6 +6,7 @@ export interface IPurchasingDataSource {
     update(id?: number, data?: PurchasingEntity): Promise<any>
     selectAll(conf: any): Promise<PurchasingEntity[]>
     selectOne(id?: number): Promise<PurchasingEntity>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
 }
 
 export interface IPoPksDataSource {
@@ -14,6 +15,8 @@ export interface IPoPksDataSource {
     update(id?: number, data?: PoPksEntity): Promise<any>
     selectAll(conf: any): Promise<PoPksEntity[]>
     selectOne(id?: number): Promise<PoPksEntity>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PoPksEntity[]>
+
 }
 
 export interface IVendorKontrakDataSource {
@@ -22,4 +25,5 @@ export interface IVendorKontrakDataSource {
     update(id?: number, data?: VendorKontrakEntity): Promise<any>
     selectAll(conf: any): Promise<VendorKontrakEntity[]>
     selectOne(id?: number): Promise<VendorKontrakEntity>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<VendorKontrakEntity[]>
 }

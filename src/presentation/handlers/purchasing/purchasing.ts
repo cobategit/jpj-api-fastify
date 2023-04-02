@@ -35,6 +35,8 @@ import {
   PurchasingEntity,
   IPengajuanKontrakPksUseCase,
   IGetAllPksCurahBankUseCase,
+  IDeletePksCurahUseCase,
+  IDeleteFreightUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -61,6 +63,8 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getOneCurrencyUseCase: IGetOneCurrencyUseCase
   private pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase
   private getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase
+  private deletePksCurahUseCase: IDeletePksCurahUseCase
+  private deleteFreightUseCase: IDeleteFreightUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -84,7 +88,9 @@ export class PurchasingHandler implements IPurchasingHandler {
     getOneStockpileUseCase: IGetOneStockpileUseCase,
     getOneCurrencyUseCase: IGetOneCurrencyUseCase,
     pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase,
-    getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase
+    getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase,
+    deletePksCurahUseCase: IDeletePksCurahUseCase,
+    deleteFreightUseCase: IDeleteFreightUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -109,6 +115,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getOneCurrencyUseCase = getOneCurrencyUseCase
     this.pengajuanKontrakPksUseCase = pengajuanKontrakPksUseCase
     this.getAllPksCurahBankUseCase = getAllPksCurahBankUseCase
+    this.deletePksCurahUseCase = deletePksCurahUseCase
+    this.deleteFreightUseCase = deleteFreightUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -347,6 +355,29 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
   }
 
+  async deletePksCurah(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.deletePksCurahUseCase.execute(
+        request.params.vendor_id,
+        request.user.user_id,
+      )
+
+      if (res.checkDeleted) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete vendor pkscurah tidak berhasil`,
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: `Delete vendor pkscurah berhasil`,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
   async findAllFreight(request: any, reply: any): Promise<void> {
     try {
       const res = await this.getAllFreightUseCase.execute(request.query)
@@ -404,6 +435,29 @@ export class PurchasingHandler implements IPurchasingHandler {
         status: true,
         message: `Data update vendor freight berhasil diinput`,
         id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async deleteFreight(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.deleteFreightUseCase.execute(
+        request.params.freight_id,
+        request.user.user_id,
+      )
+
+      if (res.checkDeleted) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete vendor freight tidak berhasil`,
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: `Delete vendor freight berhasil`,
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')

@@ -10,4 +10,6 @@ export interface ParamsEntity {
     size?: number
     stockpile_id?: number
     currency_id?: number
+    tableCol1?: string
+    tableVal1?: string | number
 }

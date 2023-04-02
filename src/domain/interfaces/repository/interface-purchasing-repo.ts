@@ -7,8 +7,10 @@ import {
   PkhoaEntity,
   PksCurahBankEntity,
   PksCurahEntity,
+  PoPksEntity,
   PurchasingEntity,
   StockpileEntity,
+  VendorKontrakEntity,
 } from '../../entity'
 
 export interface IPurchasingRepo {
@@ -30,18 +32,20 @@ export interface IPurchasingRepo {
     user_id: number,
     data?: PksCurahEntity
   ): Promise<any>
+  deletePksCurah(id?: number, user_id?: number): Promise<any>
   findAllFreight(
     conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>
   ): Promise<{ count: number; rows: FreightEntity[] }>
   findOneFreight(id?: number): Promise<FreightEntity>
   updateFreight(id: number, user_id: number, data?: FreightEntity): Promise<any>
+  deleteFreight(id?: number, user_id?: number): Promise<any>
+  findAllFreightBank(
+    conf?: Pick<ParamsEntity, 'limit' | 'offset'>
+  ): Promise<{ count: number; rows: FreightBankEntity[] }>
   findAllCurrency(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: CurrencyEntity[] }>
   findOneCurrency(id?: number): Promise<CurrencyEntity>
-  findAllFreightBank(
-    conf?: Pick<ParamsEntity, 'limit' | 'offset'>
-  ): Promise<{ count: number; rows: FreightBankEntity[] }>
   findOneStockpile(id?: number): Promise<StockpileEntity>
   findAllStockpile(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
@@ -55,5 +59,9 @@ export interface IPurchasingRepo {
     user_id: number,
     data?: PkhoaEntity
   ): Promise<any>
+  findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PkhoaEntity[]>
   pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any>
+  findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
+  findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PoPksEntity[]>
+  findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<VendorKontrakEntity[]>
 }

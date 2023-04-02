@@ -6,4 +6,5 @@ export interface IPkhoaDataSource {
     update(id?: number, data?: PkhoaEntity): Promise<any>
     selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<PkhoaEntity[]>
     selectOne(id?: number): Promise<PkhoaEntity>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PkhoaEntity[]>
 }

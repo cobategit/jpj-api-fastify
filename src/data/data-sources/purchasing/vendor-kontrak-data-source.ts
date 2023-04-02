@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage } from "../..";
-import { VendorKontrakEntity } from "../../../domain";
+import { ParamsEntity, VendorKontrakEntity } from "../../../domain";
 import { IVendorKontrakDataSource } from "../../interfaces/purchasing";
 
 export class VendorKontrakDataSource implements IVendorKontrakDataSource {
@@ -54,6 +54,15 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
         )
 
         return rows[0]
+    }
+
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<VendorKontrakEntity[]> {
+        const [rows, fileds] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_VENDOR_KONTRAK} where ${conf?.tableCol1} = ?`,
+            [conf?.tableVal1]
+        )
+
+        return rows
     }
 
 }

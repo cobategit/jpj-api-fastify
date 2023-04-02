@@ -96,4 +96,14 @@ export class FreightDataSource implements IFreighDataSource {
 
         return rows
     }
+
+    async delete(id?: number): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `delete pengajuan freight`,
+            `update ${process.env.TABLE_FREIGHT} set active = ? where freight_id = ?`,
+            [3, id!]
+        )
+
+        return res
+    }
 }

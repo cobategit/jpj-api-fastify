@@ -129,7 +129,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     let vendor_type = data?.curah == 0 ? 'PKS' : 'CURAH'
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `${res[0].insertId}`,
+      transaksi: `${id}`,
       cud: 'UPDATE',
       isitransaksi_lama: `MENGUBAH VENDOR ${vendor_type} BARU YANG DIAJUKAN DENGAN NAMA ${data?.vendor_name}`,
       user_id: user_id
@@ -138,7 +138,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     Promise.all(
       [data?.file_rekbank?.forEach(async (val: string) => {
         const dataBank: PksCurahBankEntity = {
-          vendor_id: res[0].insertId,
+          vendor_id: id,
           file_rekbank: val,
           active: 2
         }
@@ -150,6 +150,21 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async deletePksCurah(id?: number | undefined, user_id?: number | undefined): Promise<any> {
+    const row = await this.pksCurahDataSource.delete(id!)
+
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${id}`,
+      cud: 'UPDATE',
+      isitransaksi_lama: `MENGUBAH STATUS VENDOR MENJADI TIDAK AKTIF`,
+      user_id: user_id
+    }
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return row
   }
 
   async findAllFreight(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: FreightEntity[] }> {
@@ -167,7 +182,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     const res = await this.freightDataSource.update(id, data)
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `${res[0].insertId}`,
+      transaksi: `${id}`,
       cud: 'UPDATE',
       isitransaksi_lama: `MENGUBAH VENDOR BARU YANG DIAJUKAN DENGAN NAMA ${data?.freight_supplier}`,
       user_id: user_id
@@ -176,7 +191,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     Promise.all(
       [data?.file_rekbank?.forEach(async (val: string) => {
         const dataBank: FreightBankEntity = {
-          freight_id: res[0].insertId,
+          freight_id: id,
           file_rekbank: val,
           active: 2
         }
@@ -188,6 +203,21 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async deleteFreight(id?: number | undefined, user_id?: number | undefined): Promise<any> {
+    const row = await this.freightDataSource.delete(id!)
+
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${id}`,
+      cud: 'UPDATE',
+      isitransaksi_lama: `MENGUBAH STATUS FREIGHT MENJADI TIDAK AKTIF`,
+      user_id: user_id
+    }
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return row
   }
 
   async findAllFreightBank(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: FreightBankEntity[] }> {
@@ -255,7 +285,7 @@ export class PurchasingRepository implements IPurchasingRepo {
 
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
-      transaksi: `${res[0].insertId}`,
+      transaksi: `${id}`,
       cud: 'UPDATE',
       isitransaksi_lama: `MENGUBAH PENGAJUAN PKHOA BARU YANG DIAJUKAN`,
       user_id: user_id
@@ -264,6 +294,11 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PkhoaEntity[]> {
+    const rows = await this.pkhoaDataSource.selectOneDynamic(conf)
+    return rows
   }
 
   async pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any> {
@@ -315,7 +350,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${resPoPks[0].insertId}`,
       cud: 'CREATE',
-      isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table vendor kontrak )`,
+      isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table po pks)`,
       user_id: user_id
     }
 
@@ -328,4 +363,20 @@ export class PurchasingRepository implements IPurchasingRepo {
 
     return resPurchasing
   }
+
+  async findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PurchasingEntity[]> {
+    const rows = await this.purchasingDataSource.selectOneDynamic(conf)
+    return rows
+  }
+
+  async findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PoPksEntity[]> {
+    const rows = await this.poPksDataSource.selectOneDynamic(conf)
+    return rows
+  }
+
+  async findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<VendorKontrakEntity[]> {
+    const rows = await this.vendorKontrakDataSource.selectOneDynamic(conf)
+    return rows
+  }
+
 }

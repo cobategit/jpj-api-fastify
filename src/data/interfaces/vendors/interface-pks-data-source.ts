@@ -10,4 +10,5 @@ export interface IPksCurahDataSource {
     selectAllBank(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<PksCurahBankEntity[]>
     selectBankByPksCurahId(id?: number[], conf?: Record<string, any>): Promise<PksCurahBankEntity[]>
     selectOne(id?: number): Promise<PksCurahEntity>
+    delete(id?: number): Promise<any>
 }
