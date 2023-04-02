@@ -36,6 +36,10 @@ export interface IDeletePksCurahUseCase {
   execute(id: number, user_id: number): Promise<any>
 }
 
+export interface IGetBankByPksCurahIdUseCase {
+  execute(id?: number): Promise<FreightBankEntity[]>
+}
+
 export interface IGetAllFreightUseCase {
   execute(conf?: ParamsEntity): Promise<Record<string, any>>
 }

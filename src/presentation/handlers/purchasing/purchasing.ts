@@ -38,6 +38,7 @@ import {
   IDeletePksCurahUseCase,
   IDeleteFreightUseCase,
   IDeletePkhoaUseCase,
+  IGetBankByPksCurahIdUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -67,6 +68,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private deletePksCurahUseCase: IDeletePksCurahUseCase
   private deleteFreightUseCase: IDeleteFreightUseCase
   private deletePkhoaUseCase: IDeletePkhoaUseCase
+  private getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -93,7 +95,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase,
     deletePksCurahUseCase: IDeletePksCurahUseCase,
     deleteFreightUseCase: IDeleteFreightUseCase,
-    deletePkhoaUseCase: IDeletePkhoaUseCase
+    deletePkhoaUseCase: IDeletePkhoaUseCase,
+    getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -121,6 +124,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.deletePksCurahUseCase = deletePksCurahUseCase
     this.deleteFreightUseCase = deleteFreightUseCase
     this.deletePkhoaUseCase = deletePkhoaUseCase
+    this.getBankByPksCurahIdUseCase = getBankByPksCurahIdUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -296,6 +300,24 @@ export class PurchasingHandler implements IPurchasingHandler {
         status: true,
         message: 'Data ditemukan',
         res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findBankByPksCurahId(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getBankByPksCurahIdUseCase.execute(
+        request.params.vendor_id
+      )
+
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
