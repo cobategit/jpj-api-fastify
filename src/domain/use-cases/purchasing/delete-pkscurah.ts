@@ -28,7 +28,7 @@ export class DeletePksCurahUseCase implements IDeletePksCurahUseCase {
                 res = await this.purchasingRepo.deletePksCurah(id, user_id)
             }
 
-            return { checkDeleted: boolCantDelete, ...res }
+            return { checkDeleted: boolCantDelete, delete: res }
         } catch (error) {
             throw new AppError(500, false, `${error}`, '501')
         }

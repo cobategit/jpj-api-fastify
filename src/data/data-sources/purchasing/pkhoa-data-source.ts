@@ -70,7 +70,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
         return rows
     }
 
-    async selectOne(id?: number | undefined): Promise<PkhoaEntity> {
+    async selectOne(id?: number | undefined): Promise<PkhoaEntity | null> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_FREIGHT_COST} where freight_cost_id = ?`,
             [id]
@@ -86,6 +86,16 @@ export class PkhoaDataSource implements IPkhoaDataSource {
         )
 
         return rows
+    }
+
+    async delete(id?: number | undefined, status: number = 5): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `delete pengajuan pkhoa`,
+            `update ${process.env.TABLE_FREIGHT_COST} set status = ? where freight_cost_id = ? and status = ?`,
+            [4, id!, status]
+        )
+
+        return res
     }
 
 }

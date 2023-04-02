@@ -104,7 +104,7 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return rows
     }
 
-    async selectOne(id?: number): Promise<PksCurahEntity> {
+    async selectOne(id?: number): Promise<PksCurahEntity | null> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_VENDOR} where vendor_id = ?`,
             [id]
@@ -116,7 +116,7 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async delete(id?: number, active: number = 2): Promise<any> {
         const res = await this.dml.dataManipulation(
             `delete pengajuan vendor`,
-            `update ${process.env.TABLE_VENDOR} set active = ? where vendor_id = ? and where active = ?`,
+            `update ${process.env.TABLE_VENDOR} set active = ? where vendor_id = ? and active = ?`,
             [3, id!, active]
         )
 

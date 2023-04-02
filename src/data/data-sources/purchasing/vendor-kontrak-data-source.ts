@@ -47,7 +47,7 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
         return rows
     }
 
-    async selectOne(id?: number | undefined): Promise<VendorKontrakEntity> {
+    async selectOne(id?: number | undefined): Promise<VendorKontrakEntity | null> {
         const [rows, fileds] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_VENDOR_KONTRAK} where vendor_contract_id = ?`,
             [id]

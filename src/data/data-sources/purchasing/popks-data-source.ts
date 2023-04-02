@@ -47,7 +47,7 @@ export class PoPksDataSource implements IPoPksDataSource {
         return rows
     }
 
-    async selectOne(id?: number | undefined): Promise<PoPksEntity> {
+    async selectOne(id?: number | undefined): Promise<PoPksEntity | null> {
         const [rows, fileds] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_POPKS} where po_pks_id = ?`,
             [id]

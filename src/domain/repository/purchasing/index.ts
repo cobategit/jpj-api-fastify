@@ -118,7 +118,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
-  async findOnePksCurah(id?: number): Promise<PksCurahEntity> {
+  async findOnePksCurah(id?: number): Promise<PksCurahEntity | null> {
     const rows = await this.pksCurahDataSource.selectOne(id)
     return rows
   }
@@ -158,7 +158,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${id}`,
-      cud: 'UPDATE',
+      cud: 'DELETE',
       isitransaksi_lama: `MENGUBAH STATUS VENDOR MENJADI TIDAK AKTIF`,
       user_id: user_id
     }
@@ -173,7 +173,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return { count: count.count, rows }
   }
 
-  async findOneFreight(id?: number): Promise<PksCurahEntity> {
+  async findOneFreight(id?: number): Promise<PksCurahEntity | null> {
     const rows = await this.freightDataSource.selectOne(id)
     return rows
   }
@@ -211,7 +211,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     const dataHistoryLog: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${id}`,
-      cud: 'UPDATE',
+      cud: 'DELETE',
       isitransaksi_lama: `MENGUBAH STATUS FREIGHT MENJADI TIDAK AKTIF`,
       user_id: user_id
     }
@@ -242,7 +242,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
-  async findOneStockpile(id?: number): Promise<StockpileEntity> {
+  async findOneStockpile(id?: number): Promise<StockpileEntity | null> {
     const rows = await this.stockpileDataSource.selectOne(id)
     return rows
   }
@@ -275,8 +275,8 @@ export class PurchasingRepository implements IPurchasingRepo {
     return { count: count.count, rows }
   }
 
-  async findOnePkhoa(id?: number): Promise<PkhoaEntity> {
-    const rows = await this.pkhoaDataSource.selectOne(id)
+  async findOnePkhoa(id?: number): Promise<PkhoaEntity | null> {
+    const rows = await this.pkhoaDataSource.selectOne(id!)
     return rows
   }
 
@@ -294,6 +294,21 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async deletePkhoa(id?: number | undefined, user_id?: number | undefined): Promise<any> {
+    const row = await this.pkhoaDataSource.delete(id!)
+
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${id}`,
+      cud: 'DELETE',
+      isitransaksi_lama: `MENGUBAH STATUS FREIGHT COST MENJADI TIDAK AKTIF`,
+      user_id: user_id
+    }
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return row
   }
 
   async findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PkhoaEntity[]> {

@@ -328,6 +328,19 @@ export function PurchasingRoute(
       purchasingHandler.findOnePkhoa.bind(purchasingHandler)
     )
 
+    fastify.delete<{ Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+      '/pkhoa/delete/:freight_cost_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.deletePkhoa.bind(purchasingHandler)
+    )
+
     fastify.post<{
       Body: PksCurahEntity | FreightEntity
       Querystring: ParamsEntity

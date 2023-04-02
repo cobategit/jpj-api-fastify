@@ -8,7 +8,7 @@ export interface IFreighDataSource {
     updateBank(id?: number, data?: FreightBankEntity): Promise<any>
     selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<FreightEntity[]>
     selectAllBank(conf: any): Promise<FreightBankEntity[]>
-    selectOne(id?: number): Promise<FreightEntity>
+    selectOne(id?: number): Promise<FreightEntity | null>
     selectBankByFreightId(id?: number[]): Promise<FreightBankEntity[]>
     delete(id?: number): Promise<any>
 }

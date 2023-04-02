@@ -37,6 +37,7 @@ import {
   IGetAllPksCurahBankUseCase,
   IDeletePksCurahUseCase,
   IDeleteFreightUseCase,
+  IDeletePkhoaUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -65,6 +66,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase
   private deletePksCurahUseCase: IDeletePksCurahUseCase
   private deleteFreightUseCase: IDeleteFreightUseCase
+  private deletePkhoaUseCase: IDeletePkhoaUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -90,7 +92,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase,
     getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase,
     deletePksCurahUseCase: IDeletePksCurahUseCase,
-    deleteFreightUseCase: IDeleteFreightUseCase
+    deleteFreightUseCase: IDeleteFreightUseCase,
+    deletePkhoaUseCase: IDeletePkhoaUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -117,6 +120,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getAllPksCurahBankUseCase = getAllPksCurahBankUseCase
     this.deletePksCurahUseCase = deletePksCurahUseCase
     this.deleteFreightUseCase = deleteFreightUseCase
+    this.deletePkhoaUseCase = deletePkhoaUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -345,6 +349,13 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
+      if (res.checkUpdated || !res.update[0].changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete vendor pkscurah tidak berhasil`,
+        })
+      }
+
       return ApiResponse.ok(request, reply, {
         status: true,
         message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
@@ -362,7 +373,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         request.user.user_id,
       )
 
-      if (res.checkDeleted) {
+      if (res.checkDeleted || !res.delete[0].changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Delete vendor pkscurah tidak berhasil`,
@@ -431,9 +442,16 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
+      if (res.checkUpdated || !res.update[0].changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete freight  tidak berhasil`,
+        })
+      }
+
       return ApiResponse.ok(request, reply, {
         status: true,
-        message: `Data update vendor freight berhasil diinput`,
+        message: `Data update freight berhasil diinput`,
         id: res[0].insertId,
       })
     } catch (error) {
@@ -448,16 +466,16 @@ export class PurchasingHandler implements IPurchasingHandler {
         request.user.user_id,
       )
 
-      if (res.checkDeleted) {
+      if (res.checkDeleted || !res.delete[0].changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
-          message: `Delete vendor freight tidak berhasil`,
+          message: `Delete freight tidak berhasil`,
         })
       }
 
       return ApiResponse.ok(request, reply, {
         status: true,
-        message: `Delete vendor freight berhasil`,
+        message: `Delete freight berhasil`,
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
@@ -630,10 +648,40 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
+      if (res.checkUpdated || !res.update[0].changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete pkhoa tidak berhasil`,
+        })
+      }
+
       return ApiResponse.ok(request, reply, {
         status: true,
         message: `Data update pkhoa berhasil diinput`,
         id: res[0].insertId,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async deletePkhoa(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.deletePkhoaUseCase.execute(
+        request.params.freight_cost_id,
+        request.user.user_id,
+      )
+
+      if (res.checkDeleted || !res.delete[0].changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete freight cost tidak berhasil`,
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: `Delete freight cost berhasil`,
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')

@@ -92,6 +92,10 @@ export interface IUpdatePkhoaUseCase {
   execute(id: number, user_id: number, data?: PkhoaEntity): Promise<any>
 }
 
+export interface IDeletePkhoaUseCase {
+  execute(id: number, user_id: number): Promise<any>
+}
+
 export interface IPengajuanKontrakPksUseCase {
   execute(user_id?: number, data?: PurchasingEntity): Promise<any>
 }

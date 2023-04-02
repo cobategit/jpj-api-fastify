@@ -47,7 +47,7 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         return rows
     }
 
-    async selectOne(id?: number | undefined): Promise<PurchasingEntity> {
+    async selectOne(id?: number | undefined): Promise<PurchasingEntity | null> {
         const [rows, fileds] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_PURCHASING} where purchasing_id = ?`,
             [id]

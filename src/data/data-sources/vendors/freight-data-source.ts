@@ -79,7 +79,7 @@ export class FreightDataSource implements IFreighDataSource {
         return rows
     }
 
-    async selectOne(id?: number | undefined): Promise<FreightEntity> {
+    async selectOne(id?: number | undefined): Promise<FreightEntity | null> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_FREIGHT} where freight_id = ?`,
             [id]

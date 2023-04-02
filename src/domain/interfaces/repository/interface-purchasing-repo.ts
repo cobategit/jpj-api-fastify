@@ -26,7 +26,7 @@ export interface IPurchasingRepo {
     conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>
   ): Promise<{ count: number; rows: PksCurahBankEntity[] }>
   findBankByPksCurahId(id?: number[]): Promise<PksCurahBankEntity[]>
-  findOnePksCurah(id?: number): Promise<PksCurahEntity>
+  findOnePksCurah(id?: number): Promise<PksCurahEntity | null>
   updatePksCurah(
     id: number,
     user_id: number,
@@ -36,7 +36,7 @@ export interface IPurchasingRepo {
   findAllFreight(
     conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>
   ): Promise<{ count: number; rows: FreightEntity[] }>
-  findOneFreight(id?: number): Promise<FreightEntity>
+  findOneFreight(id?: number): Promise<FreightEntity | null>
   updateFreight(id: number, user_id: number, data?: FreightEntity): Promise<any>
   deleteFreight(id?: number, user_id?: number): Promise<any>
   findAllFreightBank(
@@ -46,19 +46,20 @@ export interface IPurchasingRepo {
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: CurrencyEntity[] }>
   findOneCurrency(id?: number): Promise<CurrencyEntity>
-  findOneStockpile(id?: number): Promise<StockpileEntity>
+  findOneStockpile(id?: number): Promise<StockpileEntity | null>
   findAllStockpile(
     conf?: Pick<ParamsEntity, 'limit' | 'offset'>
   ): Promise<{ count: number; rows: StockpileEntity[] }>
   findBankByFreightId(id?: number[]): Promise<FreightBankEntity[]>
   pengajuanPkhoa(user_id?: number, data?: PkhoaEntity): Promise<any>
   findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number; rows: PkhoaEntity[] }>
-  findOnePkhoa(id?: number): Promise<PkhoaEntity>
+  findOnePkhoa(id?: number): Promise<PkhoaEntity | null>
   updatePkhoa(
     id: number,
     user_id: number,
     data?: PkhoaEntity
   ): Promise<any>
+  deletePkhoa(id?: number, user_id?: number): Promise<any>
   findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PkhoaEntity[]>
   pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any>
   findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>

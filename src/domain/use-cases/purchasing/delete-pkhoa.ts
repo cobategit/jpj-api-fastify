@@ -1,8 +1,8 @@
 import { AppError } from "@jpj-common/module";
 import { ParamsEntity } from "../../entity";
-import { IDeleteFreightUseCase, IPurchasingRepo } from "../../interfaces";
+import { IDeletePkhoaUseCase, IPurchasingRepo } from "../../interfaces";
 
-export class DeleteFreightUseCase implements IDeleteFreightUseCase {
+export class DeletePkhoaUseCase implements IDeletePkhoaUseCase {
     private purchasingRepo: IPurchasingRepo
 
     constructor(purchasingRepo: IPurchasingRepo) {
@@ -13,17 +13,17 @@ export class DeleteFreightUseCase implements IDeleteFreightUseCase {
         let res: Record<string, any> = {}
         let boolCantDelete: boolean = false
         const conf: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> = {
-            tableCol1: 'freight_id',
+            tableCol1: 'freight_cost_id',
             tableVal1: id
         }
 
         try {
-            const checkInFreightCost = await this.purchasingRepo.findOnePkhoaDynamic(conf)
+            const checkInVendorKontrakCost = await this.purchasingRepo.findOneVendorKontrakDynamic(conf)
 
-            if (checkInFreightCost.length > 0) {
+            if (checkInVendorKontrakCost.length > 0) {
                 boolCantDelete = true
             } else {
-                res = await this.purchasingRepo.deleteFreight(id, user_id)
+                res = await this.purchasingRepo.deletePkhoa(id, user_id)
             }
 
             return { checkDeleted: boolCantDelete, delete: res }
