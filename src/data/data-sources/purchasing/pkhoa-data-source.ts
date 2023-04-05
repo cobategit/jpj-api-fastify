@@ -57,7 +57,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
               LEFT JOIN ${process.env.TABLE_FREIGHT} AS f
                 ON fc.freight_id = f.freight_id
               LEFT JOIN ${process.env.TABLE_VENDOR} AS v
-                ON fc.vendor_id = f.vendor_id
+                ON fc.vendor_id = v.vendor_id
               LEFT JOIN ${process.env.TABLE_STOCKPILE} AS s
                 ON fc.stockpile_id = s.stockpile_id
               LEFT JOIN ${process.env.TABLE_CURRENCY} AS c

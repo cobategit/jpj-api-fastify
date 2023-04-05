@@ -17,6 +17,11 @@ export class GetOneFreightUseCase implements IGetOneFreightUseCase {
                 return null
             }
 
+            if (res != null) {
+                const resBank = await this.purchasingRepo.findBankByFreightId([id!])
+                res.bank = resBank
+            }
+
             return res
         } catch (error) {
             throw new AppError(500, false, `${error}`, '501')

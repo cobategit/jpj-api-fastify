@@ -1,4 +1,4 @@
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, ParamsEntity, PkhoaEntity, PksCurahEntity, PurchasingEntity, StockpileEntity } from '../../entity'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, PaginationEntity, ParamsEntity, PkhoaEntity, PksCurahEntity, PurchasingEntity, StockpileEntity } from '../../entity'
 
 export interface IRegisterUserPurchasingUseCase {
   execute(data: EntityUser): Promise<any>
@@ -17,7 +17,7 @@ export interface IPengajuanFreightUseCase {
 }
 
 export interface IGetAllPksCurahUseCase {
-  execute(conf?: ParamsEntity): Promise<Record<string, any>>
+  execute(conf?: ParamsEntity): Promise<PaginationEntity>
 }
 
 export interface IGetAllPksCurahBankUseCase {

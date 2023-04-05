@@ -1,5 +1,5 @@
 import { AppError } from "@jpj-common/module";
-import { ParamsEntity, PksCurahEntity } from "../../entity";
+import { ParamsEntity, PksCurahBankEntity, PksCurahEntity } from "../../entity";
 import { IGetOnePksCurahUseCase, IPurchasingRepo } from "../../interfaces";
 
 export class GetOnePksCurahUseCase implements IGetOnePksCurahUseCase {
@@ -15,6 +15,11 @@ export class GetOnePksCurahUseCase implements IGetOnePksCurahUseCase {
 
             if (res == null) {
                 return null
+            }
+
+            if (res != null) {
+                const resBank = await this.purchasingRepo.findBankByPksCurahId([id!])
+                res.bank = resBank
             }
 
             return res

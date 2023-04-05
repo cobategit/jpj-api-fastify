@@ -36,12 +36,45 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         throw new Error("Method not implemented.");
     }
 
-    async selectAll(conf: any): Promise<PurchasingEntity[]> {
+    async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<PurchasingEntity[]> {
         let limit = ''
+        let where = ``
 
-        if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
+        if (conf!.search) where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+        if (conf!.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_PURCHASING} ${limit}`, []
+            `SELECT
+            p.purchasing_id,
+            CASE
+              WHEN p.company = 1
+              THEN 'PT.JATIM PROPERTINDO JAYA'
+              ELSE 'PT. Ceria'
+            END AS company,
+            s.stockpile_name,
+            CASE
+              WHEN p.contract_type = 1
+              THEN 'PKS-Contract'
+              ELSE 'PKS-Spb'
+            END AS contract_type,
+            CASE
+              WHEN p.type = 1
+              THEN 'PKS-Contract'
+              ELSE 'PKS-Curah'
+            END AS TYPE,
+            v.vendor_name,
+            p.price,
+            p.quantity,
+            p.entry_date,
+            p.reject_note,
+            p.open_add
+          FROM
+          ${process.env.TABLE_PURCHASING} AS p
+            LEFT JOIN ${process.env.TABLE_STOCKPILE} AS s
+              ON s.stockpile_id = p.stockpile_id
+            LEFT JOIN ${process.env.TABLE_VENDOR} AS v
+              ON v.vendor_id = p.vendor_id
+          ${limit};
+            `, []
         )
 
         return rows

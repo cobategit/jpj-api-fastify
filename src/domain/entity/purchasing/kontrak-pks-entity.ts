@@ -1,7 +1,7 @@
 export interface PurchasingEntity {
     purchasing_id?: number
     stockpile_id?: number
-    contract_type?: number
+    contract_type?: number | string
     vendor_id?: number
     jenis_file?: string
     kategori_file?: string
@@ -21,7 +21,7 @@ export interface PurchasingEntity {
     freight_cost_id?: number
     admin_input?: string
     status?: number
-    company?: number
+    company?: number | string
     ho?: number
     link?: number
     import2?: string

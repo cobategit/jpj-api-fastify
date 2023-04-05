@@ -58,7 +58,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     }
 
     Promise.all(
-      [data?.file_rekbank?.forEach(async (val: string) => {
+      [data?.file_rekbank?.map(async (val: string) => {
         const dataBank: PksCurahBankEntity = {
           vendor_id: res[0].insertId,
           file_rekbank: val,
@@ -85,7 +85,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     }
 
     Promise.all(
-      [data?.file_rekbank?.forEach(async (val: string) => {
+      [data?.file_rekbank?.map(async (val: string) => {
         const dataBank: FreightBankEntity = {
           freight_id: res[0].insertId,
           file_rekbank: val,
@@ -135,17 +135,19 @@ export class PurchasingRepository implements IPurchasingRepo {
       user_id: user_id
     }
 
-    Promise.all(
-      [data?.file_rekbank?.forEach(async (val: string) => {
-        const dataBank: PksCurahBankEntity = {
-          vendor_id: id,
-          file_rekbank: val,
-          active: 2
-        }
+    // await Promise.all(
+    //   [
+    //     data?.file_rekbank?.map(async (val: string) => {
+    //       const dataBank: PksCurahBankEntity = {
+    //         vendor_id: id,
+    //         file_rekbank: val,
+    //         active: 2
+    //       }
 
-        await this.pksCurahDataSource.updateBank(dataBank.vendor_id, dataBank)
-      })]
-    )
+    //       await this.pksCurahDataSource.updateBank(id, dataBank)
+    //     })
+    //   ]
+    // )
 
     await this.historyLogDataSource.insert(dataHistoryLog)
 
@@ -188,17 +190,17 @@ export class PurchasingRepository implements IPurchasingRepo {
       user_id: user_id
     }
 
-    Promise.all(
-      [data?.file_rekbank?.forEach(async (val: string) => {
-        const dataBank: FreightBankEntity = {
-          freight_id: id,
-          file_rekbank: val,
-          active: 2
-        }
+    // Promise.all(
+    //   [data?.file_rekbank?.forEach(async (val: string) => {
+    //     const dataBank: FreightBankEntity = {
+    //       freight_id: id,
+    //       file_rekbank: val,
+    //       active: 2
+    //     }
 
-        await this.freightDataSource.updateBank(dataBank.freight_id, dataBank)
-      })]
-    )
+    //     await this.freightDataSource.updateBank(dataBank.freight_id, dataBank)
+    //   })]
+    // )
 
     await this.historyLogDataSource.insert(dataHistoryLog)
 

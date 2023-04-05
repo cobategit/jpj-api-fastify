@@ -145,6 +145,20 @@ export function PurchasingRoute(
       purchasingHandler.findAllPksCurahBank.bind(purchasingHandler)
     )
 
+    //@findall-pkscurah-bank
+    fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      '/pks-curah/bank/detail/:vendor_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findBankByPksCurahId.bind(purchasingHandler)
+    )
+
     //@findall-freight
     fastify
       .get<{ Querystring: ParamsEntity }>(

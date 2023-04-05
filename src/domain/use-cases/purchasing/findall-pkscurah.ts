@@ -1,5 +1,5 @@
 import { AppError, getPagination, setPagination } from "@jpj-common/module";
-import { FreightBankEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from "../../entity";
+import { FreightBankEntity, PaginationEntity, ParamsEntity, PksCurahBankEntity, PksCurahEntity } from "../../entity";
 import { IGetAllPksCurahUseCase, IPurchasingRepo } from "../../interfaces";
 
 export class GetAllPksCurahUseCase implements IGetAllPksCurahUseCase {
@@ -9,7 +9,7 @@ export class GetAllPksCurahUseCase implements IGetAllPksCurahUseCase {
         this.purchasingRepo = purchasingRepo
     }
 
-    async execute(conf?: ParamsEntity | undefined): Promise<Record<string, any>> {
+    async execute(conf?: ParamsEntity | undefined): Promise<PaginationEntity> {
         try {
             let tmpVendorId: number[] = []
             let limitNumber: number = 0
@@ -32,22 +32,24 @@ export class GetAllPksCurahUseCase implements IGetAllPksCurahUseCase {
                 })
             )
 
-            const resBank = await this.purchasingRepo.findBankByPksCurahId(tmpVendorId)
-
-            await Promise.all(
-                res.rows.map((val1: PksCurahEntity) => {
-                    const arr: Record<string, any>[] = []
-                    resBank.map((val2: PksCurahBankEntity) => {
-                        if (val1.vendor_id === val2.vendor_id) {
-                            let obj: Pick<PksCurahBankEntity, 'file_rekbank'> = {
-                                file_rekbank: val2.file_rekbank
+            if (tmpVendorId.length > 0) {
+                const resBank = await this.purchasingRepo.findBankByPksCurahId(tmpVendorId)
+                await Promise.all(
+                    res.rows.map((val1: PksCurahEntity) => {
+                        const arr: Record<string, any>[] = []
+                        resBank.map((val2: PksCurahBankEntity) => {
+                            if (val1.vendor_id == val2.vendor_id) {
+                                let obj: Pick<PksCurahBankEntity, 'v_bank_id' | 'file_rekbank'> = {
+                                    v_bank_id: val2.v_bank_id,
+                                    file_rekbank: val2.file_rekbank
+                                }
+                                arr.push(obj)
                             }
-                            arr.push(obj)
-                        }
+                        })
+                        val1.bank = arr
                     })
-                    val1.bank = arr
-                })
-            )
+                )
+            }
 
             const data = getPagination(res, conf?.page!, limitNumber)
 

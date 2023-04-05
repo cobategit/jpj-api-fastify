@@ -9,7 +9,7 @@ export interface PkhoaEntity {
     price?: number
     price_converted?: number
     payment_notes?: string
-    company_id?: number
+    company_id?: number | string
     remarks?: string
     shrink_tolerance_kg?: number
     shrink_tolerance_persen?: number

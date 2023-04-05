@@ -7,6 +7,7 @@ export interface FreightEntity {
     pic?: string
     phone_pic?: string
     active?: number
+    entry_date?: string
     file_npwp?: string
     file_pkp?: string
     file_ktp?: string

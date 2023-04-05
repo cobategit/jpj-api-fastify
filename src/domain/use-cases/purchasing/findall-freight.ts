@@ -30,21 +30,24 @@ export class GetAllFreightUseCase implements IGetAllFreightUseCase {
                 })
             )
 
-            const resBank = await this.purchasingRepo.findBankByFreightId(tmpFreightId)
-            await Promise.all(
-                res.rows.map((val1: FreightEntity) => {
-                    let arr: Record<string, any>[] = []
-                    resBank.map((val2: FreightBankEntity) => {
-                        if (val1.freight_id == val2.freight_id) {
-                            let obj: Pick<FreightBankEntity, 'file_rekbank'> = {
-                                file_rekbank: val2.file_rekbank
+            if (tmpFreightId.length > 0) {
+                const resBank = await this.purchasingRepo.findBankByFreightId(tmpFreightId)
+                await Promise.all(
+                    res.rows.map((val1: FreightEntity) => {
+                        let arr: Record<string, any>[] = []
+                        resBank.map((val2: FreightBankEntity) => {
+                            if (val1.freight_id == val2.freight_id) {
+                                let obj: Pick<FreightBankEntity, 'f_bank_id' | 'file_rekbank'> = {
+                                    f_bank_id: val2.f_bank_id,
+                                    file_rekbank: val2.file_rekbank
+                                }
+                                arr.push(obj)
                             }
-                            arr.push(obj)
-                        }
+                        })
+                        val1.bank = arr
                     })
-                    val1.bank = arr
-                })
-            )
+                )
+            }
             const data = getPagination(res, conf?.page!, limitNumber)
 
             return data

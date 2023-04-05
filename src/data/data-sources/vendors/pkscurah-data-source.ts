@@ -63,18 +63,18 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         let where = ``
         let limit = ``
 
-        if (conf?.search) {
-            where = `where vendor_name Like '%${conf.search}%'`
-        } else if (conf?.vendor_type == 'pks') {
-            if (!conf.search) {
-                where = `where curah = 0 and (vendor_name Like '%${conf.search}%')`
-            }
+        if (conf?.vendor_type == 'pks') {
             where = `where curah = 0`
-        } else if (conf?.vendor_type == 'curah') {
             if (!conf.search) {
-                where = `where curah = 1 and (vendor_name Like '%${conf.search}%')`
+                where += ` and (vendor_name Like '%${conf.search}%')`
             }
+        } else if (conf?.vendor_type == 'curah') {
             where = `where curah = 1`
+            if (!conf.search) {
+                where += ` and (vendor_name Like '%${conf.search}%')`
+            }
+        } else if (conf?.search) {
+            where = `where vendor_name Like '%${conf.search}%'`
         }
 
         if (conf?.limit || conf?.offset) limit = `limit ${conf.offset}, ${conf.limit}`
