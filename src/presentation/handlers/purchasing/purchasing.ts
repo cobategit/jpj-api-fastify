@@ -37,6 +37,7 @@ import {
   IDeleteFreightUseCase,
   IDeletePkhoaUseCase,
   IGetBankByPksCurahIdUseCase,
+  IGetAllKontrakPksUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -67,6 +68,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private deleteFreightUseCase: IDeleteFreightUseCase
   private deletePkhoaUseCase: IDeletePkhoaUseCase
   private getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
+  private getAllKontrakPksUseCase: IGetAllKontrakPksUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -94,7 +96,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     deletePksCurahUseCase: IDeletePksCurahUseCase,
     deleteFreightUseCase: IDeleteFreightUseCase,
     deletePkhoaUseCase: IDeletePkhoaUseCase,
-    getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
+    getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase,
+    getAllKontrakPksUseCase: IGetAllKontrakPksUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -123,6 +126,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.deleteFreightUseCase = deleteFreightUseCase
     this.deletePkhoaUseCase = deletePkhoaUseCase
     this.getBankByPksCurahIdUseCase = getBankByPksCurahIdUseCase
+    this.getAllKontrakPksUseCase = getAllKontrakPksUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -555,12 +559,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllStockpile(request: any, reply: any): Promise<void> {
     try {
-      const res = await this.getAllStockpileUseCase.execute(request.query)
+      const data = await this.getAllStockpileUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        res,
+        data,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -569,12 +573,12 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllCurrency(request: any, reply: any): Promise<void> {
     try {
-      const res = await this.getAllCurrencyUseCase.execute(request.query)
+      const data = await this.getAllCurrencyUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
         status: true,
         message: 'Data ditemukan',
-        res,
+        data,
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
@@ -602,6 +606,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   async pengajuanPkhoa(request: any, reply: any): Promise<void> {
     try {
       const data: PkhoaEntity = request.body
+      data.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
       data.status = 4
 
       if (request.files['file_pkhoa']) {
@@ -745,6 +750,20 @@ export class PurchasingHandler implements IPurchasingHandler {
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async findAllKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const data = await this.getAllKontrakPksUseCase.execute(request.query)
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
   }
 

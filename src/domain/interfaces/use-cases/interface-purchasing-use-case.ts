@@ -103,3 +103,7 @@ export interface IDeletePkhoaUseCase {
 export interface IPengajuanKontrakPksUseCase {
   execute(user_id?: number, data?: PurchasingEntity): Promise<any>
 }
+
+export interface IGetAllKontrakPksUseCase {
+  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<PaginationEntity>
+}

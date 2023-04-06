@@ -396,4 +396,10 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
+  async findAllKontrakPks(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<{ count: number, rows: PurchasingEntity[] }> {
+    const count = await this.purchasingDataSource.count()
+    const rows = await this.purchasingDataSource.selectAll(conf!)
+    return { count: count.count, rows }
+  }
+
 }

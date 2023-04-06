@@ -35,6 +35,7 @@ import {
   GetAllCurrencyUseCase,
   GetAllFreightBankUseCase,
   GetAllFreightUseCase,
+  GetAllKontrakPksUseCase,
   GetAllPkhoaUseCase,
   GetAllPksCurahBankUseCase,
   GetAllPksCurahUseCase,
@@ -179,6 +180,9 @@ const app = async () => {
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       ),
       new GetBankByPksCurahIdUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
+      ),
+      new GetAllKontrakPksUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql))
       )
     ),

@@ -4,7 +4,7 @@ export interface IPurchasingDataSource {
     count(): Promise<any>
     insert(data?: PurchasingEntity): Promise<any>
     update(id?: number, data?: PurchasingEntity): Promise<any>
-    selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<PurchasingEntity[]>
+    selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<PurchasingEntity[]>
     selectOne(id?: number): Promise<PurchasingEntity | null>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
 }

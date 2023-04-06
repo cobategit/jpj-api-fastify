@@ -65,12 +65,12 @@ export class PksCurahDataSource implements IPksCurahDataSource {
 
         if (conf?.vendor_type == 'pks') {
             where = `where curah = 0`
-            if (!conf.search) {
+            if (conf.search) {
                 where += ` and (vendor_name Like '%${conf.search}%')`
             }
         } else if (conf?.vendor_type == 'curah') {
             where = `where curah = 1`
-            if (!conf.search) {
+            if (conf.search) {
                 where += ` and (vendor_name Like '%${conf.search}%')`
             }
         } else if (conf?.search) {

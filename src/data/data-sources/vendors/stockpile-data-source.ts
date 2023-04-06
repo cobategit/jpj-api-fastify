@@ -44,10 +44,12 @@ export class StockpileDataSource implements IStockpileDataSource {
 
   async selectAll(conf: any): Promise<StockpileEntity[]> {
     let limit = ''
+    let where = ``
 
+    if (conf.search) where = `where stockpile_name LIKE '%${conf.search}%'`
     if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_STOCKPILE} ${limit}`,
+      `select * from ${process.env.TABLE_STOCKPILE} order by stockpile_name asc ${limit}`,
       []
     )
 

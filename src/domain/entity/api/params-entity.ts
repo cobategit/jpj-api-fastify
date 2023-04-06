@@ -12,4 +12,7 @@ export interface ParamsEntity {
     currency_id?: number
     tableCol1?: string
     tableVal1?: string | number
+    filter?: string | number
+    kontrak_type?: string | number
+    pks_type?: string | number
 }

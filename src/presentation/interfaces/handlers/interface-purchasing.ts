@@ -25,4 +25,5 @@ export interface IPurchasingHandler {
   updatePkhoa(request: any, reply: any): Promise<void>
   deletePkhoa(request: any, reply: any): Promise<void>
   pengajuanKontrakPks(request: any, reply: any): Promise<void>
+  findAllKontrakPks(request: any, reply: any): Promise<void>
 }
