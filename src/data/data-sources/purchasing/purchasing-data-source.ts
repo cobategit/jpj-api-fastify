@@ -72,18 +72,23 @@ export class PurchasingDataSource implements IPurchasingDataSource {
               THEN 'PKS-Contract'
               ELSE 'PKS-Curah'
             END AS TYPE,
+            popks.contract_no,
             v.vendor_name,
             p.price,
             p.quantity,
             p.entry_date,
             p.reject_note,
-            p.open_add
+            p.open_add,
+            p.status,
+            popks.notes2
           FROM
           ${process.env.TABLE_PURCHASING} AS p
             LEFT JOIN ${process.env.TABLE_STOCKPILE} AS s
               ON s.stockpile_id = p.stockpile_id
             LEFT JOIN ${process.env.TABLE_VENDOR} AS v
               ON v.vendor_id = p.vendor_id
+            LEFT JOIN ${process.env.TABLE_POPKS} popks
+              ON popks.purchasing_id = p.purchasing_id
           ${limit};
             `, []
         )
