@@ -19,9 +19,12 @@ export class GetAllKontrakPksUseCase implements IGetAllKontrakPksUseCase {
                     limit,
                     offset,
                     search: conf?.search,
+                    pks_type: conf?.pks_type,
+                    kontrak_type: conf?.kontrak_type
                 }
                 limitNumber = limit
             }
+
             const res = await this.purchasingRepo.findAllKontrakPks(conf)
             const data = getPagination(res, conf?.page!, limitNumber)
 

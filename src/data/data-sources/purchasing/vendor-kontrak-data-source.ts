@@ -32,6 +32,16 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
         return res
     }
 
+    async bulkInsert(data?: VendorKontrakEntity[] | undefined): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `insert purchasing`,
+            `insert into ${process.env.TABLE_VENDOR_KONTRAK} 
+            (freight_cost_id, po_pks_id, stockpile_contract_id, quantity, stockpile_quantity, status, entry_by, entry_date) 
+            VALUES (?)`,
+            [data!]
+        )
+    }
+
     async update(id?: number | undefined, data?: VendorKontrakEntity | undefined): Promise<any> {
         throw new Error("Method not implemented.");
     }

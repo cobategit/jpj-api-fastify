@@ -17,7 +17,7 @@ export const storageMulterFastify = multerFastify.diskStorage({
         let nameFile = ''
         let vendor = req.body.vendor_name || req.body.freight_supplier
 
-        if (req.routeOptions.method == 'PATCH') revisi = 'revisi'
+        if (req.routeOptions.method == 'PATCH') revisi = 'revisi-'
 
         if (req.files['file_npwp']) {
             nameFile = `npwp-${revisi}` +
@@ -54,39 +54,39 @@ export const storageMulterFastify = multerFastify.diskStorage({
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_popks1']) {
-            nameFile = `popks1-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}-${revisi}` +
+            nameFile = `popks1-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
-                `${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_popks2']) {
-            nameFile = `popks-approval-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}-${revisi}` +
+            nameFile = `popks-approval-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
-                `${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_popks3']) {
-            nameFile = `popks2-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}-${revisi}` +
+            nameFile = `popks2-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
-                `${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_popks4']) {
-            nameFile = `popks3-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}-${revisi}` +
+            nameFile = `popks3-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
-                `${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_popks5']) {
-            nameFile = `popks4-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}-${revisi}` +
+            nameFile = `popks4-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
-                `${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_popks6']) {
-            nameFile = `popks5-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}-${revisi}` +
+            nameFile = `popks5-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
-                `${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 101)}` +
                 `${path.extname(file.originalname)}`
         }
 

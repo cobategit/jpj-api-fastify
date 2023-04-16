@@ -22,6 +22,7 @@ export interface IPoPksDataSource {
 export interface IVendorKontrakDataSource {
     count(): Promise<any>
     insert(data?: VendorKontrakEntity): Promise<any>
+    bulkInsert(data?: VendorKontrakEntity[]): Promise<any>
     update(id?: number, data?: VendorKontrakEntity): Promise<any>
     selectAll(conf: any): Promise<VendorKontrakEntity[]>
     selectOne(id?: number): Promise<VendorKontrakEntity | null>

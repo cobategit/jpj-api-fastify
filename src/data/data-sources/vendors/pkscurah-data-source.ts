@@ -22,8 +22,8 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async insert(data?: PksCurahEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `insert pengajuan ${data?.curah}`,
-            `insert into ${process.env.TABLE_VENDOR} (vendor_code, vendor_name, vendor_address, active, entry_date, stockpile_id, pic, phone_pic, file_npwp, file_pkp, curah, notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-            [data?.vendor_code, data?.vendor_name, data?.vendor_address, data?.active, data?.entry_date, data?.stockpile_id, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.curah, data?.notes]
+            `insert into ${process.env.TABLE_VENDOR} (vendor_code, vendor_name, vendor_address, active, entry_date, pic, phone_pic, file_npwp, file_pkp, curah, notes) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+            [data?.vendor_code, data?.vendor_name, data?.vendor_address, data?.active, data?.entry_date, data?.pic, data?.phone_pic, data?.file_npwp, data?.file_pkp, data?.curah, data?.notes]
         )
 
         return res
@@ -52,7 +52,7 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async updateBank(id?: number, data?: PksCurahBankEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `update pengajuan pkscurah bank`,
-            `update ${process.env.TABLE_VENDOR_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where vendor_id = ?`,
+            `update ${process.env.TABLE_VENDOR_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where v_ban = ?`,
             [data?.bank_name, data?.account_no, data?.file_rekbank, id!]
         )
 
@@ -93,6 +93,15 @@ export class PksCurahDataSource implements IPksCurahDataSource {
             `select * from ${process.env.TABLE_VENDOR_BANK} order by v_bank_id desc ${limit}`, []
         )
         return rows
+    }
+
+    async selectOneBank(id?: number | undefined): Promise<PksCurahBankEntity | null> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_VENDOR_BANK} where v_bank_id = ?`,
+            [id]
+        )
+
+        return rows[0]
     }
 
     async selectBankByPksCurahId(id?: number[] | undefined, conf?: Record<string, any> | undefined): Promise<PksCurahBankEntity[]> {

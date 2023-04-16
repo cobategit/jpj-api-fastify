@@ -49,18 +49,20 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         } else if (conf!.kontrak_type == 'PKS-Spb') {
             where = `where (p.type = 2 or p.type = 1) and p.contract_type = 2`
             if (conf!.search) where += `and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
-        }
-        if (conf!.search) where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+        } else if (conf!.search) where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+
         if (conf!.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
 
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `SELECT
-            p.purchasing_id,
+            p.*,
             CASE
               WHEN p.company = 1
               THEN 'PT.JATIM PROPERTINDO JAYA'
               ELSE 'PT. Ceria'
             END AS company,
+            s.stockpile_id,
+            s.stockpile_code,
             s.stockpile_name,
             CASE
               WHEN p.contract_type = 1
@@ -71,15 +73,11 @@ export class PurchasingDataSource implements IPurchasingDataSource {
               WHEN p.type = 1
               THEN 'PKS-Contract'
               ELSE 'PKS-Curah'
-            END AS TYPE,
+            END AS type,
             popks.contract_no,
+            v.vendor_id,
             v.vendor_name,
-            p.price,
-            p.quantity,
-            p.entry_date,
-            p.reject_note,
-            p.open_add,
-            p.status,
+            v.ppn as vendor_ppn,
             popks.notes2
           FROM
           ${process.env.TABLE_PURCHASING} AS p
@@ -89,6 +87,8 @@ export class PurchasingDataSource implements IPurchasingDataSource {
               ON v.vendor_id = p.vendor_id
             LEFT JOIN ${process.env.TABLE_POPKS} popks
               ON popks.purchasing_id = p.purchasing_id
+          ${where}
+          ORDER BY purchasing_id DESC
           ${limit};
             `, []
         )

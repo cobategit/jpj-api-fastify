@@ -118,6 +118,11 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
+  async findOnePksCurahBank(id?: number | undefined): Promise<PksCurahBankEntity | null> {
+    const row = await this.pksCurahDataSource.selectOneBank(id);
+    return row
+  }
+
   async findOnePksCurah(id?: number): Promise<PksCurahEntity | null> {
     const rows = await this.pksCurahDataSource.selectOne(id)
     return rows
@@ -135,19 +140,35 @@ export class PurchasingRepository implements IPurchasingRepo {
       user_id: user_id
     }
 
-    // await Promise.all(
-    //   [
-    //     data?.file_rekbank?.map(async (val: string) => {
-    //       const dataBank: PksCurahBankEntity = {
-    //         vendor_id: id,
-    //         file_rekbank: val,
-    //         active: 2
-    //       }
+    let vBankId: string[] = []
 
-    //       await this.pksCurahDataSource.updateBank(id, dataBank)
-    //     })
-    //   ]
-    // )
+    if (Array.isArray(data!.v_bank_id)) {
+      vBankId = data?.v_bank_id!
+    } else {
+      vBankId.push(data?.v_bank_id!)
+    }
+
+
+    await Promise.all(
+      [
+        data?.file_rekbank?.forEach(async (val: string, i: number) => {
+          if (vBankId[i]) {
+            const dataBank: PksCurahBankEntity = {
+              v_bank_id: parseInt(vBankId[i]),
+              file_rekbank: val,
+              active: 2
+            }
+            await this.pksCurahDataSource.updateBank(parseInt(vBankId[i]), dataBank)
+          } else {
+            const dataBank: PksCurahBankEntity = {
+              file_rekbank: val,
+              active: 2
+            }
+            await this.pksCurahDataSource.insertBank(dataBank)
+          }
+        })
+      ]
+    )
 
     await this.historyLogDataSource.insert(dataHistoryLog)
 
@@ -190,17 +211,35 @@ export class PurchasingRepository implements IPurchasingRepo {
       user_id: user_id
     }
 
-    // Promise.all(
-    //   [data?.file_rekbank?.forEach(async (val: string) => {
-    //     const dataBank: FreightBankEntity = {
-    //       freight_id: id,
-    //       file_rekbank: val,
-    //       active: 2
-    //     }
+    let fBankId: string[] = []
 
-    //     await this.freightDataSource.updateBank(dataBank.freight_id, dataBank)
-    //   })]
-    // )
+    if (Array.isArray(data!.f_bank_id)) {
+      fBankId = data?.f_bank_id!
+    } else {
+      fBankId.push(data?.f_bank_id!)
+    }
+
+
+    await Promise.all(
+      [
+        data?.file_rekbank?.forEach(async (val: string, i: number) => {
+          if (fBankId[i]) {
+            const dataBank: FreightBankEntity = {
+              f_bank_id: parseInt(fBankId[i]),
+              file_rekbank: val,
+              active: 2
+            }
+            await this.freightDataSource.updateBank(parseInt(fBankId[i]), dataBank)
+          } else {
+            const dataBank: PksCurahBankEntity = {
+              file_rekbank: val,
+              active: 2
+            }
+            await this.freightDataSource.insertBank(dataBank)
+          }
+        })
+      ]
+    )
 
     await this.historyLogDataSource.insert(dataHistoryLog)
 
@@ -318,10 +357,15 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
+  async getPkhoaExclude(stockpile_id: number, vendor_id: number): Promise<any> {
+    const rows = await this.pkhoaDataSource.selectPkhoaExclude(stockpile_id, vendor_id)
+    return rows
+  }
+
   async pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any> {
     let pricePoPks: number = data?.price!
     const resPurchasing = await this.purchasingDataSource.insert(data)
-    const resPpn = await this.setupsDataSource.selectByNama('ppn 11%')
+    const resPpn = await this.setupsDataSource.selectByNama(process.env.PPN_NAME)
 
     if (data?.ppn == 1) {
       pricePoPks = data?.price! / (1 + resPpn.nilai!)
@@ -334,14 +378,25 @@ export class PurchasingRepository implements IPurchasingRepo {
       exchange_rate: 1,
       price: pricePoPks,
       final_status: 4,
+      entry_date: data?.entry_date
     }
     const resPoPks = await this.poPksDataSource.insert(dataPoPks)
 
     if (data?.freight == 2) {
+
+      let freighCostId: string[] = []
+
+      if (Array.isArray(data!.freight_cost_id)) {
+        freighCostId = data?.freight_cost_id!
+      } else {
+        freighCostId.push(data?.freight_cost_id!.toString())
+      }
+
       let dataVendorKontrak: VendorKontrakEntity = {
         po_pks_id: resPoPks[0].insertId,
         freight_cost_id: data?.freight_cost_id,
         quantity: data?.quantity,
+        entry_date: data?.entry_date,
         status: 1
       }
       const resVendorKontrak = await this.vendorKontrakDataSource.insert(dataVendorKontrak)
@@ -396,7 +451,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
-  async findAllKontrakPks(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<{ count: number, rows: PurchasingEntity[] }> {
+  async findAllKontrakPks(conf?: ParamsEntity): Promise<{ count: number, rows: PurchasingEntity[] }> {
     const count = await this.purchasingDataSource.count()
     const rows = await this.purchasingDataSource.selectAll(conf!)
     return { count: count.count, rows }

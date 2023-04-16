@@ -96,7 +96,7 @@ export function PurchasingRoute(
             upload.fields([
               { name: 'file_npwp', maxCount: 1 },
               { name: 'file_pkp', maxCount: 1 },
-              // { name: 'file_rekbank' },
+              { name: 'file_rekbank' },
             ]),
           ],
         },
@@ -185,7 +185,7 @@ export function PurchasingRoute(
             upload.fields([
               { name: 'file_npwp', maxCount: 1 },
               { name: 'file_pkp', maxCount: 1 },
-              // { name: 'file_rekbank' },
+              { name: 'file_rekbank' },
               { name: 'file_ktp', maxCount: 1 },
             ]),
           ],
@@ -382,12 +382,26 @@ export function PurchasingRoute(
       purchasingHandler.deletePkhoa.bind(purchasingHandler)
     )
 
+    //@find-pkhoa-exclude
+    fastify.get<{ Querystring: Pick<ParamsEntity, 'vendor_id' | 'stockpile_id'> }>(
+      '/pkhoa-exclude',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findPkhoaExclude.bind(purchasingHandler)
+    )
+
     //@pengajuan-kontrak-pks
     fastify.post<{
       Body: PksCurahEntity | FreightEntity
       Querystring: ParamsEntity
     }>(
-      '/pengajuan-kontrak-pks',
+      '/kontrak-pks',
       {
         logLevel: 'info',
         preHandler: [

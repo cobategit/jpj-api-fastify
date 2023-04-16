@@ -100,10 +100,14 @@ export interface IDeletePkhoaUseCase {
   execute(id: number, user_id: number): Promise<any>
 }
 
+export interface IGetPkhoaExcludeUseCase {
+  execute(stockpile_id: number, vendor_id: number): Promise<any>
+}
+
 export interface IPengajuanKontrakPksUseCase {
   execute(user_id?: number, data?: PurchasingEntity): Promise<any>
 }
 
 export interface IGetAllKontrakPksUseCase {
-  execute(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<PaginationEntity>
+  execute(conf?: ParamsEntity): Promise<PaginationEntity>
 }

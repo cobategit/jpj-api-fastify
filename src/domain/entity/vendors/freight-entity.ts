@@ -15,6 +15,7 @@ export interface FreightEntity {
     jenis_file?: string
     kategori_file?: string
     notes?: string
+    f_bank_id?: string | string[]
     bank?: FreightBankEntity[]
 }
 

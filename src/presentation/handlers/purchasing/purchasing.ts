@@ -38,6 +38,7 @@ import {
   IDeletePkhoaUseCase,
   IGetBankByPksCurahIdUseCase,
   IGetAllKontrakPksUseCase,
+  IGetPkhoaExcludeUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -69,6 +70,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private deletePkhoaUseCase: IDeletePkhoaUseCase
   private getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
   private getAllKontrakPksUseCase: IGetAllKontrakPksUseCase
+  private getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -97,7 +99,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     deleteFreightUseCase: IDeleteFreightUseCase,
     deletePkhoaUseCase: IDeletePkhoaUseCase,
     getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase,
-    getAllKontrakPksUseCase: IGetAllKontrakPksUseCase
+    getAllKontrakPksUseCase: IGetAllKontrakPksUseCase,
+    getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -127,6 +130,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.deletePkhoaUseCase = deletePkhoaUseCase
     this.getBankByPksCurahIdUseCase = getBankByPksCurahIdUseCase
     this.getAllKontrakPksUseCase = getAllKontrakPksUseCase
+    this.getPkhoaExcludeUseCase = getPkhoaExcludeUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -349,7 +353,6 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       let dataBank: string[] = []
       const data: PksCurahEntity = request.body
-      data.stockpile_id = request.user.user_id
 
       if (request.files['file_npwp']) {
         data!.file_npwp = `${process.env.URL_FILE}/purchasing/${request.files['file_npwp'][0].filename}`
@@ -357,16 +360,16 @@ export class PurchasingHandler implements IPurchasingHandler {
       if (request.files['file_pkp']) {
         data!.file_pkp = `${process.env.URL_FILE}/purchasing/${request.files['file_pkp'][0].filename}`
       }
-      // if (request.files['file_rekbank']) {
-      //   Promise.all([
-      //     request.files['file_rekbank'].forEach((val: any) => {
-      //       let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
-      //       dataBank.push(file)
-      //     }),
-      //   ])
-      // }
+      if (request.files['file_rekbank']) {
+        Promise.all([
+          request.files['file_rekbank'].map((val: any, index: number) => {
+            let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+            dataBank.push(file)
+          }),
+        ])
+      }
 
-      // data.file_rekbank = dataBank
+      data.file_rekbank = dataBank
 
       const res = await this.updatePksCurahUseCase.execute(
         request.params.vendor_id,
@@ -385,6 +388,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         status: true,
         message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
         id: request.params.vendor_id,
+        res
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
@@ -448,6 +452,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async updateFreight(request: any, reply: any): Promise<void> {
     try {
+      let dataBank: string[] = []
       const data: FreightEntity = request.body
       data.id_user_stockpile = request.user.user_id
 
@@ -460,6 +465,16 @@ export class PurchasingHandler implements IPurchasingHandler {
       if (request.files['file_ktp']) {
         data!.file_ktp = `${process.env.URL_FILE}/purchasing/${request.files['file_ktp'][0].filename}`
       }
+      if (request.files['file_rekbank']) {
+        Promise.all([
+          request.files['file_rekbank'].map((val: any, index: number) => {
+            let file = `${process.env.URL_FILE}/purchasing/${val.filename}`
+            dataBank.push(file)
+          }),
+        ])
+      }
+
+      data.file_rekbank = dataBank
 
       const res = await this.updateFreightUseCase.execute(
         request.params.freight_id,
@@ -711,6 +726,20 @@ export class PurchasingHandler implements IPurchasingHandler {
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async findPkhoaExclude(request: any, reply: any): Promise<void> {
+    try {
+      const data = await this.getPkhoaExcludeUseCase.execute(request.query.stockpile_id, request.query.vendor_id)
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
     }
   }
 

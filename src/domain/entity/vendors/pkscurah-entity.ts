@@ -8,6 +8,8 @@ export interface PksCurahEntity {
     active?: number
     pic?: string
     phone_pic?: string
+    ppn_tax_id?: number
+    ppn?: number
     file_npwp?: string
     file_pkp?: string
     file_rekbank?: string[]
@@ -15,6 +17,7 @@ export interface PksCurahEntity {
     jenis_file?: string
     kategori_file?: string
     notes?: string
+    v_bank_id?: string | string[]
     bank?: PksCurahBankEntity[]
 }
 
