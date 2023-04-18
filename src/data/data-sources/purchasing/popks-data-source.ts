@@ -48,7 +48,7 @@ export class PoPksDataSource implements IPoPksDataSource {
     }
 
     async selectOne(id?: number | undefined): Promise<PoPksEntity | null> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_POPKS} where po_pks_id = ?`,
             [id]
         )
@@ -57,12 +57,22 @@ export class PoPksDataSource implements IPoPksDataSource {
     }
 
     async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PoPksEntity[]> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_POPKS} where ${conf?.tableCol1} = ?`,
             [conf?.tableVal1]
         )
 
         return rows
+    }
+
+    async delete(id?: number | undefined): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `delete popks`,
+            `delete from ${process.env.TABLE_POPKS} where purchasing_id = ? and final_status = ?`,
+            [id!, 4]
+        )
+
+        return res
     }
 
 }

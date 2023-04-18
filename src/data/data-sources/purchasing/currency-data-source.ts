@@ -48,7 +48,7 @@ export class CurrencyDataSource implements ICurrencyDataSource {
     }
 
     async selectOne(id?: number | undefined): Promise<CurrencyEntity> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_CURRENCY} where currency_id = ?`,
             [id]
         )

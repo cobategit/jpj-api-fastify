@@ -36,7 +36,7 @@ export function PurchasingRoute(
 
     //@pengajuan-vendor (pkscurah/freight)
     fastify.post<{
-      Body: PksCurahEntity | FreightEntity
+      Body: PksCurahEntity | FreightEntity,
       Querystring: ParamsEntity
     }>(
       '/pengajuan-vendor',
@@ -85,7 +85,7 @@ export function PurchasingRoute(
         purchasingHandler.findAllPksCurah.bind(purchasingHandler)
       )
       //@updated-pkscurah
-      .patch<{ Body: PksCurahEntity; Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      .patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'vendor_id'> }>(
         '/pks-curah/:vendor_id',
         {
           logLevel: 'info',
@@ -174,7 +174,7 @@ export function PurchasingRoute(
         purchasingHandler.findAllFreight.bind(purchasingHandler)
       )
       //@updated-freight
-      .patch<{ Body: FreightEntity; Params: Pick<ParamsEntity, 'freight_id'> }>(
+      .patch<{ Body: FreightEntity, Params: Pick<ParamsEntity, 'freight_id'> }>(
         '/freight/:freight_id',
         {
           logLevel: 'info',
@@ -338,7 +338,7 @@ export function PurchasingRoute(
         purchasingHandler.findAllPkhoa.bind(purchasingHandler)
       )
       //@updated-pkhoa
-      .patch<{ Body: PkhoaEntity; Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+      .patch<{ Body: PkhoaEntity, Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
         '/pkhoa/:freight_cost_id',
         {
           logLevel: 'info',
@@ -398,7 +398,7 @@ export function PurchasingRoute(
 
     //@pengajuan-kontrak-pks
     fastify.post<{
-      Body: PksCurahEntity | FreightEntity
+      Body: PksCurahEntity & FreightEntity,
       Querystring: ParamsEntity
     }>(
       '/kontrak-pks',
@@ -419,6 +419,25 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.pengajuanKontrakPks.bind(purchasingHandler)
+    ).patch<{ Body: PksCurahEntity & FreightEntity, Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+      '/kontrak-pks/:purchasing_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+          upload.fields([
+            { name: 'file_popks1', maxCount: 1 },
+            { name: 'file_popks2', maxCount: 1 },
+            { name: 'file_popks3', maxCount: 1 },
+            { name: 'file_popks4', maxCount: 1 },
+            { name: 'file_popks5', maxCount: 1 },
+            { name: 'file_popks6', maxCount: 1 },
+          ]),
+        ],
+      },
+      purchasingHandler.updateFilePurchasing.bind(purchasingHandler)
     )
 
     //@findall-kontrak-pks
@@ -433,6 +452,45 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findAllKontrakPks.bind(purchasingHandler)
+    )
+
+    //@findaone-kontrak-pks
+    fastify.get<{ Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+      '/kontrak-pks/:purchasing_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findOneKontrakPks.bind(purchasingHandler)
+    ).delete<{ Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+      '/kontrak-pks/:purchasing_id',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.deletePengajuanKontrakPks.bind(purchasingHandler)
+    )
+
+    //@plan-payment-date
+    fastify.get<{ Querystring: ParamsEntity }>(
+      '/plan-payment-date',
+      {
+        logLevel: 'info',
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findPlanPaymentDate.bind(purchasingHandler)
     )
 
     done()

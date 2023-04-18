@@ -26,7 +26,7 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
             `insert into ${process.env.TABLE_VENDOR_KONTRAK} 
             (freight_cost_id, po_pks_id, stockpile_contract_id, quantity, stockpile_quantity, status, entry_by, entry_date) 
             VALUES (?,?,?,?,?,?,?,?)`,
-            [data?.freight_cost_id, data?.po_pks_id, data?.stockpile_contract_id, data?.quantity, data?.status, data?.entry_by, data?.entry_date]
+            [data?.freight_cost_id, data?.po_pks_id, data?.stockpile_contract_id, data?.quantity, data?.stockpile_quantity, data?.status, data?.entry_by, data?.entry_date]
         )
 
         return res
@@ -40,6 +40,8 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
             VALUES (?)`,
             [data!]
         )
+
+        return res
     }
 
     async update(id?: number | undefined, data?: VendorKontrakEntity | undefined): Promise<any> {
@@ -58,7 +60,7 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
     }
 
     async selectOne(id?: number | undefined): Promise<VendorKontrakEntity | null> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_VENDOR_KONTRAK} where vendor_contract_id = ?`,
             [id]
         )
@@ -67,12 +69,22 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
     }
 
     async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<VendorKontrakEntity[]> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_VENDOR_KONTRAK} where ${conf?.tableCol1} = ?`,
             [conf?.tableVal1]
         )
 
         return rows
+    }
+
+    async delete(id?: number | undefined): Promise<any> {
+        const res = await this.dml.dataManipulation(
+            `delete vendor kontrak`,
+            `delete from ${process.env.TABLE_VENDOR_KONTRAK} where po_pks_id = ?`,
+            [id!]
+        )
+
+        return res
     }
 
 }

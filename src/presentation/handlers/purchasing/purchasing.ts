@@ -20,7 +20,6 @@ import {
   IUpdateFreightUseCase,
   IUpdatePksCurahUseCase,
   IGetAllStockpileUseCase,
-  ParamsEntity,
   PksCurahEntity,
   IGetBankByFreightIdUseCase,
   PkhoaEntity,
@@ -39,6 +38,10 @@ import {
   IGetBankByPksCurahIdUseCase,
   IGetAllKontrakPksUseCase,
   IGetPkhoaExcludeUseCase,
+  IGetPlanPaymentDateUseCase,
+  IGetOneKontrakPksUseCase,
+  IDeletePengajuanKontrakPksUseCase,
+  IUpdateFilePurchasingUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -71,6 +74,10 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
   private getAllKontrakPksUseCase: IGetAllKontrakPksUseCase
   private getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase
+  private getPlanPaymentDateUseCase: IGetPlanPaymentDateUseCase
+  private getOneKontrakPksUseCase: IGetOneKontrakPksUseCase
+  private deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase
+  private updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -100,7 +107,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     deletePkhoaUseCase: IDeletePkhoaUseCase,
     getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase,
     getAllKontrakPksUseCase: IGetAllKontrakPksUseCase,
-    getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase
+    getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase,
+    getPlanPaymentDateUseCase: IGetPlanPaymentDateUseCase,
+    getOneKontrakPksUseCase: IGetOneKontrakPksUseCase,
+    deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase,
+    updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -131,6 +142,10 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getBankByPksCurahIdUseCase = getBankByPksCurahIdUseCase
     this.getAllKontrakPksUseCase = getAllKontrakPksUseCase
     this.getPkhoaExcludeUseCase = getPkhoaExcludeUseCase
+    this.getPlanPaymentDateUseCase = getPlanPaymentDateUseCase
+    this.getOneKontrakPksUseCase = getOneKontrakPksUseCase
+    this.deletePengajuanKontrakPksUseCase = deletePengajuanKontrakPksUseCase
+    this.updateFilePurchasingUseCase = updateFilePurchasingUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -377,7 +392,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      if (res.checkUpdated || !res.update[0].changedRows) {
+      if (res.checkUpdated || !res?.update[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Updated vendor pkscurah tidak berhasil`,
@@ -402,7 +417,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         request.user.user_id,
       )
 
-      if (res.checkDeleted || !res.delete[0].changedRows) {
+      if (res.checkDeleted || !res?.delete[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Delete vendor pkscurah tidak berhasil`,
@@ -482,7 +497,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      if (res.checkUpdated || !res.update[0].changedRows) {
+      if (res.checkUpdated || !res?.update[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Delete freight  tidak berhasil`,
@@ -506,7 +521,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         request.user.user_id,
       )
 
-      if (res.checkDeleted || !res.delete[0].changedRows) {
+      if (res.checkDeleted || !res?.delete[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Delete freight tidak berhasil`,
@@ -689,7 +704,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      if (res.checkUpdated || !res.update[0].changedRows) {
+      if (res.checkUpdated || !res?.update[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Delete pkhoa tidak berhasil`,
@@ -713,7 +728,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         request.user.user_id,
       )
 
-      if (res.checkDeleted || !res.delete[0].changedRows) {
+      if (res.checkDeleted || !res?.delete[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,
           message: `Delete freight cost tidak berhasil`,
@@ -731,7 +746,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findPkhoaExclude(request: any, reply: any): Promise<void> {
     try {
-      const data = await this.getPkhoaExcludeUseCase.execute(request.query.stockpile_id, request.query.vendor_id)
+      const data = await this.getPkhoaExcludeUseCase.execute(request.query.stockpile_id, request.query.vendor_id, request.query.req_payment_date)
 
       return ApiResponse.ok(request, reply, {
         status: true,
@@ -793,6 +808,114 @@ export class PurchasingHandler implements IPurchasingHandler {
       })
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findOneKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.getOneKontrakPksUseCase.execute(
+        request.params.purchasing_id
+      )
+
+      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findPlanPaymentDate(request: any, reply: any): Promise<void> {
+    try {
+      const data = await this.getPlanPaymentDateUseCase.execute()
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: `${format(data.tglBayar, 'yyyy-MM-dd')}`,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async deletePengajuanKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.deletePengajuanKontrakPksUseCase.execute(
+        request.params.purchasing_id,
+        request.user.user_id,
+      )
+
+      if (res.checkData) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Data tidak ada, Delete pengajuan kontrak pks tidak berhasil`,
+        })
+      }
+
+      if (res.checkDeleted || !res?.deletePurchasing[0]?.affectedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Delete pengajuan kontrak pks tidak berhasil`,
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: `Delete pengajuan kontrak pks berhasil`,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async updateFilePurchasing(request: any, reply: any): Promise<void> {
+    try {
+      const data: PurchasingEntity = request.body
+
+      if (request.files['file_popks1']) {
+        data!.upload_file = `${process.env.URL_FILE}/purchasing/${request.files['file_popks1'][0].filename}`
+      }
+      if (request.files['file_popks2']) {
+        data!.approval_file = `${process.env.URL_FILE}/purchasing/${request.files['file_popks2'][0].filename}`
+      }
+      if (request.files['file_popks3']) {
+        data!.upload_file1 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks3'][0].filename}`
+      }
+      if (request.files['file_popks4']) {
+        data!.upload_file2 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks4'][0].filename}`
+      }
+      if (request.files['file_popks5']) {
+        data!.upload_file3 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks5'][0].filename}`
+      }
+      if (request.files['file_popks6']) {
+        data!.upload_file4 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks6'][0].filename}`
+      }
+
+      const res = await this.updateFilePurchasingUseCase.execute(
+        request.params.purchasing_id,
+        request.user.user_id,
+        data
+      )
+
+      if (res.checkUpdated || !res?.updateFilePurchasing[0]?.changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Update kontrak pks file purchasing tidak berhasil`,
+        })
+      }
+
+      return ApiResponse.created(request, reply, {
+        status: true,
+        message: `UpdateData pengajuan kontrak pks`,
+        id: request.params.purchasing_id,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
     }
   }
 

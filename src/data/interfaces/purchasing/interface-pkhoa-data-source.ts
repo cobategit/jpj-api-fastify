@@ -8,5 +8,5 @@ export interface IPkhoaDataSource {
     selectOne(id?: number): Promise<PkhoaEntity | null>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PkhoaEntity[]>
     delete(id?: number): Promise<any>
-    selectPkhoaExclude(stockpile_id: number, vendor_id: number): Promise<any>
+    selectPkhoaExclude(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any>
 }

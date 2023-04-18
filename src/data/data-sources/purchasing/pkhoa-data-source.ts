@@ -113,7 +113,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
   }
 
   async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PkhoaEntity[]> {
-    const [rows, fileds] = await this.dql.dataQueryLanguage(
+    const [rows, fields] = await this.dql.dataQueryLanguage(
       `select * from ${process.env.TABLE_FREIGHT_COST} where ${conf?.tableCol1} = ?`,
       [conf?.tableVal1]
     )
@@ -131,9 +131,8 @@ export class PkhoaDataSource implements IPkhoaDataSource {
     return res
   }
 
-  async selectPkhoaExclude(stockpile_id: number, vendor_id: number): Promise<any> {
-    const [rows, fileds] = await this.dql.dataQueryLanguage(
-      `SELECT 
+  async selectPkhoaExclude(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any> {
+    const query = `SELECT 
         fc.freight_cost_id, 
         CONCAT(
           f.freight_supplier, ' - ', fc.price_converted
@@ -147,7 +146,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
         fc.vendor_id = ?
         AND fc.stockpile_id = ? 
         AND f.active = 1 
-        AND freight_cost_id IN (
+        AND fc.freight_cost_id IN (
           SELECT 
             MAX(freight_cost_id) 
           FROM 
@@ -155,7 +154,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
           WHERE 
             vendor_id = ?
             AND stockpile_id = ? 
-            AND active_from <= CURRENT_DATE() 
+            AND active_from <= ? 
           GROUP BY 
             freight_id
         ) 
@@ -163,9 +162,12 @@ export class PkhoaDataSource implements IPkhoaDataSource {
         f.freight_id, vendor_oa, fc.price_converted, 
         fc.active_from, fc.freight_cost_id
       ORDER BY 
-        active_from DESC
-        `,
-      [vendor_id, stockpile_id, vendor_id, stockpile_id]
+        fc.active_from DESC
+        `
+
+    const [rows, fields] = await this.dql.dataQueryLanguage(
+      query,
+      [vendor_id, stockpile_id, vendor_id, stockpile_id, req_payment_date]
     )
 
     return rows

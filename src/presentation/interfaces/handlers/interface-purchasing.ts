@@ -27,4 +27,8 @@ export interface IPurchasingHandler {
   findPkhoaExclude(request: any, reply: any): Promise<void>
   pengajuanKontrakPks(request: any, reply: any): Promise<void>
   findAllKontrakPks(request: any, reply: any): Promise<void>
+  findOneKontrakPks(request: any, reply: any): Promise<void>
+  findPlanPaymentDate(request: any, reply: any): Promise<void>
+  deletePengajuanKontrakPks(request: any, reply: any): Promise<void>
+  updateFilePurchasing(request: any, reply: any): Promise<void>
 }

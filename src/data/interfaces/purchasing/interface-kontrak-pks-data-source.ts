@@ -1,4 +1,4 @@
-import { ParamsEntity, PoPksEntity, PurchasingEntity, VendorKontrakEntity } from "../../../domain"
+import { ParamsEntity, PoPksEntity, PurchasingEntity, PurchasingFreightCostEntity, VendorKontrakEntity } from "../../../domain"
 
 export interface IPurchasingDataSource {
     count(): Promise<any>
@@ -7,6 +7,20 @@ export interface IPurchasingDataSource {
     selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<PurchasingEntity[]>
     selectOne(id?: number): Promise<PurchasingEntity | null>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
+    selectPlanPaymentDate(): Promise<any>
+    delete(id?: number): Promise<any>
+    updateFile(id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
+}
+
+export interface IPurchasingFreightCostDataSource {
+    count(): Promise<any>
+    insert(data?: PurchasingFreightCostEntity): Promise<any>
+    bulkInsert(data?: PurchasingFreightCostEntity[]): Promise<any>
+    update(id?: number, data?: PurchasingFreightCostEntity): Promise<any>
+    selectAll(conf: ParamsEntity): Promise<PurchasingFreightCostEntity[]>
+    selectOne(id?: number): Promise<PurchasingFreightCostEntity | null>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingFreightCostEntity[]>
+    delete(id?: number): Promise<any>
 }
 
 export interface IPoPksDataSource {
@@ -16,7 +30,7 @@ export interface IPoPksDataSource {
     selectAll(conf: any): Promise<PoPksEntity[]>
     selectOne(id?: number): Promise<PoPksEntity | null>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PoPksEntity[]>
-
+    delete(id?: number): Promise<any>
 }
 
 export interface IVendorKontrakDataSource {
@@ -27,4 +41,5 @@ export interface IVendorKontrakDataSource {
     selectAll(conf: any): Promise<VendorKontrakEntity[]>
     selectOne(id?: number): Promise<VendorKontrakEntity | null>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<VendorKontrakEntity[]>
+    delete(id?: number): Promise<any>
 }

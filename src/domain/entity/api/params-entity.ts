@@ -15,4 +15,5 @@ export interface ParamsEntity {
     filter?: string | number
     kontrak_type?: string | number
     pks_type?: string | number
+    purchasing_id?: number
 }

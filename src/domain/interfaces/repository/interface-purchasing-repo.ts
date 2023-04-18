@@ -62,10 +62,17 @@ export interface IPurchasingRepo {
   ): Promise<any>
   deletePkhoa(id?: number, user_id?: number): Promise<any>
   findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PkhoaEntity[]>
-  getPkhoaExclude(stockpile_id: number, vendor_id: number): Promise<any>
+  getPkhoaExclude(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any>
   pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any>
   findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
   findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PoPksEntity[]>
   findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<VendorKontrakEntity[]>
   findAllKontrakPks(conf?: ParamsEntity): Promise<{ count: number; rows: PurchasingEntity[] }>
+  findOneKontrakPks(id?: number): Promise<PurchasingEntity | null>
+  findPlanPaymentDate(): Promise<any>
+  deletePurchasing(id?: number, user_id?: number): Promise<any>
+  deletePopks(id?: number, user_id?: number): Promise<any>
+  deleteVendorKontrak(id?: number, user_id?: number): Promise<any>
+  deletePurchasingFreightCost(id?: number, user_id?: number): Promise<any>
+  updateFilePurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
 }

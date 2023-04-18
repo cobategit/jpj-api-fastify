@@ -37,6 +37,13 @@ export interface PurchasingEntity {
     tempVendor?: string
 }
 
+export interface PurchasingFreightCostEntity {
+    id?: number
+    purchasing_id?: number
+    freight_cost_id?: number
+    entry_date?: string
+}
+
 export interface PoPksEntity {
     po_pks_id?: number
     contract_no?: string

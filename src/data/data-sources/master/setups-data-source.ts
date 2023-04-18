@@ -48,7 +48,7 @@ export class SetupsDataSource implements ISetupsDataSource {
     }
 
     async selectOne(id?: number | undefined): Promise<SetupsEntity> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_SETUPS} where id = ?`,
             [id]
         )
@@ -57,7 +57,7 @@ export class SetupsDataSource implements ISetupsDataSource {
     }
 
     async selectByNama(nama?: string | undefined): Promise<SetupsEntity> {
-        const [rows, fileds] = await this.dql.dataQueryLanguage(
+        const [rows, fields] = await this.dql.dataQueryLanguage(
             `select * from ${process.env.TABLE_SETUPS} where nama = ?`,
             [nama]
         )

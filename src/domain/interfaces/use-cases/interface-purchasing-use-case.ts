@@ -101,7 +101,7 @@ export interface IDeletePkhoaUseCase {
 }
 
 export interface IGetPkhoaExcludeUseCase {
-  execute(stockpile_id: number, vendor_id: number): Promise<any>
+  execute(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any>
 }
 
 export interface IPengajuanKontrakPksUseCase {
@@ -110,4 +110,20 @@ export interface IPengajuanKontrakPksUseCase {
 
 export interface IGetAllKontrakPksUseCase {
   execute(conf?: ParamsEntity): Promise<PaginationEntity>
+}
+
+export interface IGetOneKontrakPksUseCase {
+  execute(id?: number): Promise<PurchasingEntity | null>
+}
+
+export interface IGetPlanPaymentDateUseCase {
+  execute(): Promise<any>
+}
+
+export interface IDeletePengajuanKontrakPksUseCase {
+  execute(id?: number, user_id?: number): Promise<any>
+}
+
+export interface IUpdateFilePurchasingUseCase {
+  execute(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
 }

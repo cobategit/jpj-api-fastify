@@ -8,9 +8,9 @@ export class GetPkhoaExcludeUseCase implements IGetPkhoaExcludeUseCase {
         this.purchasingRepo = purchasingRepo
     }
 
-    async execute(stockpile_id: number, vendor_id: number): Promise<any> {
+    async execute(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any> {
         try {
-            const res = await this.purchasingRepo.getPkhoaExclude(stockpile_id, vendor_id)
+            const res = await this.purchasingRepo.getPkhoaExclude(stockpile_id, vendor_id, req_payment_date)
 
             return res
         } catch (error) {
