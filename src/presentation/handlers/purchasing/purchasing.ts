@@ -902,6 +902,13 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
+      if (res.checkData) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Data tidak ada, Update pengajuan kontrak pks tidak berhasil`,
+        })
+      }
+
       if (res.checkUpdated || !res?.updateFilePurchasing[0]?.changedRows) {
         return ApiResponse.ok(request, reply, {
           status: false,

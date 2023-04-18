@@ -15,7 +15,6 @@ export class UpdateFilePurchasingUseCase implements IUpdateFilePurchasingUseCase
             tableCol1: 'purchasing_id',
             tableVal1: id
         }
-        let statusPoPks: number = 2 || 3
 
         try {
             const findPurchasingInPoPks = await this.purchasingRepo.findOnePoPksDynamic(conf)
@@ -25,7 +24,7 @@ export class UpdateFilePurchasingUseCase implements IUpdateFilePurchasingUseCase
                 return { checkData: boolCantUpdate }
             }
 
-            if (findPurchasingInPoPks[0]?.final_status != statusPoPks) {
+            if (findPurchasingInPoPks[0]?.final_status != Number(2) || findPurchasingInPoPks[0]?.final_status != Number(3) || findPurchasingInPoPks[0]?.final_status != Number(4)) {
                 boolCantUpdate = true
                 return { checkUpdated: boolCantUpdate }
             }

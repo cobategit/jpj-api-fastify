@@ -167,7 +167,7 @@ export class PurchasingDataSource implements IPurchasingDataSource {
   async updateFile(id?: number | undefined, data?: Pick<PurchasingEntity, "upload_file" | "approval_file" | "upload_file1" | "upload_file2" | "upload_file3" | "upload_file4"> | undefined): Promise<any> {
     const res = await this.dml.dataManipulation(
       `update file purchasing`,
-      `update ${process.env.TABLE_PURCHASING} set upload_file = ?, approval_file = ?, upload_file1 = ?, upload_file2 = ?, upload_file4 = ? where purchasing_id = ? and status = ?`,
+      `update ${process.env.TABLE_PURCHASING} set upload_file = ?, approval_file = ?, upload_file1 = ?, upload_file2 = ?,  upload_file3 = ?, upload_file4 = ? where purchasing_id = ? and status = ?`,
       [data?.upload_file, data?.approval_file, data?.upload_file1, data?.upload_file2, data?.upload_file3, data?.upload_file4, id!, 0]
     )
 
