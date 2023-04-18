@@ -24,7 +24,7 @@ export class UpdateFilePurchasingUseCase implements IUpdateFilePurchasingUseCase
                 return { checkData: boolCantUpdate }
             }
 
-            if (findPurchasingInPoPks[0]?.final_status != Number(2) || findPurchasingInPoPks[0]?.final_status != Number(3) || findPurchasingInPoPks[0]?.final_status != Number(4)) {
+            if (findPurchasingInPoPks[0]?.final_status != 2 && findPurchasingInPoPks[0]?.final_status != 3 && findPurchasingInPoPks[0]?.final_status != 4) {
                 boolCantUpdate = true
                 return { checkUpdated: boolCantUpdate }
             }
