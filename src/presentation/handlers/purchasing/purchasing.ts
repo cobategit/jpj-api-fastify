@@ -916,7 +916,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         })
       }
 
-      return ApiResponse.created(request, reply, {
+      return ApiResponse.ok(request, reply, {
         status: true,
         message: `UpdateData pengajuan kontrak pks`,
         id: request.params.purchasing_id,
