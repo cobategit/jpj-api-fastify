@@ -53,38 +53,38 @@ export const storageMulterFastify = multerFastify.diskStorage({
                 `${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_popks1']) {
-            nameFile = `popks1-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+        if (req.files['upload_file']) {
+            nameFile = `upload_file-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_popks2']) {
-            nameFile = `popks-approval-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+        if (req.files['approval_file']) {
+            nameFile = `approval_file-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_popks3']) {
-            nameFile = `popks2-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+        if (req.files['upload_file1']) {
+            nameFile = `upload_file1-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_popks4']) {
-            nameFile = `popks3-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+        if (req.files['upload_file2']) {
+            nameFile = `upload_file2-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_popks5']) {
-            nameFile = `popks4-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+        if (req.files['upload_file3']) {
+            nameFile = `upload_file3-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
-        if (req.files['file_popks6']) {
-            nameFile = `popks5-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+        if (req.files['upload_file4']) {
+            nameFile = `upload_file4-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`

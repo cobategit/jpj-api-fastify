@@ -763,23 +763,23 @@ export class PurchasingHandler implements IPurchasingHandler {
       const data: PurchasingEntity = request.body
       data.status = 0
 
-      if (request.files['file_popks1']) {
-        data!.upload_file = `${process.env.URL_FILE}/purchasing/${request.files['file_popks1'][0].filename}`
+      if (request.files['upload_file']) {
+        data!.upload_file = `${process.env.URL_FILE}/purchasing/${request.files['upload_file'][0].filename}`
       }
-      if (request.files['file_popks2']) {
-        data!.approval_file = `${process.env.URL_FILE}/purchasing/${request.files['file_popks2'][0].filename}`
+      if (request.files['approval_file']) {
+        data!.approval_file = `${process.env.URL_FILE}/purchasing/${request.files['approval_file'][0].filename}`
       }
-      if (request.files['file_popks3']) {
-        data!.upload_file1 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks3'][0].filename}`
+      if (request.files['upload_file1']) {
+        data!.upload_file1 = `${process.env.URL_FILE}/purchasing/${request.files['upload_file1'][0].filename}`
       }
-      if (request.files['file_popks4']) {
-        data!.upload_file2 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks4'][0].filename}`
+      if (request.files['upload_file2']) {
+        data!.upload_file2 = `${process.env.URL_FILE}/purchasing/${request.files['upload_file2'][0].filename}`
       }
-      if (request.files['file_popks5']) {
-        data!.upload_file3 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks5'][0].filename}`
+      if (request.files['upload_file3']) {
+        data!.upload_file3 = `${process.env.URL_FILE}/purchasing/${request.files['upload_file3'][0].filename}`
       }
-      if (request.files['file_popks6']) {
-        data!.upload_file4 = `${process.env.URL_FILE}/purchasing/${request.files['file_popks6'][0].filename}`
+      if (request.files['upload_file4']) {
+        data!.upload_file4 = `${process.env.URL_FILE}/purchasing/${request.files['upload_file4'][0].filename}`
       }
 
       const res = await this.pengajuanKontrakPksUseCase.execute(
