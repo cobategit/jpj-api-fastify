@@ -68,10 +68,10 @@ export class VendorKontrakDataSource implements IVendorKontrakDataSource {
         return rows[0]
     }
 
-    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<VendorKontrakEntity[]> {
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<VendorKontrakEntity[]> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_VENDOR_KONTRAK} where ${conf?.tableCol1} = ?`,
-            [conf?.tableVal1]
+            `select * from ${process.env.TABLE_VENDOR_KONTRAK} where ${conf?.columnKey} = ?`,
+            [conf?.columnValue]
         )
 
         return rows

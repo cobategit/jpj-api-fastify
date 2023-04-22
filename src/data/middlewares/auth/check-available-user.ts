@@ -3,7 +3,7 @@ import { IUsersDataSource } from "../..";
 import { EntityUser } from "../../../domain";
 
 export function CheckAvailableUser(userDataSource: IUsersDataSource, req: any, res: any, done: any) {
-    const checkUser = async (req: any, res: any, done: any): Promise<void> => {
+    const check = async (req: any, res: any, done: any): Promise<void> => {
         try {
             const dataToken: EntityUser = req.user!
             const checkAvailableUser = await userDataSource.selectByEmail(dataToken.user_email!)
@@ -16,7 +16,7 @@ export function CheckAvailableUser(userDataSource: IUsersDataSource, req: any, r
         }
     }
 
-    const result = checkUser(req, res, done)
+    const result = check(req, res, done)
 
     return result
 }

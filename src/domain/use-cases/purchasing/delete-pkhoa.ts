@@ -12,9 +12,9 @@ export class DeletePkhoaUseCase implements IDeletePkhoaUseCase {
     async execute(id: number, user_id: number): Promise<any> {
         let res: Record<string, any> = {}
         let boolCantDelete: boolean = false
-        const conf: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> = {
-            tableCol1: 'freight_cost_id',
-            tableVal1: id
+        const conf: Pick<ParamsEntity, 'columnKey' | 'columnValue'> = {
+            columnKey: 'freight_cost_id',
+            columnValue: id
         }
 
         try {

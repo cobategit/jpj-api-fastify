@@ -10,10 +10,13 @@ export interface ParamsEntity {
     size?: number
     stockpile_id?: number
     currency_id?: number
-    tableCol1?: string
-    tableVal1?: string | number
+    columnKey?: string
+    columnValue?: string | number
+    whereKey?: string
+    whereValue?: Array<string | number>
     filter?: string | number
     kontrak_type?: string | number
     pks_type?: string | number
     purchasing_id?: number
+    re_entry?: boolean
 }

@@ -146,10 +146,10 @@ export class PurchasingDataSource implements IPurchasingDataSource {
     return rows[0]
   }
 
-  async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PurchasingEntity[]> {
+  async selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PurchasingEntity[]> {
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_PURCHASING} where ${conf?.tableCol1} = ?`,
-      [conf?.tableVal1]
+      `select * from ${process.env.TABLE_PURCHASING} where ${conf?.columnKey} = ?`,
+      [conf?.columnValue]
     )
 
     return rows
@@ -182,6 +182,15 @@ export class PurchasingDataSource implements IPurchasingDataSource {
     )
 
     return res
+  }
+
+  async selectWhereDynamic(conf?: Pick<ParamsEntity, "whereKey" | 'whereValue'> | undefined): Promise<PurchasingEntity | null> {
+    const [rows, fields] = await this.dql.dataQueryLanguage(
+      `select * from purchasing ${conf?.whereKey}`,
+      conf?.whereValue!
+    )
+
+    return rows[0]
   }
 
 }

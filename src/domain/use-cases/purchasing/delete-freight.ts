@@ -12,9 +12,9 @@ export class DeleteFreightUseCase implements IDeleteFreightUseCase {
     async execute(id: number, user_id: number): Promise<any> {
         let res: Record<string, any> = {}
         let boolCantDelete: boolean = false
-        const conf: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> = {
-            tableCol1: 'freight_id',
-            tableVal1: id
+        const conf: Pick<ParamsEntity, 'columnKey' | 'columnValue'> = {
+            columnKey: 'freight_id',
+            columnValue: id
         }
 
         try {

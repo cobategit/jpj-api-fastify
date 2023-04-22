@@ -6,10 +6,11 @@ export interface IPurchasingDataSource {
     update(id?: number, data?: PurchasingEntity): Promise<any>
     selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<PurchasingEntity[]>
     selectOne(id?: number): Promise<PurchasingEntity | null>
-    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingEntity[]>
     selectPlanPaymentDate(): Promise<any>
     delete(id?: number): Promise<any>
     updateFile(id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
+    selectWhereDynamic(conf?: Pick<ParamsEntity, 'whereKey' | 'whereValue'>): Promise<PurchasingEntity | null>
 }
 
 export interface IPurchasingFreightCostDataSource {
@@ -19,7 +20,7 @@ export interface IPurchasingFreightCostDataSource {
     update(id?: number, data?: PurchasingFreightCostEntity): Promise<any>
     selectAll(conf: ParamsEntity): Promise<PurchasingFreightCostEntity[]>
     selectOne(id?: number): Promise<PurchasingFreightCostEntity | null>
-    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingFreightCostEntity[]>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingFreightCostEntity[]>
     delete(id?: number): Promise<any>
 }
 
@@ -29,7 +30,7 @@ export interface IPoPksDataSource {
     update(id?: number, data?: PoPksEntity): Promise<any>
     selectAll(conf: any): Promise<PoPksEntity[]>
     selectOne(id?: number): Promise<PoPksEntity | null>
-    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PoPksEntity[]>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PoPksEntity[]>
     delete(id?: number): Promise<any>
 }
 
@@ -40,6 +41,6 @@ export interface IVendorKontrakDataSource {
     update(id?: number, data?: VendorKontrakEntity): Promise<any>
     selectAll(conf: any): Promise<VendorKontrakEntity[]>
     selectOne(id?: number): Promise<VendorKontrakEntity | null>
-    selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<VendorKontrakEntity[]>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<VendorKontrakEntity[]>
     delete(id?: number): Promise<any>
 }

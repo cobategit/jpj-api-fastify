@@ -12,9 +12,9 @@ export class UpdatePkhoaUseCase implements IUpdatePkhoaUseCase {
     async execute(id: number, user_id: number, data?: PkhoaEntity | undefined): Promise<any> {
         let res: Record<string, any> = {}
         let cantUpdated: boolean = false
-        const conf: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> = {
-            tableCol1: 'freight_cost_id',
-            tableVal1: id
+        const conf: Pick<ParamsEntity, 'columnKey' | 'columnValue'> = {
+            columnKey: 'freight_cost_id',
+            columnValue: id
         }
 
         try {

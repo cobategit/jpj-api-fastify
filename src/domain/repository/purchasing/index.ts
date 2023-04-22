@@ -354,7 +354,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return row
   }
 
-  async findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PkhoaEntity[]> {
+  async findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PkhoaEntity[]> {
     const rows = await this.pkhoaDataSource.selectOneDynamic(conf)
     return rows
   }
@@ -465,17 +465,17 @@ export class PurchasingRepository implements IPurchasingRepo {
     return resPurchasing
   }
 
-  async findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PurchasingEntity[]> {
+  async findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PurchasingEntity[]> {
     const rows = await this.purchasingDataSource.selectOneDynamic(conf)
     return rows
   }
 
-  async findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PoPksEntity[]> {
+  async findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PoPksEntity[]> {
     const rows = await this.poPksDataSource.selectOneDynamic(conf)
     return rows
   }
 
-  async findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<VendorKontrakEntity[]> {
+  async findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<VendorKontrakEntity[]> {
     const rows = await this.vendorKontrakDataSource.selectOneDynamic(conf)
     return rows
   }

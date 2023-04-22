@@ -68,10 +68,10 @@ export class PurchasingFreightCostDataSource implements IPurchasingFreightCostDa
         return rows[0]
     }
 
-    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PurchasingFreightCostEntity[]> {
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PurchasingFreightCostEntity[]> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_PURCHASING_FREIGHTCOST} where ${conf?.tableCol1} = ?`,
-            [conf?.tableVal1]
+            `select * from ${process.env.TABLE_PURCHASING_FREIGHTCOST} where ${conf?.columnKey} = ?`,
+            [conf?.columnValue]
         )
 
         return rows

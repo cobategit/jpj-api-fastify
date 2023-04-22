@@ -7,12 +7,13 @@ import {
   PkhoaEntity,
   PksCurahEntity,
 } from '../../../domain'
-import { CheckAvailableUser, IUsersDataSource, upload } from '../../../data'
+import { CheckAvailableUser, IPurchasingDataSource, IUsersDataSource, checkExistKontrakPks, upload } from '../../../data'
 import { ApiResponse, reqAuthToken } from '@jpj-common/module'
 
 export function PurchasingRoute(
   purchasingHandler: IPurchasingHandler,
-  userDataSource: IUsersDataSource
+  userDataSource: IUsersDataSource,
+  purchasingDataSource: IPurchasingDataSource
 ) {
   const purchasingRoute = (
     fastify: FastifyInstance,
@@ -398,8 +399,8 @@ export function PurchasingRoute(
 
     //@pengajuan-kontrak-pks
     fastify.post<{
-      Body: PksCurahEntity & FreightEntity,
-      Querystring: ParamsEntity
+      Body: PksCurahEntity,
+      Querystring: Pick<ParamsEntity, 're_entry'>
     }>(
       '/kontrak-pks',
       {
@@ -408,6 +409,8 @@ export function PurchasingRoute(
           reqAuthToken,
           (req: any, rep: any, done: any) =>
             CheckAvailableUser(userDataSource, req, rep, done),
+          (req: any, rep: any, done: any) =>
+            checkExistKontrakPks(purchasingDataSource, req, rep, done),
           upload.fields([
             { name: 'upload_file', maxCount: 1 },
             { name: 'approval_file', maxCount: 1 },
@@ -419,25 +422,51 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.pengajuanKontrakPks.bind(purchasingHandler)
-    ).patch<{ Body: PksCurahEntity & FreightEntity, Params: Pick<ParamsEntity, 'purchasing_id'> }>(
-      '/kontrak-pks/:purchasing_id',
+    )
+      //@update-file-kontrak-pks
+      .patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+        '/kontrak-pks/:purchasing_id',
+        {
+          logLevel: 'info',
+          preHandler: [
+            reqAuthToken,
+            (req: any, rep: any, done: any) =>
+              CheckAvailableUser(userDataSource, req, rep, done),
+            upload.fields([
+              { name: 'upload_file', maxCount: 1 },
+              { name: 'approval_file', maxCount: 1 },
+              { name: 'upload_file1', maxCount: 1 },
+              { name: 'upload_file2', maxCount: 1 },
+              { name: 'upload_file3', maxCount: 1 },
+              { name: 'upload_file4', maxCount: 1 },
+            ]),
+          ],
+        },
+        purchasingHandler.updateFilePurchasing.bind(purchasingHandler)
+      )
+
+    //@re-pengajuan-kontrak-pks
+    fastify.post<{
+      Body: PksCurahEntity & FreightEntity,
+      Querystring: ParamsEntity
+    }>(
+      '/re-entry/kontrak-pks',
       {
         logLevel: 'info',
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
-            CheckAvailableUser(userDataSource, req, rep, done),
-          upload.fields([
-            { name: 'upload_file', maxCount: 1 },
-            { name: 'approval_file', maxCount: 1 },
-            { name: 'upload_file1', maxCount: 1 },
-            { name: 'upload_file2', maxCount: 1 },
-            { name: 'upload_file3', maxCount: 1 },
-            { name: 'upload_file4', maxCount: 1 },
-          ]),
+            CheckAvailableUser(userDataSource, req, rep, done), upload.fields([
+              { name: 'upload_file', maxCount: 1 },
+              { name: 'approval_file', maxCount: 1 },
+              { name: 'upload_file1', maxCount: 1 },
+              { name: 'upload_file2', maxCount: 1 },
+              { name: 'upload_file3', maxCount: 1 },
+              { name: 'upload_file4', maxCount: 1 },
+            ]),
         ],
       },
-      purchasingHandler.updateFilePurchasing.bind(purchasingHandler)
+      purchasingHandler.pengajuanKontrakPks.bind(purchasingHandler)
     )
 
     //@findall-kontrak-pks
@@ -466,18 +495,20 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findOneKontrakPks.bind(purchasingHandler)
-    ).delete<{ Params: Pick<ParamsEntity, 'purchasing_id'> }>(
-      '/kontrak-pks/:purchasing_id',
-      {
-        logLevel: 'info',
-        preHandler: [
-          reqAuthToken,
-          (req: any, rep: any, done: any) =>
-            CheckAvailableUser(userDataSource, req, rep, done),
-        ],
-      },
-      purchasingHandler.deletePengajuanKontrakPks.bind(purchasingHandler)
     )
+      //@delete-kontrak-pks
+      .delete<{ Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+        '/kontrak-pks/:purchasing_id',
+        {
+          logLevel: 'info',
+          preHandler: [
+            reqAuthToken,
+            (req: any, rep: any, done: any) =>
+              CheckAvailableUser(userDataSource, req, rep, done),
+          ],
+        },
+        purchasingHandler.deletePengajuanKontrakPks.bind(purchasingHandler)
+      )
 
     //@plan-payment-date
     fastify.get<{ Querystring: ParamsEntity }>(

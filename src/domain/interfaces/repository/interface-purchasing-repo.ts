@@ -61,12 +61,12 @@ export interface IPurchasingRepo {
     data?: PkhoaEntity
   ): Promise<any>
   deletePkhoa(id?: number, user_id?: number): Promise<any>
-  findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PkhoaEntity[]>
+  findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PkhoaEntity[]>
   getPkhoaExclude(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any>
   pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any>
-  findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PurchasingEntity[]>
-  findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<PoPksEntity[]>
-  findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'>): Promise<VendorKontrakEntity[]>
+  findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingEntity[]>
+  findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PoPksEntity[]>
+  findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<VendorKontrakEntity[]>
   findAllKontrakPks(conf?: ParamsEntity): Promise<{ count: number; rows: PurchasingEntity[] }>
   findOneKontrakPks(id?: number): Promise<PurchasingEntity | null>
   findPlanPaymentDate(): Promise<any>

@@ -56,10 +56,10 @@ export class PoPksDataSource implements IPoPksDataSource {
         return rows[0]
     }
 
-    async selectOneDynamic(conf?: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> | undefined): Promise<PoPksEntity[]> {
+    async selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PoPksEntity[]> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_POPKS} where ${conf?.tableCol1} = ?`,
-            [conf?.tableVal1]
+            `select * from ${process.env.TABLE_POPKS} where ${conf?.columnKey} = ?`,
+            [conf?.columnValue]
         )
 
         return rows

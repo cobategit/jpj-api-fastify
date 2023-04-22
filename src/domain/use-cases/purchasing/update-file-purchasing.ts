@@ -11,9 +11,9 @@ export class UpdateFilePurchasingUseCase implements IUpdateFilePurchasingUseCase
 
     async execute(id?: number | undefined, user_id?: number | undefined, data?: Pick<PurchasingEntity, "upload_file" | "approval_file" | "upload_file1" | "upload_file2" | "upload_file3" | "upload_file4"> | undefined): Promise<any> {
         let boolCantUpdate: boolean = false
-        const conf: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> = {
-            tableCol1: 'purchasing_id',
-            tableVal1: id
+        const conf: Pick<ParamsEntity, 'columnKey' | 'columnValue'> = {
+            columnKey: 'purchasing_id',
+            columnValue: id
         }
 
         try {

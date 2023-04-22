@@ -11,9 +11,9 @@ export class DeletePengajuanKontrakPksUseCase implements IDeletePengajuanKontrak
 
     async execute(id: number, user_id: number): Promise<any> {
         let boolCantDelete: boolean = false
-        const conf: Pick<ParamsEntity, 'tableCol1' | 'tableVal1'> = {
-            tableCol1: 'purchasing_id',
-            tableVal1: id
+        const conf: Pick<ParamsEntity, 'columnKey' | 'columnValue'> = {
+            columnKey: 'purchasing_id',
+            columnValue: id
         }
 
         try {
