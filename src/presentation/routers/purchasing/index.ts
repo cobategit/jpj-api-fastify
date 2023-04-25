@@ -38,12 +38,22 @@ export function PurchasingRoute(
 
     //@pengajuan-vendor (pkscurah/freight)
     fastify.post<{
-      Body: PksCurahEntity | FreightEntity,
-      Querystring: ParamsEntity
+      Body: PksCurahEntity & FreightEntity,
+      Querystring: Pick<ParamsEntity, 'vendor_type'>
     }>(
       '/pengajuan-vendor',
       {
         logLevel: 'info',
+        schema: {
+          querystring: {
+            type: 'object',
+            properties: {
+              vendor_type: {
+                type: 'string'
+              }
+            }
+          }
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -406,6 +416,17 @@ export function PurchasingRoute(
       '/kontrak-pks',
       {
         logLevel: 'info',
+        schema: {
+          querystring: {
+            type: 'object',
+            properties: {
+              re_entry: {
+                type: 'boolean',
+                default: false
+              }
+            }
+          }
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
