@@ -3,6 +3,7 @@ import { IPurchasingHandler } from '../..'
 import {
   EntityUser,
   FreightEntity,
+  IHeaders,
   ParamsEntity,
   PkhoaEntity,
   PksCurahEntity,
@@ -10,6 +11,7 @@ import {
 } from '../../../domain'
 import { CheckAvailableUser, IPurchasingDataSource, IUsersDataSource, CheckExistKontrakPks, upload } from '../../../data'
 import { ApiResponse, reqAuthToken } from '@jpj-common/module'
+import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, queryStringAddPengajuanVendor } from '../../schema'
 
 export function PurchasingRoute(
   purchasingHandler: IPurchasingHandler,
@@ -25,34 +27,35 @@ export function PurchasingRoute(
     //@register-purchasing
     fastify.post<{ Body: EntityUser }>(
       '/register',
-      { logLevel: 'info' },
+      {
+        logLevel: 'info',
+        schema: { body: bodyRegisterSchema }
+      },
       purchasingHandler.register.bind(purchasingHandler)
     )
 
     //@login-purchasing
-    fastify.post<{ Body: EntityUser }>(
+    fastify.post<{ Body: Pick<EntityUser, 'deviced_id' | 'kode_akses'> }>(
       '/login',
-      { logLevel: 'info' },
+      {
+        logLevel: 'info',
+        schema: { body: bodyLoginSchema }
+      },
       purchasingHandler.login.bind(purchasingHandler)
     )
 
     //@pengajuan-vendor (pkscurah/freight)
     fastify.post<{
       Body: PksCurahEntity & FreightEntity,
-      Querystring: Pick<ParamsEntity, 'vendor_type'>
+      Querystring: Pick<ParamsEntity, 'vendor_type'>,
+      Headers: Pick<IHeaders, 'x-access-token'>
     }>(
       '/pengajuan-vendor',
       {
         logLevel: 'info',
         schema: {
-          querystring: {
-            type: 'object',
-            properties: {
-              vendor_type: {
-                type: 'string'
-              }
-            }
-          }
+          querystring: queryStringAddPengajuanVendor,
+          headers: headersSchema
         },
         preHandler: [
           reqAuthToken,
@@ -67,27 +70,31 @@ export function PurchasingRoute(
         ],
       },
       (request: any, reply: any) => {
-        if (!request.query.vendor_type) {
+        const { vendor_type } = request.query
+        if (!vendor_type) {
           return ApiResponse.badRequest(request, reply, {
             success: false,
             message: `Harap masukkan query string 'vendor_type(pkscurah atau freight)'`,
           })
         }
 
-        if (request.query.vendor_type == 'pkscurah')
+        if (vendor_type == 'pkscurah')
           purchasingHandler.pengajuanPksCurah(request, reply)
 
-        if (request.query.vendor_type == 'freight')
+        if (vendor_type == 'freight')
           purchasingHandler.pengajuanFreight(request, reply)
       }
     )
 
     //@findall-pkscurah
     fastify
-      .get<{ Querystring: ParamsEntity }>(
+      .get<{ Querystring: ParamsEntity, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/pks-curah',
         {
           logLevel: 'info',
+          schema: {
+            headers: headersSchema
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -97,10 +104,14 @@ export function PurchasingRoute(
         purchasingHandler.findAllPksCurah.bind(purchasingHandler)
       )
       //@updated-pkscurah
-      .patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'vendor_id'> }>(
+      .patch<{ Body: PksCurahEntity, Params: Pick<ParamsEntity, 'vendor_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/pks-curah/:vendor_id',
         {
           logLevel: 'info',
+          schema: {
+            headers: headersSchema,
+            params: paramsPksCurah
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -116,10 +127,14 @@ export function PurchasingRoute(
       )
 
     //@detail-pkscurah
-    fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
+    fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pks-curah/detail/:vendor_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsPksCurah
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -130,10 +145,14 @@ export function PurchasingRoute(
     )
 
     //@deleted-pkscurah
-    fastify.delete<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
+    fastify.delete<{ Params: Pick<ParamsEntity, 'vendor_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pks-curah/delete/:vendor_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsPksCurah
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -144,10 +163,13 @@ export function PurchasingRoute(
     )
 
     //@findall-pkscurah-bank
-    fastify.get<{ Querystring: ParamsEntity }>(
+    fastify.get<{ Querystring: ParamsEntity, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pks-curah/bank',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -158,10 +180,14 @@ export function PurchasingRoute(
     )
 
     //@findall-pkscurah-bank
-    fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'> }>(
+    fastify.get<{ Params: Pick<ParamsEntity, 'vendor_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pks-curah/bank/detail/:vendor_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsPksCurah
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -173,10 +199,13 @@ export function PurchasingRoute(
 
     //@findall-freight
     fastify
-      .get<{ Querystring: ParamsEntity }>(
+      .get<{ Querystring: ParamsEntity, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/freight',
         {
           logLevel: 'info',
+          schema: {
+            headers: headersSchema,
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -186,10 +215,14 @@ export function PurchasingRoute(
         purchasingHandler.findAllFreight.bind(purchasingHandler)
       )
       //@updated-freight
-      .patch<{ Body: FreightEntity, Params: Pick<ParamsEntity, 'freight_id'> }>(
+      .patch<{ Body: FreightEntity, Params: Pick<ParamsEntity, 'freight_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/freight/:freight_id',
         {
           logLevel: 'info',
+          schema: {
+            headers: headersSchema,
+            params: paramsFreight
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -206,10 +239,14 @@ export function PurchasingRoute(
       )
 
     //@detail-freight
-    fastify.get<{ Params: Pick<ParamsEntity, 'freight_id'> }>(
+    fastify.get<{ Params: Pick<ParamsEntity, 'freight_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/freight/detail/:freight_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsFreight
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -220,10 +257,14 @@ export function PurchasingRoute(
     )
 
     //@deleted-freight
-    fastify.delete<{ Params: Pick<ParamsEntity, 'freight_id'> }>(
+    fastify.delete<{ Params: Pick<ParamsEntity, 'freight_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/freight/delete/:freight_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsFreight
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -248,10 +289,14 @@ export function PurchasingRoute(
     )
 
     //@findall-freight-bank
-    fastify.get<{ Params: Pick<ParamsEntity, 'freight_id'> }>(
+    fastify.get<{ Params: Pick<ParamsEntity, 'freight_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/freight/bank/detail/:freight_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsFreight
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -320,11 +365,15 @@ export function PurchasingRoute(
 
     //@pengajuan-pkhoa
     fastify.post<{
-      Body: PkhoaEntity
+      Body: PkhoaEntity,
+      Headers: Pick<IHeaders, 'x-access-token'>
     }>(
       '/pkhoa',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -350,10 +399,14 @@ export function PurchasingRoute(
         purchasingHandler.findAllPkhoa.bind(purchasingHandler)
       )
       //@updated-pkhoa
-      .patch<{ Body: PkhoaEntity, Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+      .patch<{ Body: PkhoaEntity, Params: Pick<ParamsEntity, 'freight_cost_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/pkhoa/:freight_cost_id',
         {
           logLevel: 'info',
+          schema: {
+            headers: headersSchema,
+            params: paramsPkhoa
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -367,10 +420,14 @@ export function PurchasingRoute(
       )
 
     //@detail-pkhoa
-    fastify.get<{ Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+    fastify.get<{ Params: Pick<ParamsEntity, 'freight_cost_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pkhoa/detail/:freight_cost_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsPkhoa
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -381,10 +438,14 @@ export function PurchasingRoute(
     )
 
     //@deleted-pkhoa
-    fastify.delete<{ Params: Pick<ParamsEntity, 'freight_cost_id'> }>(
+    fastify.delete<{ Params: Pick<ParamsEntity, 'freight_cost_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pkhoa/delete/:freight_cost_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsPkhoa
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -395,10 +456,14 @@ export function PurchasingRoute(
     )
 
     //@find-pkhoa-exclude
-    fastify.get<{ Querystring: Pick<ParamsEntity, 'vendor_id' | 'stockpile_id'> }>(
+    fastify.get<{ Querystring: Pick<ParamsEntity, 'vendor_id' | 'stockpile_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/pkhoa-exclude',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsPksCurah
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -411,21 +476,15 @@ export function PurchasingRoute(
     //@pengajuan-kontrak-pks
     fastify.post<{
       Body: PurchasingEntity,
-      Querystring: Pick<ParamsEntity, 're_entry'>
+      Querystring: Pick<ParamsEntity, 're_entry'>,
+      Headers: Pick<IHeaders, 'x-access-token'>
     }>(
       '/kontrak-pks',
       {
         logLevel: 'info',
         schema: {
-          querystring: {
-            type: 'object',
-            properties: {
-              re_entry: {
-                type: 'boolean',
-                default: false
-              }
-            }
-          }
+          querystring: addQueryStringKontrakPks,
+          headers: headersSchema
         },
         preHandler: [
           reqAuthToken,
@@ -446,10 +505,14 @@ export function PurchasingRoute(
       purchasingHandler.pengajuanKontrakPks.bind(purchasingHandler)
     )
       //@update-file-kontrak-pks
-      .patch<{ Body: PurchasingEntity, Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+      .patch<{ Body: PurchasingEntity, Params: Pick<ParamsEntity, 'purchasing_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/kontrak-pks/:purchasing_id',
         {
           logLevel: 'info',
+          schema: {
+            params: paramsKontrakPks,
+            headers: headersSchema
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -469,12 +532,16 @@ export function PurchasingRoute(
 
     //@re-pengajuan-kontrak-pks
     fastify.post<{
-      Body: PksCurahEntity & FreightEntity,
-      Querystring: ParamsEntity
+      Body: PurchasingEntity,
+      Querystring: ParamsEntity,
+      Headers: Pick<IHeaders, 'x-access-token'>
     }>(
       '/re-entry/kontrak-pks',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -492,10 +559,13 @@ export function PurchasingRoute(
     )
 
     //@findall-kontrak-pks
-    fastify.get<{ Querystring: ParamsEntity }>(
+    fastify.get<{ Querystring: ParamsEntity, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/kontrak-pks',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -506,10 +576,14 @@ export function PurchasingRoute(
     )
 
     //@findaone-kontrak-pks
-    fastify.get<{ Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+    fastify.get<{ Params: Pick<ParamsEntity, 'purchasing_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
       '/kontrak-pks/:purchasing_id',
       {
         logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsKontrakPks
+        },
         preHandler: [
           reqAuthToken,
           (req: any, rep: any, done: any) =>
@@ -519,10 +593,14 @@ export function PurchasingRoute(
       purchasingHandler.findOneKontrakPks.bind(purchasingHandler)
     )
       //@delete-kontrak-pks
-      .delete<{ Params: Pick<ParamsEntity, 'purchasing_id'> }>(
+      .delete<{ Params: Pick<ParamsEntity, 'purchasing_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
         '/kontrak-pks/:purchasing_id',
         {
           logLevel: 'info',
+          schema: {
+            headers: headersSchema,
+            params: paramsKontrakPks
+          },
           preHandler: [
             reqAuthToken,
             (req: any, rep: any, done: any) =>
@@ -533,7 +611,7 @@ export function PurchasingRoute(
       )
 
     //@plan-payment-date
-    fastify.get<{ Querystring: ParamsEntity }>(
+    fastify.get(
       '/plan-payment-date',
       {
         logLevel: 'info',

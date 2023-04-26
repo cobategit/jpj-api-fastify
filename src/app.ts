@@ -74,6 +74,15 @@ const app = async () => {
 
   const server = Fastify({
     logger: pino({ level: 'info' }),
+    ajv: {
+      customOptions: {
+        // jsonPointers: true,
+        allErrors: true
+      },
+      plugins: [
+        require('ajv-errors')
+      ]
+    }
   })
   await server.register(express)
   await server.register(rateLimit, {

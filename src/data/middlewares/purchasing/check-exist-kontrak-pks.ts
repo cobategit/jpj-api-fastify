@@ -5,16 +5,17 @@ import { ParamsEntity } from "../../../domain";
 export function CheckExistKontrakPks(purchasingDataSource: IPurchasingDataSource, req: any, rep: any, done: any) {
     const check = async (req: any, rep: any, done: any): Promise<void> => {
         let reEntry = req.query.re_entry
+        const { stockpile_id, contract_type, vendor_id, type, payment_type, quantity, price } = req.body
         try {
             const conf: Pick<ParamsEntity, 'whereKey' | 'whereValue'> = {
                 whereKey: `where stockpile_id = ? and contract_type = ? and vendor_id = ? and type = ? and payment_type = ? and quantity = ? and price = ?`,
-                whereValue: [req.body.stockpile_id, req.body.contract_type, req.body.vendor_id, req.body.type, req.body.payment_type, req.body.quantity, req.body.price]
+                whereValue: [stockpile_id, contract_type, vendor_id, type, payment_type, quantity, price]
             }
 
             const checkExistKontrakPks = await purchasingDataSource.selectWhereDynamic(conf)
 
             if (checkExistKontrakPks && !reEntry) {
-                done(new AppError(400, false, 'Data sudah ada, Apa anda ingin melanjutkan input data ini ?', '401'))
+                done(new AppError(400, true, 'Data sudah ada, Apa anda ingin melanjutkan input data ini ?', '401'))
             }
 
         } catch (error) {
