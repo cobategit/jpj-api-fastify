@@ -11,7 +11,7 @@ import {
 } from '../../../domain'
 import { CheckAvailableUser, IPurchasingDataSource, IUsersDataSource, CheckExistKontrakPks, upload } from '../../../data'
 import { ApiResponse, reqAuthToken } from '@jpj-common/module'
-import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, queryStringAddPengajuanVendor } from '../../schema'
+import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, queryStringAddPengajuanVendor, queryStringPkhoa } from '../../schema'
 
 export function PurchasingRoute(
   purchasingHandler: IPurchasingHandler,
@@ -362,7 +362,6 @@ export function PurchasingRoute(
       purchasingHandler.findOneCurrency.bind(purchasingHandler)
     )
 
-
     //@pengajuan-pkhoa
     fastify.post<{
       Body: PkhoaEntity,
@@ -462,7 +461,7 @@ export function PurchasingRoute(
         logLevel: 'info',
         schema: {
           headers: headersSchema,
-          params: paramsPksCurah
+          params: queryStringPkhoa
         },
         preHandler: [
           reqAuthToken,

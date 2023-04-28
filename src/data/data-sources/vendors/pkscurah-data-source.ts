@@ -52,7 +52,7 @@ export class PksCurahDataSource implements IPksCurahDataSource {
     async updateBank(id?: number, data?: PksCurahBankEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `update pengajuan pkscurah bank`,
-            `update ${process.env.TABLE_VENDOR_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where v_ban = ?`,
+            `update ${process.env.TABLE_VENDOR_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where v_bank_id = ?`,
             [data?.bank_name, data?.account_no, data?.file_rekbank, id!]
         )
 

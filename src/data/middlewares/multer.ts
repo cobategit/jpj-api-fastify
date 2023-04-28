@@ -21,28 +21,28 @@ export const storageMulterFastify = multerFastify.diskStorage({
 
         if (req.files['file_npwp']) {
             nameFile = `npwp-${revisi}` +
-                (vendor.split(' ')[0] || vendor.split(' ')[1]) +
+                (vendor.split(' ')[1] || vendor.split(' ')[0]) +
                 '-' +
                 `${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_pkp']) {
             nameFile = `pkp-${revisi}` +
-                (vendor.split(' ')[0] || vendor.split(' ')[1]) +
+                (vendor.split(' ')[1] || vendor.split(' ')[0]) +
                 '-' +
                 `${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_rekbank']) {
             nameFile = `bank-${revisi}` +
-                (vendor.split(' ')[0] || vendor.split(' ')[1]) +
+                (vendor.split(' ')[1] || vendor.split(' ')[0]) +
                 '-' +
                 `${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
         if (req.files['file_ktp']) {
             nameFile = `ktp-${revisi}` + `${Math.floor(Math.random() * 10)}` +
-                (vendor.split(' ')[0] || vendor.split(' ')[1]) +
+                (vendor.split(' ')[1] || vendor.split(' ')[0]) +
                 '-' +
                 `${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`

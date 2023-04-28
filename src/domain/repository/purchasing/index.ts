@@ -142,7 +142,8 @@ export class PurchasingRepository implements IPurchasingRepo {
       user_id: user_id
     }
 
-    let vBankId: string[] = []
+    let vBankId: number[] = []
+
 
     if (Array.isArray(data!.v_bank_id)) {
       vBankId = data?.v_bank_id!
@@ -150,19 +151,19 @@ export class PurchasingRepository implements IPurchasingRepo {
       vBankId.push(data?.v_bank_id!)
     }
 
-
     await Promise.all(
       [
         data?.file_rekbank?.forEach(async (val: string, i: number) => {
           if (vBankId[i]) {
             const dataBank: PksCurahBankEntity = {
-              v_bank_id: parseInt(vBankId[i]),
+              v_bank_id: vBankId[i],
               file_rekbank: val,
               active: 2
             }
-            await this.pksCurahDataSource.updateBank(parseInt(vBankId[i]), dataBank)
+            await this.pksCurahDataSource.updateBank(vBankId[i], dataBank)
           } else {
             const dataBank: PksCurahBankEntity = {
+              vendor_id: id,
               file_rekbank: val,
               active: 2
             }
@@ -213,7 +214,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       user_id: user_id
     }
 
-    let fBankId: string[] = []
+    let fBankId: number[] = []
 
     if (Array.isArray(data!.f_bank_id)) {
       fBankId = data?.f_bank_id!
@@ -227,13 +228,14 @@ export class PurchasingRepository implements IPurchasingRepo {
         data?.file_rekbank?.forEach(async (val: string, i: number) => {
           if (fBankId[i]) {
             const dataBank: FreightBankEntity = {
-              f_bank_id: parseInt(fBankId[i]),
+              f_bank_id: fBankId[i],
               file_rekbank: val,
               active: 2
             }
-            await this.freightDataSource.updateBank(parseInt(fBankId[i]), dataBank)
+            await this.freightDataSource.updateBank(fBankId[i], dataBank)
           } else {
-            const dataBank: PksCurahBankEntity = {
+            const dataBank: FreightBankEntity = {
+              f_bank_id: id,
               file_rekbank: val,
               active: 2
             }

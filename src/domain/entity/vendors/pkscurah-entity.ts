@@ -17,7 +17,7 @@ export interface PksCurahEntity {
     jenis_file?: string
     kategori_file?: string
     notes?: string
-    v_bank_id?: string | string[]
+    v_bank_id?: number | number[]
     bank?: PksCurahBankEntity[]
 }
 

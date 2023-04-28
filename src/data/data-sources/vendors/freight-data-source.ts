@@ -50,7 +50,7 @@ export class FreightDataSource implements IFreighDataSource {
     async updateBank(id?: number, data?: FreightBankEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `update pengajuan freight bank`,
-            `update ${process.env.TABLE_FREIGHT_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where vendor_id = ?`,
+            `update ${process.env.TABLE_FREIGHT_BANK} set bank_name = ?, account_no = ?, file_rekbank = ? where f_bank_id = ?`,
             [data?.bank_name, data?.account_no, data?.file_rekbank, id!]
         )
 

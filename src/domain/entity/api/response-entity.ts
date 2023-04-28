@@ -1,5 +1,5 @@
-export interface HttpResponse {
+export interface HttpResponse<T> {
     status: number
     message: string
-    data: Record<string, any>
+    data: T
 }

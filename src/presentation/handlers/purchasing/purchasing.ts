@@ -392,10 +392,18 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      if (res.checkUpdated || !res?.update[0]?.changedRows) {
+      if (res.checkUpdated) {
         return ApiResponse.ok(request, reply, {
           status: false,
-          message: `Updated vendor pkscurah tidak berhasil`,
+          message: `Updated vendor pkscurah tidak berhasil, karena vendor sedang terpakai`,
+        })
+      }
+
+      if (!res?.update[0]?.changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: true,
+          message: `Updated vendor pkscurah tidak ada perubahan`,
+          id: request.params.vendor_id,
         })
       }
 
@@ -403,7 +411,6 @@ export class PurchasingHandler implements IPurchasingHandler {
         status: true,
         message: `Data update vendor pkscurah berhasil diinput ${data.curah}`,
         id: request.params.vendor_id,
-        res
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
@@ -497,10 +504,17 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      if (res.checkUpdated || !res?.update[0]?.changedRows) {
+      if (res.checkUpdated) {
         return ApiResponse.ok(request, reply, {
           status: false,
-          message: `Delete freight  tidak berhasil`,
+          message: `Updated freight tidak berhasil, karena freight sedang terpakai`,
+        })
+      }
+
+      if (!res?.update[0]?.changedRows) {
+        return ApiResponse.ok(request, reply, {
+          status: false,
+          message: `Updated freight tidak ada perubahan`,
         })
       }
 

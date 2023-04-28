@@ -61,11 +61,11 @@ import {
   UpdateFreightUseCase,
   UpdatePkhoaUseCase,
   UpdatePksCurahUseCase,
+  GetPkhoaExcludeUseCase,
+  DeletePengajuanKontrakPksUseCase
 } from './domain'
 import cluster from 'cluster'
 import os from 'os'
-import { GetPkhoaExcludeUseCase } from './domain/use-cases/purchasing/find-freight-exclude'
-import { DeletePengajuanKontrakPksUseCase } from './domain/use-cases/purchasing/delete-kontrak-pks'
 
 const app = async () => {
   dotenv.config()

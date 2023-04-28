@@ -15,3 +15,21 @@ export const paramsPkhoa = {
         }
     }
 }
+
+export const queryStringPkhoa = {
+    type: 'object',
+    properties: {
+        vendor_id: {
+            type: 'number',
+            errorMessage: {
+                type: 'failed value'
+            }
+        },
+        stockpile_id: {
+            type: 'number',
+            errorMessage: {
+                type: 'failed value'
+            }
+        }
+    },
+}
