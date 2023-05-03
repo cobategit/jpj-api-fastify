@@ -37,19 +37,31 @@ export class PurchasingDataSource implements IPurchasingDataSource {
     throw new Error("Method not implemented.");
   }
 
-  async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type'>): Promise<PurchasingEntity[]> {
+  async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id'>): Promise<PurchasingEntity[]> {
     let limit = ''
     let where = ``
 
     if (conf!.pks_type == 'PKS-Contract') {
       where = `where p.type = 1 and p.contract_type = 1`
-      if (conf!.search) where += `and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.stockpile_id) {
+        where += ` and s.stockpile_id = ${conf!.stockpile_id}`
+      }
+      if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
     } else if (conf!.pks_type == 'PKS-Curah') {
       where = `where p.type = 2 and p.contract_type = 1`
-      if (conf!.search) where += `and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.stockpile_id) {
+        where += ` and s.stockpile_id = ${conf!.stockpile_id}`
+      }
+      if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
     } else if (conf!.kontrak_type == 'PKS-Spb') {
       where = `where (p.type = 2 or p.type = 1) and p.contract_type = 2`
-      if (conf!.search) where += `and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.stockpile_id) {
+        where += ` and s.stockpile_id = ${conf!.stockpile_id}`
+      }
+      if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+    } else if (conf!.stockpile_id) {
+      where = `where s.stockpile_id = ${conf!.stockpile_id}`
+      if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
     } else if (conf!.search) where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
 
     if (conf!.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`

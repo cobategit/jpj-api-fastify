@@ -2,7 +2,7 @@
 
 By employing clean architecture, you can design applications with very low coupling and independent of technical implementation details. That way, the application becomes easy to maintain and flexible to change. Clean architecture allows us to create architectural boundaries between dependencies which allows components to be swapped in and out and be intrinsically testable.
 
-### Prepare Installation and Run it
+### Prepare Installation, Run it and Deploy to server
 
 - install Nodejs >= 16.0 LTS
 - check configration in file .env
