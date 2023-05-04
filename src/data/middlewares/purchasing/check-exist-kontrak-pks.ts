@@ -5,11 +5,11 @@ import { ParamsEntity } from "../../../domain";
 export function CheckExistKontrakPks(purchasingDataSource: IPurchasingDataSource, req: any, rep: any, done: any) {
     const check = async (req: any, rep: any, done: any): Promise<void> => {
         let reEntry = req.query.re_entry
-        const { stockpile_id, contract_type, vendor_id, type, payment_type, quantity, price } = req.body
+        const { stockpile_id, contract_type, vendor_id, type, quantity, price } = req.body
         try {
             const conf: Pick<ParamsEntity, 'whereKey' | 'whereValue'> = {
-                whereKey: `where stockpile_id = ? and contract_type = ? and vendor_id = ? and type = ? and payment_type = ? and quantity = ? and price = ?`,
-                whereValue: [stockpile_id, contract_type, vendor_id, type, payment_type, quantity, price]
+                whereKey: `where stockpile_id = ? and contract_type = ? and vendor_id = ? and type = ?  and quantity = ? and price = ?`,
+                whereValue: [stockpile_id, contract_type, vendor_id, type, quantity, price]
             }
 
             const checkExistKontrakPks = await purchasingDataSource.selectWhereDynamic(conf)
