@@ -119,4 +119,4 @@ The external layer functions helpers
 
 ### The Plan
 
-![alt text](https://github.com/cobategit/jpj-api-fastify/tree/master/public/documentation/img/flow%20jpj%20api%20clean%20architecture.drawio.png?raw=true)
+![alt text](https://github.com/cobategit/jpj-api-fastify/blob/master/public/documentation/img/flow%20jpj%20api%20clean%20architecture.drawio.png?raw=true)
