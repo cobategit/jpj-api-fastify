@@ -20,13 +20,14 @@ By employing clean architecture, you can design applications with very low coupl
 - setup config nginx on /nginx/sites-enabled/jpj-api-fastify.config:
 
 ===============================================================================
-upstream jpjapiservices {
-server 127.0.0.1:4005
-}
-server {
-listen 4006 default_server;
-server_name jpj-api-fastify.test;
-root "C:/laragon/www/jpj-api-fastify"; (lokasi sesuaikan dengan OS server)
+
+    upstream jpjapiservices {
+    server 127.0.0.1:4005
+    }
+    server {
+    listen 4006 default_server;
+    server_name jpj-api-fastify.test;
+    root "C:/laragon/www/jpj-api-fastify"; (lokasi sesuaikan dengan OS server)
 
     index index.html index.htm index.php;
 
@@ -69,10 +70,10 @@ root "C:/laragon/www/jpj-api-fastify"; (lokasi sesuaikan dengan OS server)
         deny all;
     }
 
-}
-This file is auto-generated.
-If you want Laragon to respect your changes, just remove the [auto.] prefix
-If you want to use SSL, enable it at: Menu > Nginx > SSL > Enabled
+    }
+    This file is auto-generated.
+    If you want Laragon to respect your changes, just remove the [auto.] prefix
+    If you want to use SSL, enable it at: Menu > Nginx > SSL > Enabled
 
 ===============================================================================
 
