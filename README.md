@@ -70,12 +70,9 @@ root "C:/laragon/www/jpj-api-fastify"; (lokasi sesuaikan dengan OS server)
     }
 
 }
-
-# This file is auto-generated.
-
-# If you want Laragon to respect your changes, just remove the [auto.] prefix
-
-# If you want to use SSL, enable it at: Menu > Nginx > SSL > Enabled
+This file is auto-generated.
+If you want Laragon to respect your changes, just remove the [auto.] prefix
+If you want to use SSL, enable it at: Menu > Nginx > SSL > Enabled
 
 ===============================================================================
 
