@@ -19,7 +19,7 @@ By employing clean architecture, you can design applications with very low coupl
 - create table set_ups : nama(string), nilai(double 18,2)
 - setup config nginx on /nginx/sites-enabled/jpj-api-fastify.config:
 
-===============================================================================
+============================================================================
 
     upstream jpjapiservices {
     server 127.0.0.1:4005
@@ -75,7 +75,7 @@ By employing clean architecture, you can design applications with very low coupl
     If you want Laragon to respect your changes, just remove the [auto.] prefix
     If you want to use SSL, enable it at: Menu > Nginx > SSL > Enabled
 
-===============================================================================
+===========================================================================
 
 - untuk running services, "npm run dev:build", setelah itu, "npm run dev:server"
 - untuk running di PM2, "npm run dev:build", setelah itu, didalam folder projectnya, " pm2 start dist/app.js --name='jpj-api' "
