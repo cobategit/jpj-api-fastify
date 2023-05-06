@@ -19,7 +19,7 @@ By employing clean architecture, you can design applications with very low coupl
 - create table set_ups : nama(string), nilai(double 18,2)
 - setup config nginx on /nginx/sites-enabled/jpj-api-fastify.config:
 
-============================================================================
+===========================================================================
 
     upstream jpjapiservices {
     server 127.0.0.1:4005
