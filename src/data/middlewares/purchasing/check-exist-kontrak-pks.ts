@@ -15,7 +15,7 @@ export function CheckExistKontrakPks(purchasingDataSource: IPurchasingDataSource
             const checkExistKontrakPks = await purchasingDataSource.selectWhereDynamic(conf)
 
             if (checkExistKontrakPks && !reEntry) {
-                done(new AppError(400, true, 'Data sudah ada, Apa anda ingin melanjutkan input data ini ?', '401'))
+                done(new AppError(400, true, 'Data contract sudah pernah diupload, apakah anda ingin melanjutkan upload data ini ?', '401'))
             }
 
         } catch (error) {

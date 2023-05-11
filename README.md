@@ -17,7 +17,7 @@ By employing clean architecture, you can design applications with very low coupl
 - alter table freight_cost : file_pkhoa(text)
 - create table user_purchasing : user_id(int), deviced_id(string), kode_akses(string), active(int), entry_date(date)
 - create table set_ups : nama(string), nilai(double 18,2)
-- setup config nginx on /nginx/sites-enabled/jpj-api-fastify.config:
+- setup config nginx on /nginx/sites-enabled/jpj-api-fastify.conf :
 
 ===========================================================================
 

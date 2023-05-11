@@ -103,7 +103,7 @@ export const upload = multerFastify({
         fileSize: 600000000,
     },
     fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(png|jpg|jepg|docx|pdf)$/)) {
+        if (!file.originalname.match(/\.(png|jpg|jpeg|docx|pdf)$/)) {
             return cb(
                 new AppError(500, false,
                     'Please Upload File :pdf or .jpg or .jpeg or .png or .docx',

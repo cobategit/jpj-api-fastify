@@ -106,10 +106,10 @@ const app = async () => {
     contentSecurityPolicy: false,
     global: true,
   })
-  server.register(fastifyStatic, {
-    root: path.join(process.cwd(), 'public'),
-    prefix: '/public',
-  })
+  // server.register(fastifyStatic, {
+  //   root: path.join(process.cwd(), 'public'),
+  //   prefix: '/public',
+  // })
   server.register(multerFastify.contentParser)
 
   const pool = await mysqlConn()
