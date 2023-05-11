@@ -30,7 +30,7 @@ export class FreightDataSource implements IFreighDataSource {
     async insertBank(data?: FreightBankEntity): Promise<any> {
         const res = await this.dml.dataManipulation(
             `insert pengajuan bank freight`,
-            `insert into ${process.env.TABLE_FREIGHT_BANK} (vendor_id, bank_name, account_no, active, file_rekbank) VALUES (?,?,?,?,?)`,
+            `insert into ${process.env.TABLE_FREIGHT_BANK} (freight_id, bank_name, account_no, active, file_rekbank) VALUES (?,?,?,?,?)`,
             [data?.freight_id, data?.bank_name, data?.account_no, data?.active, data?.file_rekbank]
         )
 
