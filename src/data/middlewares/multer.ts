@@ -6,10 +6,11 @@ export const storageMulterFastify = multerFastify.diskStorage({
     destination: (req: any, file: any, cb: any) => {
         cb(
             null,
-            path.join(
-                process.cwd(),
-                `public/${req.body.jenis_file}`
-            )
+            // path.join(
+            //     process.cwd(),
+            //     `public/${req.body.jenis_file}`
+            // )
+            `${process.env.DIRECTORY_FILE}/${req.body.jenis_file}`
         )
     },
     filename: (req: any, file: any, cb: any) => {
