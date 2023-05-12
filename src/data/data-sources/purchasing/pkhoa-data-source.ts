@@ -145,7 +145,7 @@ export class PkhoaDataSource implements IPkhoaDataSource {
       WHERE 
         fc.vendor_id = ?
         AND fc.stockpile_id = ? 
-        AND f.active = 1 
+        AND (f.active = 1 OR f.active = 2)
         AND fc.freight_cost_id IN (
           SELECT 
             MAX(freight_cost_id) 
