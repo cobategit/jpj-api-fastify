@@ -77,7 +77,8 @@ export class PkhoaDataSource implements IPkhoaDataSource {
               LEFT JOIN ${process.env.TABLE_CURRENCY} AS c
                 ON fc.currency_id = c.currency_id
             ${where}
-            ORDER BY fc.freight_cost_id DESC ${limit}`,
+            GROUP BY f.freight_id
+            ORDER BY fc.active_from DESC ${limit}`,
       []
     )
 

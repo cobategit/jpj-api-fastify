@@ -386,6 +386,11 @@ export class PurchasingRepository implements IPurchasingRepo {
       currency_id: 1,
       exchange_rate: 1,
       price: pricePoPks,
+      price_converted: 1 * pricePoPks,
+      company_id: 2,
+      lock_contract: 1,
+      po_status: 0,
+      quantity: data?.quantity,
       final_status: 4,
       entry_date: data?.entry_date
     }
