@@ -104,7 +104,7 @@ export class PurchasingDataSource implements IPurchasingDataSource {
             LEFT JOIN ${process.env.TABLE_POPKS} popks
               ON popks.purchasing_id = p.purchasing_id
           ${where}
-          ORDER BY purchasing_id DESC
+          ORDER BY popks.final_status DESC, p.purchasing_id DESC
           ${limit};
             `, []
     )
