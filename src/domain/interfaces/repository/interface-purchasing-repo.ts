@@ -17,6 +17,7 @@ export interface IPurchasingRepo {
   registerUserPurchasing(data: EntityUser): Promise<any>
   checkEmail(email: string): Promise<EntityUser | null>
   checkDeviceId(deviceId: string): Promise<EntityUser | null>
+  updateKodeAksesUser(deviced_id: string, kode_akses: string): Promise<any>
   pengajuanPksCurah(user_id?: number, data?: PksCurahEntity): Promise<any>
   pengajuanFreight(user_id?: number, data?: FreightEntity): Promise<any>
   findAllPksCurah(
@@ -75,4 +76,5 @@ export interface IPurchasingRepo {
   deleteVendorKontrak(id?: number, user_id?: number): Promise<any>
   deletePurchasingFreightCost(id?: number, user_id?: number): Promise<any>
   updateFilePurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
+  updateFileSpbPurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'import2' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4' | 'import2_date'>): Promise<any>
 }

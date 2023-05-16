@@ -62,4 +62,14 @@ export class UsersDataSource implements IUsersDataSource {
 
     return rows[0]
   }
+
+  async updateKodeAksesUserPurchasing(deviced_id: string, kode_akses: string): Promise<any> {
+    const res = await this.dml.dataManipulation(
+      'update kode akses user purchasing',
+      `update ${process.env.TABLE_USER_PURCHASING} set kode_akses = ? where deviced_id = ?`,
+      [kode_akses, deviced_id]
+    )
+
+    return res
+  }
 }

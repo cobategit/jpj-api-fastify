@@ -12,6 +12,7 @@ import {
 import { CheckAvailableUser, IPurchasingDataSource, IUsersDataSource, CheckExistKontrakPks, upload } from '../../../data'
 import { ApiResponse, reqAuthToken } from '@jpj-common/module'
 import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, queryStringAddPengajuanVendor, queryStringPkhoa } from '../../schema'
+import { changedPasswordSchema, forgotPasswordSchema } from '../../schema/purchasing/password-schema'
 
 export function PurchasingRoute(
   purchasingHandler: IPurchasingHandler,
@@ -42,6 +43,31 @@ export function PurchasingRoute(
         schema: { body: bodyLoginSchema }
       },
       purchasingHandler.login.bind(purchasingHandler)
+    )
+
+    //@changed-password-purchasing
+    fastify.post<{}>(
+      '/changed-password',
+      {
+        logLevel: 'info',
+        schema: { body: changedPasswordSchema },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done)
+        ]
+      },
+      purchasingHandler.changedPassword.bind(purchasingHandler)
+    )
+
+    //@forgot-password-purchasing
+    fastify.post<{}>(
+      '/forgot-password',
+      {
+        logLevel: 'info',
+        schema: { body: forgotPasswordSchema },
+      },
+      purchasingHandler.forgotPassword.bind(purchasingHandler)
     )
 
     //@pengajuan-vendor (pkscurah/freight)
@@ -504,7 +530,12 @@ export function PurchasingRoute(
       purchasingHandler.pengajuanKontrakPks.bind(purchasingHandler)
     )
       //@update-file-kontrak-pks
-      .patch<{ Body: PurchasingEntity, Params: Pick<ParamsEntity, 'purchasing_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
+      .patch<{
+        Body: PurchasingEntity,
+        Params: Pick<ParamsEntity, 'purchasing_id'>,
+        Headers: Pick<IHeaders, 'x-access-token'>,
+        Querystring: Pick<ParamsEntity, 'status' | 'final_status'>
+      }>(
         '/kontrak-pks/:purchasing_id',
         {
           logLevel: 'info',
@@ -518,6 +549,7 @@ export function PurchasingRoute(
               CheckAvailableUser(userDataSource, req, rep, done),
             upload.fields([
               { name: 'upload_file', maxCount: 1 },
+              { name: 'import2', maxCount: 1 },
               { name: 'approval_file', maxCount: 1 },
               { name: 'upload_file1', maxCount: 1 },
               { name: 'upload_file2', maxCount: 1 },

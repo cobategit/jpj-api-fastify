@@ -4,12 +4,13 @@ export interface IPurchasingDataSource {
     count(): Promise<any>
     insert(data?: PurchasingEntity): Promise<any>
     update(id?: number, data?: PurchasingEntity): Promise<any>
-    selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id'>): Promise<PurchasingEntity[]>
+    selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id' | 'final_status'>): Promise<PurchasingEntity[]>
     selectOne(id?: number): Promise<PurchasingEntity | null>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingEntity[]>
     selectPlanPaymentDate(): Promise<any>
     delete(id?: number): Promise<any>
     updateFile(id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
+    updateFileSpb(id?: number, data?: Pick<PurchasingEntity, 'import2' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4' | 'import2_date'>): Promise<any>
     selectWhereDynamic(conf?: Pick<ParamsEntity, 'whereKey' | 'whereValue'>): Promise<PurchasingEntity | null>
 }
 

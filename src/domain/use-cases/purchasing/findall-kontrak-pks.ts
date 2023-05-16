@@ -21,7 +21,8 @@ export class GetAllKontrakPksUseCase implements IGetAllKontrakPksUseCase {
                     search: conf?.search,
                     pks_type: conf?.pks_type,
                     kontrak_type: conf?.kontrak_type,
-                    stockpile_id: conf?.stockpile_id
+                    stockpile_id: conf?.stockpile_id,
+                    final_status: conf?.final_status
                 }
                 limitNumber = limit
             }

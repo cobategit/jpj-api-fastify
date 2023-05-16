@@ -47,6 +47,11 @@ export class PurchasingRepository implements IPurchasingRepo {
     return res
   }
 
+  async updateKodeAksesUser(deviced_id: string, kode_akses: string): Promise<any> {
+    const res = await this.userDataSource.updateKodeAksesUserPurchasing(deviced_id, kode_akses)
+    return res
+  }
+
   async pengajuanPksCurah(user_id?: number, data?: PksCurahEntity | undefined): Promise<any> {
     const res = await this.pksCurahDataSource.insert(data)
 
@@ -571,6 +576,23 @@ export class PurchasingRepository implements IPurchasingRepo {
       transaksi: `${id}`,
       cud: 'UPDATE',
       isitransaksi_lama: `MENGUBAH KONTRAK PKS FILE PURCHASING YANG DIAJUKAN`,
+      user_id: user_id
+    }
+
+    await this.historyLogDataSource.insert(dataHistoryLog)
+
+    return res
+  }
+
+  async updateFileSpbPurchasing(id?: number | undefined, user_id?: number | undefined, data?: Pick<PurchasingEntity, 'import2' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4' | 'import2_date'> | undefined): Promise<any> {
+    data!.import2_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
+    const res = await this.purchasingDataSource.updateFileSpb(id, data)
+
+    const dataHistoryLog: HistoryLogEntity = {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${id}`,
+      cud: 'UPDATE',
+      isitransaksi_lama: `MENGUBAH KONTRAK PKS FILE SPB PURCHASING YANG DIAJUKAN`,
       user_id: user_id
     }
 

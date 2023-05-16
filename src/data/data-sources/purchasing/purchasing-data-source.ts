@@ -37,9 +37,10 @@ export class PurchasingDataSource implements IPurchasingDataSource {
     throw new Error("Method not implemented.");
   }
 
-  async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id'>): Promise<PurchasingEntity[]> {
+  async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id' | 'final_status'>): Promise<PurchasingEntity[]> {
     let limit = ''
     let where = ``
+    let orderBy = `, p.purchasing_id DESC`
 
     if (conf!.pks_type == 'PKS-Contract') {
       where = `where p.type = 1 and p.contract_type = 1`
@@ -47,23 +48,44 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         where += ` and s.stockpile_id = ${conf!.stockpile_id}`
       }
       if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.final_status) {
+        where += ` and popks.final_status = ${conf?.final_status}`
+        orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
+      }
     } else if (conf!.pks_type == 'PKS-Curah') {
       where = `where p.type = 2 and p.contract_type = 1`
       if (conf!.stockpile_id) {
         where += ` and s.stockpile_id = ${conf!.stockpile_id}`
       }
       if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.final_status) {
+        where += ` and popks.final_status = ${conf?.final_status}`
+        orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
+      }
     } else if (conf!.kontrak_type == 'PKS-Spb') {
       where = `where (p.type = 2 or p.type = 1) and p.contract_type = 2`
       if (conf!.stockpile_id) {
         where += ` and s.stockpile_id = ${conf!.stockpile_id}`
       }
       if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.final_status) {
+        where += ` and popks.final_status = ${conf?.final_status}`
+        orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
+      }
     } else if (conf!.stockpile_id) {
       where = `where s.stockpile_id = ${conf!.stockpile_id}`
       if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
-    } else if (conf!.search) where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
-
+      if (conf!.final_status) {
+        where += ` and popks.final_status = ${conf?.final_status}`
+        orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
+      }
+    } else if (conf!.search) {
+      where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      if (conf!.final_status) {
+        where += ` and popks.final_status = ${conf?.final_status}`
+        orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
+      }
+    }
     if (conf!.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
 
     const [rows, fields] = await this.dql.dataQueryLanguage(
@@ -104,7 +126,7 @@ export class PurchasingDataSource implements IPurchasingDataSource {
             LEFT JOIN ${process.env.TABLE_POPKS} popks
               ON popks.purchasing_id = p.purchasing_id
           ${where}
-          ORDER BY popks.final_status DESC, p.purchasing_id DESC
+          ORDER BY popks.final_status DESC ${orderBy}
           ${limit};
             `, []
     )
@@ -181,6 +203,16 @@ export class PurchasingDataSource implements IPurchasingDataSource {
       `update file purchasing`,
       `update ${process.env.TABLE_PURCHASING} set upload_file = ?, approval_file = ?, upload_file1 = ?, upload_file2 = ?,  upload_file3 = ?, upload_file4 = ? where purchasing_id = ? and status = ?`,
       [data?.upload_file, data?.approval_file, data?.upload_file1, data?.upload_file2, data?.upload_file3, data?.upload_file4, id!, 0]
+    )
+
+    return res
+  }
+
+  async updateFileSpb(id?: number | undefined, data?: Pick<PurchasingEntity, "import2" | "approval_file" | "upload_file1" | "upload_file2" | "upload_file3" | "upload_file4" | "import2_date"> | undefined): Promise<any> {
+    const res = await this.dml.dataManipulation(
+      `update file purchasing, spb`,
+      `update ${process.env.TABLE_PURCHASING} set import2 = ?, approval_file = ?, upload_file1 = ?, upload_file2 = ?,  upload_file3 = ?, upload_file4 = ?, import2_date = ? where purchasing_id = ? and status = ?`,
+      [data?.import2, data?.approval_file, data?.upload_file1, data?.upload_file2, data?.upload_file3, data?.upload_file4, data?.import2_date, id!, 2]
     )
 
     return res

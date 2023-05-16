@@ -19,4 +19,6 @@ export interface ParamsEntity {
     pks_type?: string | number
     purchasing_id?: number
     re_entry?: boolean
+    final_status?: number
+    status?: number
 }

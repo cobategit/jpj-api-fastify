@@ -60,6 +60,12 @@ export const storageMulterFastify = multerFastify.diskStorage({
                 `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
                 `${path.extname(file.originalname)}`
         }
+        if (req.files['import2']) {
+            nameFile = `import2-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
+                '-' +
+                `${revisi}${Date.now()}-` + `${Math.floor(Math.random() * 10)}` +
+                `${path.extname(file.originalname)}`
+        }
         if (req.files['approval_file']) {
             nameFile = `approval_file-${req.body.stockpile_id}-${req.body.vendor_id}-${req.body.contract_type}-${req.body.type}` +
                 '-' +

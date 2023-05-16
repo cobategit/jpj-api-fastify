@@ -42,12 +42,16 @@ import {
   IGetOneKontrakPksUseCase,
   IDeletePengajuanKontrakPksUseCase,
   IUpdateFilePurchasingUseCase,
+  IChangedPasswordPurchasingUseCase,
+  IForgotPasswordPurchasingUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
   private registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase
   private loginUserPurchasingUseCase: ILoginUserPurchasingUseCase
+  private changedPasswordPurchasingUseCase: IChangedPasswordPurchasingUseCase
+  private forgotPasswordPurchasingUseCase: IForgotPasswordPurchasingUseCase
   private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
   private getAllPksCurahUseCase: IGetAllPksCurahUseCase
   private getOnePksCurahUseCase: IGetOnePksCurahUseCase
@@ -82,6 +86,8 @@ export class PurchasingHandler implements IPurchasingHandler {
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
     loginUserPurchasingUseCase: ILoginUserPurchasingUseCase,
+    changedPasswordPurchasingUseCase: IChangedPasswordPurchasingUseCase,
+    forgotPasswordPurchasingUseCase: IForgotPasswordPurchasingUseCase,
     pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase,
     getAllPksCurahUseCase: IGetAllPksCurahUseCase,
     getOnePksCurahUseCase: IGetOnePksCurahUseCase,
@@ -116,6 +122,8 @@ export class PurchasingHandler implements IPurchasingHandler {
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
     this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
+    this.changedPasswordPurchasingUseCase = changedPasswordPurchasingUseCase
+    this.forgotPasswordPurchasingUseCase = forgotPasswordPurchasingUseCase
     this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
     this.getAllPksCurahUseCase = getAllPksCurahUseCase
     this.pengajuanFreightUseCase = pengajuanFreightUseCase
@@ -219,6 +227,57 @@ export class PurchasingHandler implements IPurchasingHandler {
       throw new AppError(400, false, `${error}`, '401')
     }
   }
+
+  async changedPassword(request: any, reply: any): Promise<void> {
+    try {
+      const { deviced_id, current_password, new_password, confirm_password } = request.body
+
+      if (new_password != confirm_password) {
+        throw new AppError(406, false, 'New password dan confirm password tidak cocok', '406')
+      }
+
+      const res = await this.changedPasswordPurchasingUseCase.execute(deviced_id, current_password, new_password);
+
+      if (res.checkComparePassword) {
+        throw new AppError(406, false, 'Password yang anda masukkan salah', '406')
+      }
+
+      if (res.checkDevicedId) {
+        throw new AppError(404, false, `Data device id anda tidak ada`, '401')
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Update Password Berhasil',
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async forgotPassword(request: any, reply: any): Promise<void> {
+    try {
+      const { deviced_id, email } = request.body
+
+      const res = await this.forgotPasswordPurchasingUseCase.execute(deviced_id, email);
+
+      if (res.checkDevicedId) {
+        throw new AppError(404, false, `Data device id anda tidak ada`, '401')
+      }
+
+      if (res.checkEmail) {
+        throw new AppError(404, false, `Data email anda tidak ada`, '401')
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Update Forgot Password Berhasil',
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
   async pengajuanPksCurah(request: any, reply: any): Promise<void> {
     try {
       let dataBank: string[] = []
@@ -894,6 +953,9 @@ export class PurchasingHandler implements IPurchasingHandler {
       if (request.files['upload_file']) {
         data!.upload_file = `${process.env.URL_FILE}/purchasing/${request.files['upload_file'][0].filename}`
       }
+      if (request.files['import2']) {
+        data!.import2 = `${process.env.URL_FILE}/purchasing/${request.files['import2'][0].filename}`
+      }
       if (request.files['approval_file']) {
         data!.approval_file = `${process.env.URL_FILE}/purchasing/${request.files['approval_file'][0].filename}`
       }
@@ -913,6 +975,8 @@ export class PurchasingHandler implements IPurchasingHandler {
       const res = await this.updateFilePurchasingUseCase.execute(
         request.params.purchasing_id,
         request.user.user_id,
+        request.query.status,
+        request.query.final_status,
         data
       )
 

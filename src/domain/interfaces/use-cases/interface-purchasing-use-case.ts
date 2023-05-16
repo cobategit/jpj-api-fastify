@@ -8,6 +8,14 @@ export interface ILoginUserPurchasingUseCase {
   execute(data: EntityUser): Promise<EntityUser | null>
 }
 
+export interface IChangedPasswordPurchasingUseCase {
+  execute(deviced_id?: string, current_password?: string, new_password?: string): Promise<any>
+}
+
+export interface IForgotPasswordPurchasingUseCase {
+  execute(deviced_id?: string, email?: string): Promise<any>
+}
+
 export interface IPengajuanPksCurahUseCase {
   execute(user_id?: number, data?: PksCurahEntity): Promise<any>
 }
@@ -125,5 +133,5 @@ export interface IDeletePengajuanKontrakPksUseCase {
 }
 
 export interface IUpdateFilePurchasingUseCase {
-  execute(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
+  execute(id?: number, user_id?: number, status?: number, final_status?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'import2' | 'import2_date' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
 }
