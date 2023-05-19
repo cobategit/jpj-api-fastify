@@ -26,7 +26,7 @@ export class RegisterUserPurchasingUseCase
         return { invalidEmail: 'Email tidak terdaftar' }
       }
 
-      if (checkEmail.deviced_id) {
+      if (checkEmail.deviced_id == data.deviced_id) {
         return {
           existDeviceId: 'Device Id anda sudah terdaftar',
         }
