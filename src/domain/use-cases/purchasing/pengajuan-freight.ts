@@ -1,5 +1,5 @@
 import { AppError } from "@jpj-common/module";
-import { PksCurahEntity } from "../../entity";
+import { FreightEntity } from "../../entity";
 import { IPurchasingRepo, IPengajuanFreightUseCase } from "../../interfaces";
 
 export class PengajuanFreightUseCase implements IPengajuanFreightUseCase {
@@ -9,7 +9,7 @@ export class PengajuanFreightUseCase implements IPengajuanFreightUseCase {
         this.purchasingRepo = purchasingRepo
     }
 
-    async execute(user_id?: number, data?: PksCurahEntity | undefined): Promise<any> {
+    async execute(user_id?: number, data?: FreightEntity | undefined): Promise<any> {
         try {
             const res = await this.purchasingRepo.pengajuanFreight(user_id, data)
 
