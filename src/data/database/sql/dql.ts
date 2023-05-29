@@ -13,7 +13,7 @@ export class DataQueryLanguage implements IDql {
       const res = await this.db.query(`${query}`, queryConfig)
       return res
     } catch (error) {
-      await this.db.rollback()
+      await this.db.query('ROLLBACK')
       LoggersApp.warn('dml-query', { error })
       throw new AppError(400, false, `Error - ${error}`, '001')
     }
