@@ -9,7 +9,7 @@ export async function mysqlConn() {
     database: process.env.DB_NAME_MySql,
     password: process.env.PASSWORD_MySql,
     port: Number(process.env.PORT_MySql),
-    idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+    // idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
     queueLimit: 0,
     enableKeepAlive: true,
     keepAliveInitialDelay: 0,
