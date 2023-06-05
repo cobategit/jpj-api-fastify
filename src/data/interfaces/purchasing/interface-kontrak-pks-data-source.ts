@@ -1,4 +1,4 @@
-import { ParamsEntity, PoPksEntity, PurchasingEntity, PurchasingFreightCostEntity, VendorKontrakEntity } from "../../../domain"
+import { ParamsEntity, PoPksEntity, PurchasingDetailEntity, PurchasingEntity, PurchasingFreightCostEntity, VendorKontrakEntity } from "../../../domain"
 
 export interface IPurchasingDataSource {
     count(): Promise<any>
@@ -12,6 +12,14 @@ export interface IPurchasingDataSource {
     updateFile(id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
     updateFileSpb(id?: number, data?: Pick<PurchasingEntity, 'import2' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4' | 'import2_date'>): Promise<any>
     selectWhereDynamic(conf?: Pick<ParamsEntity, 'whereKey' | 'whereValue'>): Promise<PurchasingEntity | null>
+}
+
+export interface IPurchasingDetailDataSource {
+    count(): Promise<any>
+    insert(data?: PurchasingDetailEntity): Promise<any>
+    selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingDetailEntity[] | []>
+    update(id?: number, data?: PurchasingDetailEntity): Promise<any>
+    delete(id?: number): Promise<any>
 }
 
 export interface IPurchasingFreightCostDataSource {

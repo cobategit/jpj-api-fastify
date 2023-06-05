@@ -21,4 +21,5 @@ export interface ParamsEntity {
     re_entry?: boolean
     final_status?: number
     status?: number
+    purchasing_detail_id?: number
 }

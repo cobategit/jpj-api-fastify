@@ -1,5 +1,5 @@
-import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPkhoaDataSource, IPksCurahDataSource, IPoPksDataSource, IPurchasingDataSource, IPurchasingFreightCostDataSource, ISetupsDataSource, IStockpileDataSource, IUsersDataSource, IVendorKontrakDataSource } from '../../../data'
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PkhoaEntity, PksCurahBankEntity, PksCurahEntity, PoPksEntity, PurchasingEntity, PurchasingFreightCostEntity, StockpileEntity, VendorKontrakEntity } from '../../entity'
+import { ICurrencyDataSource, IFreighDataSource, IHistoryLogDataSource, IPkhoaDataSource, IPksCurahDataSource, IPoPksDataSource, IPurchasingDataSource, IPurchasingDetailDataSource, IPurchasingFreightCostDataSource, ISetupsDataSource, IStockpileDataSource, IUsersDataSource, IVendorKontrakDataSource } from '../../../data'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HistoryLogEntity, ParamsEntity, PkhoaEntity, PksCurahBankEntity, PksCurahEntity, PoPksEntity, PurchasingDetailEntity, PurchasingEntity, PurchasingFreightCostEntity, StockpileEntity, TypePengajuanKontrakPks, VendorKontrakEntity } from '../../entity'
 import { IPurchasingRepo } from '../../interfaces'
 import { format } from 'date-fns'
 
@@ -16,8 +16,9 @@ export class PurchasingRepository implements IPurchasingRepo {
   private vendorKontrakDataSource: IVendorKontrakDataSource
   private setupsDataSource: ISetupsDataSource
   private purchasingFreightCostDataSource: IPurchasingFreightCostDataSource
+  private purchasingDetailDataSource: IPurchasingDetailDataSource
 
-  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource, pkhoaDataSource: IPkhoaDataSource, purchasingDataSource: IPurchasingDataSource, poPksDataSource: IPoPksDataSource, vendorKontrakDataSource: IVendorKontrakDataSource, setupsDataSource: ISetupsDataSource, purchasingFreightCostDataSource: IPurchasingFreightCostDataSource) {
+  constructor(userDataSource: IUsersDataSource, pksCurahDataSource: IPksCurahDataSource, freightDataSource: IFreighDataSource, historyLogDataSource: IHistoryLogDataSource, currencyDataSource: ICurrencyDataSource, stockpileDataSource: IStockpileDataSource, pkhoaDataSource: IPkhoaDataSource, purchasingDataSource: IPurchasingDataSource, poPksDataSource: IPoPksDataSource, vendorKontrakDataSource: IVendorKontrakDataSource, setupsDataSource: ISetupsDataSource, purchasingFreightCostDataSource: IPurchasingFreightCostDataSource, purchasingDetailDataSource: IPurchasingDetailDataSource) {
     this.userDataSource = userDataSource
     this.pksCurahDataSource = pksCurahDataSource
     this.freightDataSource = freightDataSource
@@ -30,6 +31,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     this.vendorKontrakDataSource = vendorKontrakDataSource
     this.setupsDataSource = setupsDataSource
     this.purchasingFreightCostDataSource = purchasingFreightCostDataSource
+    this.purchasingDetailDataSource = purchasingDetailDataSource
   }
 
   async registerUserPurchasing(data: EntityUser): Promise<any> {
@@ -371,7 +373,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
-  async pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any> {
+  async pengajuanKontrakPks(user_id?: number, data?: TypePengajuanKontrakPks): Promise<any> {
     let pricePoPks: number = data?.price!
     const resPurchasing = await this.purchasingDataSource.insert(data)
     const resPpn = await this.setupsDataSource.selectByNama(process.env.PPN_NAME)
@@ -452,6 +454,25 @@ export class PurchasingRepository implements IPurchasingRepo {
         )
     }
 
+    let dataPurchasingDetail = new Map<string, PurchasingDetailEntity>()
+    dataPurchasingDetail.set('data', {
+      purchasing_id: resPurchasing[0].insertId,
+      quantity_payment: data?.quantity_payment,
+      payment_type: data?.payment_type,
+      entry_by: user_id,
+      entry_date: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      status: 0,
+    })
+    const insertPurchasingDetail = await this.purchasingDetailDataSource.insert(dataPurchasingDetail.get('data'))
+
+    const dataLogPurchasingDetail = new Map<string, HistoryLogEntity>()
+    dataLogPurchasingDetail.set('data', {
+      cud: "CREATE",
+      isitransaksi_baru: "INSERT TERMIN",
+      transaksi: insertPurchasingDetail[0].insertId,
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      user_id: user_id
+    })
     const dataHistoryLogPurchasing: HistoryLogEntity = {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${resPurchasing[0].insertId}`,
@@ -471,6 +492,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       [
         this.historyLogDataSource.insert(dataHistoryLogPurchasing),
         this.historyLogDataSource.insert(dataHistoryLogPoPks),
+        this.historyLogDataSource.insert(dataLogPurchasingDetail.get('data'))
       ]
     )
 
@@ -599,6 +621,46 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(dataHistoryLog)
 
     return res
+  }
+
+  async addTerminKontrakPks(data?: PurchasingDetailEntity | undefined): Promise<any> {
+  }
+
+  async findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PurchasingDetailEntity[] | []> {
+    const res = await this.purchasingDetailDataSource.selectOneDynamic(conf!)
+    return res
+  }
+
+  async updateTerminKontrakPks(id?: number | undefined, user_id?: number | undefined, data?: PurchasingDetailEntity | undefined): Promise<any> {
+    const update = await this.purchasingDetailDataSource.update(id, data)
+
+    const logUpdatePurchasingDetail = new Map<string, HistoryLogEntity>()
+    logUpdatePurchasingDetail.set('data', {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${id}`,
+      cud: 'UPDATE',
+      isitransaksi_lama: `MENGUBAH TERMIN`,
+      user_id: user_id
+    })
+    await this.historyLogDataSource.insert(logUpdatePurchasingDetail.get('data'))
+
+    return update
+  }
+
+  async deleteTerminKontrakPks(id?: number | undefined, user_id?: number | undefined): Promise<any> {
+    const delet = await this.purchasingDetailDataSource.delete(id)
+
+    const logDeletePurchasingDetail = new Map<string, HistoryLogEntity>()
+    logDeletePurchasingDetail.set('data', {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${id}`,
+      cud: 'DELETE',
+      isitransaksi_lama: `MENGHAPUS TERMIN`,
+      user_id: user_id
+    })
+    await this.historyLogDataSource.insert(logDeletePurchasingDetail.get('data'))
+
+    return delet
   }
 
 }

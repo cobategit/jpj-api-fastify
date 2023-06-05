@@ -8,8 +8,10 @@ import {
   PksCurahBankEntity,
   PksCurahEntity,
   PoPksEntity,
+  PurchasingDetailEntity,
   PurchasingEntity,
   StockpileEntity,
+  TypePengajuanKontrakPks,
   VendorKontrakEntity,
 } from '../../entity'
 
@@ -64,7 +66,7 @@ export interface IPurchasingRepo {
   deletePkhoa(id?: number, user_id?: number): Promise<any>
   findOnePkhoaDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PkhoaEntity[]>
   getPkhoaExclude(stockpile_id: number, vendor_id: number, req_payment_date: string): Promise<any>
-  pengajuanKontrakPks(user_id?: number, data?: PurchasingEntity): Promise<any>
+  pengajuanKontrakPks(user_id?: number, data?: TypePengajuanKontrakPks): Promise<any>
   findOnePurchasingDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingEntity[]>
   findOnePoPksDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PoPksEntity[]>
   findOneVendorKontrakDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<VendorKontrakEntity[]>
@@ -77,4 +79,8 @@ export interface IPurchasingRepo {
   deletePurchasingFreightCost(id?: number, user_id?: number): Promise<any>
   updateFilePurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
   updateFileSpbPurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'import2' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4' | 'import2_date'>): Promise<any>
+  addTerminKontrakPks(data?: PurchasingDetailEntity): Promise<any>
+  findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, "columnKey" | "columnValue">): Promise<PurchasingDetailEntity[] | []>
+  updateTerminKontrakPks(id?: number, user_id?: number, data?: PurchasingDetailEntity): Promise<any>
+  deleteTerminKontrakPks(id?: number, user_id?: number): Promise<any>
 }

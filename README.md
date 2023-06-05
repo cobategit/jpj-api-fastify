@@ -15,6 +15,7 @@ By employing clean architecture, you can design applications with very low coupl
 - alter table freight : pic(string), phone_pic(int), id_user_stockpile(int), file_npwp(text), file_pkp(text), file_ktp(text)
 - alter table freight_bank : file_rekbank(text)
 - alter table freight_cost : file_pkhoa(text)
+- alter table purchasing : isTermin(tinyint) default 0
 - create table user_purchasing : user_id(int), deviced_id(string), kode_akses(string), active(int), entry_date(date)
 - create table set_ups : nama(string), nilai(double 18,2)
 - setup config nginx on /nginx/sites-enabled/jpj-api-fastify.conf :

@@ -35,6 +35,19 @@ export interface PurchasingEntity {
     type?: number
     logbook_status?: number
     tempVendor?: string
+    isTermin?: number
+}
+
+export interface PurchasingDetailEntity {
+    purchasing_detail_id?: number
+    purchasing_id?: number
+    quantity_payment?: number
+    entry_date?: string
+    entry_by?: number
+    payment_date?: string
+    payment_type?: number
+    contract_id?: number
+    status?: number
 }
 
 export interface PurchasingFreightCostEntity {
@@ -81,3 +94,5 @@ export interface VendorKontrakEntity {
     entry_date?: string
     updated_at?: string
 }
+
+export type TypePengajuanKontrakPks = PurchasingEntity & PurchasingDetailEntity

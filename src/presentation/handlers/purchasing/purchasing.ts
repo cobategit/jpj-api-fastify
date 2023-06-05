@@ -44,6 +44,9 @@ import {
   IUpdateFilePurchasingUseCase,
   IChangedPasswordPurchasingUseCase,
   IForgotPasswordPurchasingUseCase,
+  TypePengajuanKontrakPks,
+  IUpdateTerminKontrakPksUseCase,
+  IDeleteTerminKontrakPksUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -82,6 +85,8 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getOneKontrakPksUseCase: IGetOneKontrakPksUseCase
   private deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase
   private updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase
+  private updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase
+  private deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -117,7 +122,9 @@ export class PurchasingHandler implements IPurchasingHandler {
     getPlanPaymentDateUseCase: IGetPlanPaymentDateUseCase,
     getOneKontrakPksUseCase: IGetOneKontrakPksUseCase,
     deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase,
-    updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase
+    updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase,
+    updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase,
+    deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -154,6 +161,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getOneKontrakPksUseCase = getOneKontrakPksUseCase
     this.deletePengajuanKontrakPksUseCase = deletePengajuanKontrakPksUseCase
     this.updateFilePurchasingUseCase = updateFilePurchasingUseCase
+    this.updateTerminKontrakPksUseCase = updateTerminKontrakPksUseCase
+    this.deleteTerminKontrakPksUseCase = deleteTerminKontrakPksUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -833,7 +842,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async pengajuanKontrakPks(request: any, reply: any): Promise<void> {
     try {
-      const data: PurchasingEntity = request.body
+      const data: TypePengajuanKontrakPks = request.body
       data.status = 0
 
       if (request.files['upload_file']) {
@@ -998,6 +1007,48 @@ export class PurchasingHandler implements IPurchasingHandler {
         status: true,
         message: `UpdateData pengajuan kontrak pks`,
         id: request.params.purchasing_id,
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async updateTerminKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const update = await this.updateTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id, request.body.data)
+
+      if (update.allowUpdate || !update.dataUpdate) {
+        return ApiResponse.badRequest(request, reply, {
+          status: false,
+          message: 'Update termin tidak bisa'
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Update termin kontrak pks berhasil',
+        id: request.params.purchasing_detail_id
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async deleteTerminKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const delet = await this.deleteTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id)
+
+      if (delet.allowUpdate || !delet.dataUpdate) {
+        return ApiResponse.badRequest(request, reply, {
+          status: false,
+          message: 'Delete termin tidak bisa'
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Delete termin kontrak pks berhasil',
+        id: request.params.purchasing_detail_id
       })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')

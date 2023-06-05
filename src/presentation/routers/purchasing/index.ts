@@ -7,11 +7,13 @@ import {
   ParamsEntity,
   PkhoaEntity,
   PksCurahEntity,
+  PurchasingDetailEntity,
   PurchasingEntity,
+  TypePengajuanKontrakPks,
 } from '../../../domain'
 import { CheckAvailableUser, IPurchasingDataSource, IUsersDataSource, CheckExistKontrakPks, upload } from '../../../data'
 import { ApiResponse, reqAuthToken } from '@jpj-common/module'
-import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, queryStringAddPengajuanVendor, queryStringPkhoa } from '../../schema'
+import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, paramsTerminKontrakPks, queryStringAddPengajuanVendor, queryStringPkhoa } from '../../schema'
 import { changedPasswordSchema, forgotPasswordSchema } from '../../schema/purchasing/password-schema'
 
 export function PurchasingRoute(
@@ -500,7 +502,7 @@ export function PurchasingRoute(
 
     //@pengajuan-kontrak-pks
     fastify.post<{
-      Body: PurchasingEntity,
+      Body: TypePengajuanKontrakPks,
       Querystring: Pick<ParamsEntity, 're_entry'>,
       Headers: Pick<IHeaders, 'x-access-token'>
     }>(
@@ -653,6 +655,48 @@ export function PurchasingRoute(
         ],
       },
       purchasingHandler.findPlanPaymentDate.bind(purchasingHandler)
+    )
+
+    //@update-termin-kontrak-pks
+    fastify.patch<{
+      Params: Pick<ParamsEntity, 'purchasing_detail_id'>,
+      Headers: Pick<IHeaders, 'x-access-token'>
+    }>(
+      '/termin/update',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsTerminKontrakPks
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ]
+      },
+      purchasingHandler.updateTerminKontrakPks.bind(purchasingHandler)
+    )
+
+    //@delete-termin-kontrak-pks
+    fastify.delete<{
+      Params: Pick<ParamsEntity, 'purchasing_detail_id'>,
+      Headers: Pick<IHeaders, 'x-access-token'>
+    }>(
+      '/termin/update',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+          params: paramsTerminKontrakPks
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ]
+      },
+      purchasingHandler.deleteTerminKontrakPks.bind(purchasingHandler)
     )
 
     done()

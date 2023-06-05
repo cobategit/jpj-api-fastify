@@ -1,4 +1,4 @@
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, PaginationEntity, ParamsEntity, PkhoaEntity, PksCurahEntity, PurchasingEntity, StockpileEntity } from '../../entity'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, PaginationEntity, ParamsEntity, PkhoaEntity, PksCurahEntity, PurchasingDetailEntity, PurchasingEntity, StockpileEntity, TypePengajuanKontrakPks } from '../../entity'
 
 export interface IRegisterUserPurchasingUseCase {
   execute(data: EntityUser): Promise<any>
@@ -113,7 +113,7 @@ export interface IGetPkhoaExcludeUseCase {
 }
 
 export interface IPengajuanKontrakPksUseCase {
-  execute(user_id?: number, data?: PurchasingEntity): Promise<any>
+  execute(user_id?: number, data?: TypePengajuanKontrakPks): Promise<any>
 }
 
 export interface IGetAllKontrakPksUseCase {
@@ -134,4 +134,12 @@ export interface IDeletePengajuanKontrakPksUseCase {
 
 export interface IUpdateFilePurchasingUseCase {
   execute(id?: number, user_id?: number, status?: number, final_status?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'import2' | 'import2_date' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
+}
+
+export interface IUpdateTerminKontrakPksUseCase {
+  execute(id?: number, user_id?: number, data?: PurchasingDetailEntity): Promise<any>
+}
+
+export interface IDeleteTerminKontrakPksUseCase {
+  execute(id?: number, user_id?: number): Promise<any>
 }

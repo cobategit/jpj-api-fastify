@@ -33,4 +33,6 @@ export interface IPurchasingHandler {
   findPlanPaymentDate(request: any, reply: any): Promise<void>
   deletePengajuanKontrakPks(request: any, reply: any): Promise<void>
   updateFilePurchasing(request: any, reply: any): Promise<void>
+  updateTerminKontrakPks(request: any, reply: any): Promise<void>
+  deleteTerminKontrakPks(request: any, reply: any): Promise<void>
 }
