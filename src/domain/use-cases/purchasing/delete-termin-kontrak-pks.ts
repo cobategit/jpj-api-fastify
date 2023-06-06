@@ -19,7 +19,7 @@ export class DeleteTerminKontrakPksUseCase implements IDeleteTerminKontrakPksUse
         })
         const allowDelet = await this.purchasingRepo.findOneDynamicPurchasingDetail(paramsAllowDelet.get('data'))
 
-        if (allowDelet.length == 0 || allowDelet[0]?.status != 0) {
+        if (!allowDelet[0].contract_id || allowDelet[0]?.status != 0) {
             result.set('allowDelet', true)
             paramsAllowDelet.delete('data')
             return result

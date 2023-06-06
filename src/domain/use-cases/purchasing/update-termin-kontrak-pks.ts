@@ -1,4 +1,4 @@
-import { ParamsEntity, PurchasingDetailEntity } from "../../entity";
+import { ParamsEntity, PurchasingDetailEntity, TypePengajuanKontrakPks } from "../../entity";
 import { IPurchasingRepo, IUpdateTerminKontrakPksUseCase } from "../../interfaces";
 
 export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUseCase {
@@ -8,9 +8,21 @@ export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUse
         this.purchasingRepo = purchasingRepo
     }
 
-    async execute(id?: number | undefined, user_id?: number, data?: PurchasingDetailEntity | undefined): Promise<any> {
+    async execute(id?: number | undefined, user_id?: number, data?: TypePengajuanKontrakPks | undefined): Promise<any> {
         const result = new Map<string, string | number | boolean>()
-        const paramsAllowUpdate = new Map<String, Pick<ParamsEntity, 'columnKey' | 'columnValue'>>()
+        const paramsAllowUpdate = new Map<string, Pick<ParamsEntity, 'columnKey' | 'columnValue'>>()
+        const dataCheckQuantityTermin = new Map<string, Pick<TypePengajuanKontrakPks, 'purchasing_id' | 'purchasing_detail_id'>>()
+
+        dataCheckQuantityTermin.set('data', {
+            purchasing_id: data?.purchasing_id,
+            purchasing_detail_id: data?.purchasing_detail_id
+        })
+        const checkQuantityTermin = await this.purchasingRepo.checkQuantityTerminKontrakPks('update', dataCheckQuantityTermin.get('data'))
+
+        if (checkQuantityTermin.remain_quantity_termin < 0) {
+            result.set('remainQuantity', true)
+            return result
+        }
 
         paramsAllowUpdate.set('data', {
             columnKey: 'purchasing_detail_id',
@@ -18,7 +30,7 @@ export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUse
         })
         const allowUpdate = await this.purchasingRepo.findOneDynamicPurchasingDetail(paramsAllowUpdate.get('data'))
 
-        if (allowUpdate.length == 0 || allowUpdate[0]?.status != 0) {
+        if (!allowUpdate[0].contract_id || allowUpdate[0]?.status != 0) {
             result.set('allowUpdate', true)
             paramsAllowUpdate.delete('data')
             return result

@@ -662,7 +662,7 @@ export function PurchasingRoute(
       Params: Pick<ParamsEntity, 'purchasing_detail_id'>,
       Headers: Pick<IHeaders, 'x-access-token'>
     }>(
-      '/termin/update',
+      '/termin/update/:purchasing_detail_id',
       {
         logLevel: 'info',
         schema: {
@@ -683,7 +683,7 @@ export function PurchasingRoute(
       Params: Pick<ParamsEntity, 'purchasing_detail_id'>,
       Headers: Pick<IHeaders, 'x-access-token'>
     }>(
-      '/termin/update',
+      '/termin/delete/:purchasing_detail_id',
       {
         logLevel: 'info',
         schema: {

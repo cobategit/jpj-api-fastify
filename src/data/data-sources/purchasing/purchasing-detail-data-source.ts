@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage, IPurchasingDetailDataSource } from "../..";
-import { ParamsEntity, PurchasingDetailEntity } from "../../../domain";
+import { ParamsEntity, PurchasingDetailEntity, TypePengajuanKontrakPks } from "../../../domain";
 
 export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
     private dql: DataQueryLanguage
@@ -38,6 +38,26 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
         )
 
         return rows
+    }
+
+    async availableQuantity(type?: string | undefined, data?: TypePengajuanKontrakPks | undefined): Promise<any> {
+        let whereKey: string = "where purchasing_id = ?"
+        let whereValue: Array<string | number | boolean> = [data?.purchasing_id!]
+
+        if (type == 'update') {
+            whereKey += 'and purchasing_detail_id = ?'
+            whereValue.push(data?.purchasing_detail_id!)
+        }
+
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `SELECT (p.quantity - SUM(pd.quantity_payment)) AS remain_quantity_termin
+            FROM purchasing AS p
+            INNER JOIN purchasing_detail AS pd
+            ON pd.purchasing_id = p.purchasing_id ${whereKey}`,
+            whereValue
+        )
+
+        return rows[0]
     }
 
     async update(id?: number | undefined, data?: PurchasingDetailEntity | undefined): Promise<any> {

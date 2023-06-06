@@ -624,10 +624,28 @@ export class PurchasingRepository implements IPurchasingRepo {
   }
 
   async addTerminKontrakPks(data?: PurchasingDetailEntity | undefined): Promise<any> {
+    const insert = await this.purchasingDetailDataSource.insert(data!)
+
+    const logInsertPurchasingDetail = new Map<string, HistoryLogEntity>()
+    logInsertPurchasingDetail.set('data', {
+      tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      transaksi: `${insert[0].insertId}`,
+      cud: 'UPDATE',
+      isitransaksi_lama: `MENAMBAH TERMIN`,
+      user_id: data?.entry_by
+    })
+    await this.historyLogDataSource.insert(logInsertPurchasingDetail.get('data'))
+
+    return insert
   }
 
   async findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PurchasingDetailEntity[] | []> {
     const res = await this.purchasingDetailDataSource.selectOneDynamic(conf!)
+    return res
+  }
+
+  async checkQuantityTerminKontrakPks(type?: string | undefined, data?: TypePengajuanKontrakPks | undefined): Promise<any> {
+    const res = await this.purchasingDetailDataSource.availableQuantity(type!, data!)
     return res
   }
 

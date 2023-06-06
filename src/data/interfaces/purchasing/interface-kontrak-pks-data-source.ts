@@ -1,4 +1,4 @@
-import { ParamsEntity, PoPksEntity, PurchasingDetailEntity, PurchasingEntity, PurchasingFreightCostEntity, VendorKontrakEntity } from "../../../domain"
+import { ParamsEntity, PoPksEntity, PurchasingDetailEntity, PurchasingEntity, PurchasingFreightCostEntity, TypePengajuanKontrakPks, VendorKontrakEntity } from "../../../domain"
 
 export interface IPurchasingDataSource {
     count(): Promise<any>
@@ -20,6 +20,7 @@ export interface IPurchasingDetailDataSource {
     selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'>): Promise<PurchasingDetailEntity[] | []>
     update(id?: number, data?: PurchasingDetailEntity): Promise<any>
     delete(id?: number): Promise<any>
+    availableQuantity(type?: string, data?: TypePengajuanKontrakPks): Promise<any>
 }
 
 export interface IPurchasingFreightCostDataSource {
