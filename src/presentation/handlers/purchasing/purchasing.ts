@@ -47,6 +47,7 @@ import {
   TypePengajuanKontrakPks,
   IUpdateTerminKontrakPksUseCase,
   IDeleteTerminKontrakPksUseCase,
+  IAddTerminKontrakPksUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -85,6 +86,7 @@ export class PurchasingHandler implements IPurchasingHandler {
   private getOneKontrakPksUseCase: IGetOneKontrakPksUseCase
   private deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase
   private updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase
+  private addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase
   private updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase
   private deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
 
@@ -123,6 +125,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     getOneKontrakPksUseCase: IGetOneKontrakPksUseCase,
     deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase,
     updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase,
+    addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase,
     updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase,
     deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
 
@@ -161,6 +164,7 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.getOneKontrakPksUseCase = getOneKontrakPksUseCase
     this.deletePengajuanKontrakPksUseCase = deletePengajuanKontrakPksUseCase
     this.updateFilePurchasingUseCase = updateFilePurchasingUseCase
+    this.addTerminKontrakPksUseCase = addTerminKontrakPksUseCase
     this.updateTerminKontrakPksUseCase = updateTerminKontrakPksUseCase
     this.deleteTerminKontrakPksUseCase = deleteTerminKontrakPksUseCase
   }
@@ -1013,11 +1017,39 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
   }
 
+  async addTerminKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const insert = await this.addTerminKontrakPksUseCase.execute(request.body)
+
+      if (insert?.remainQuantity) {
+        return ApiResponse.badRequest(request, reply, {
+          status: false,
+          menubar: 'Quantity melebihi dari ketentuan'
+        })
+      }
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Insert termin kontrak pks berhasil',
+        id: insert?.dataInsert
+      })
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
   async updateTerminKontrakPks(request: any, reply: any): Promise<void> {
     try {
-      const update = await this.updateTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id, request.body.data)
+      const update = await this.updateTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id, request.body)
 
-      if (update.allowUpdate || !update.dataUpdate) {
+      if (update?.remainQuantity) {
+        return ApiResponse.badRequest(request, reply, {
+          status: false,
+          message: 'Quantity melebihi dari ketentuan'
+        })
+      }
+
+      if (update?.allowUpdate || !update?.dataUpdate) {
         return ApiResponse.badRequest(request, reply, {
           status: false,
           message: 'Update termin tidak bisa'

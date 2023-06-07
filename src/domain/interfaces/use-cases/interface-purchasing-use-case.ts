@@ -137,7 +137,7 @@ export interface IUpdateFilePurchasingUseCase {
 }
 
 export interface IAddTerminKontrakPksUseCase {
-  execute(data?: PurchasingDetailEntity): Promise<any>
+  execute(data?: TypePengajuanKontrakPks): Promise<any>
 }
 
 export interface IUpdateTerminKontrakPksUseCase {

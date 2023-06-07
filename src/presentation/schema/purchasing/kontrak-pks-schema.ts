@@ -27,7 +27,28 @@ export const paramsKontrakPks = {
     }
 }
 
-export const paramsTerminKontrakPks = {
+export const updateParamsTerminKontrakPks = {
+    type: 'object',
+    properties: {
+        purchasing_detail_id: {
+            type: 'number',
+            errorMessage: 'failed value, must be number'
+        },
+        purchasing_id: {
+            type: 'number',
+            errorMessage: 'failed value, must be number'
+        }
+    },
+    required: ['purchasing_detail_id', 'purchasing_id'],
+    errorMessage: {
+        required: {
+            purchasing_detail_id: 'purchasing_detail_id must be exist',
+            purchasing_id: 'purchasing_id must be exist',
+        }
+    }
+}
+
+export const deleteParamsTerminKontrakPks = {
     type: 'object',
     properties: {
         purchasing_detail_id: {

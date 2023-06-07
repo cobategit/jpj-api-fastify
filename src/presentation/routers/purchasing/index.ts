@@ -13,7 +13,7 @@ import {
 } from '../../../domain'
 import { CheckAvailableUser, IPurchasingDataSource, IUsersDataSource, CheckExistKontrakPks, upload } from '../../../data'
 import { ApiResponse, reqAuthToken } from '@jpj-common/module'
-import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, paramsTerminKontrakPks, queryStringAddPengajuanVendor, queryStringPkhoa } from '../../schema'
+import { addQueryStringKontrakPks, bodyLoginSchema, bodyRegisterSchema, headersSchema, paramsFreight, paramsKontrakPks, paramsPkhoa, paramsPksCurah, updateParamsTerminKontrakPks, queryStringAddPengajuanVendor, queryStringPkhoa, deleteParamsTerminKontrakPks } from '../../schema'
 import { changedPasswordSchema, forgotPasswordSchema } from '../../schema/purchasing/password-schema'
 
 export function PurchasingRoute(
@@ -657,8 +657,28 @@ export function PurchasingRoute(
       purchasingHandler.findPlanPaymentDate.bind(purchasingHandler)
     )
 
+    //@add-termin-kontrak-pks
+    fastify.post<{
+      Body: PurchasingDetailEntity,
+      Headers: Pick<IHeaders, 'x-access-token'>
+    }>(
+      '/termin/add',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
+        ]
+      },
+      purchasingHandler.addTerminKontrakPks.bind(purchasingHandler)
+    )
+
     //@update-termin-kontrak-pks
     fastify.patch<{
+      Body: TypePengajuanKontrakPks,
       Params: Pick<ParamsEntity, 'purchasing_detail_id'>,
       Headers: Pick<IHeaders, 'x-access-token'>
     }>(
@@ -667,7 +687,7 @@ export function PurchasingRoute(
         logLevel: 'info',
         schema: {
           headers: headersSchema,
-          params: paramsTerminKontrakPks
+          params: updateParamsTerminKontrakPks
         },
         preHandler: [
           reqAuthToken,
@@ -688,7 +708,7 @@ export function PurchasingRoute(
         logLevel: 'info',
         schema: {
           headers: headersSchema,
-          params: paramsTerminKontrakPks
+          params: deleteParamsTerminKontrakPks
         },
         preHandler: [
           reqAuthToken,

@@ -15,11 +15,12 @@ export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUse
 
         dataCheckQuantityTermin.set('data', {
             purchasing_id: data?.purchasing_id,
-            purchasing_detail_id: data?.purchasing_detail_id
+            purchasing_detail_id: id!
         })
         const checkQuantityTermin = await this.purchasingRepo.checkQuantityTerminKontrakPks('update', dataCheckQuantityTermin.get('data'))
+        const selisihQuantityTermin = Number(checkQuantityTermin.remain_quantity_termin) - Number(data?.quantity_payment)
 
-        if (checkQuantityTermin.remain_quantity_termin < 0) {
+        if (selisihQuantityTermin < 0) {
             result.set('remainQuantity', true)
             return result
         }
@@ -38,9 +39,9 @@ export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUse
 
         const update = await this.purchasingRepo.updateTerminKontrakPks(id, user_id, data)
 
+        result.set('remainQuantity', false)
         result.set('allowUpdate', false)
         result.set('dataUpdate', update[0].changedRows)
-
         return result
     }
 
