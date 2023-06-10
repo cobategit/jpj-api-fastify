@@ -31,9 +31,9 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
         return res
     }
 
-    async selectOneDynamic(conf?: Pick<ParamsEntity, "columnKey" | "columnValue"> | undefined): Promise<PurchasingDetailEntity[] | []> {
+    async selectOneDynamic(conf?: Pick<ParamsEntity, "columnKey" | "columnValue" | "options"> | undefined): Promise<PurchasingDetailEntity[] | []> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_PURCHASING_DETAIL} where ${conf?.columnKey} = ?`,
+            `select * from ${process.env.TABLE_PURCHASING_DETAIL} where ${conf?.columnKey} = ? ${conf?.options}`,
             [conf?.columnValue]
         )
 

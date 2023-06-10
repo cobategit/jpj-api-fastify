@@ -461,6 +461,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       payment_type: data?.payment_type,
       entry_by: user_id,
       entry_date: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
+      termin: 1,
       status: 0,
     })
     const insertPurchasingDetail = await this.purchasingDetailDataSource.insert(dataPurchasingDetail.get('data'))

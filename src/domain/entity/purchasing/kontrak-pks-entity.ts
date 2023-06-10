@@ -48,6 +48,9 @@ export interface PurchasingDetailEntity {
     payment_type?: number
     contract_id?: number
     status?: number
+    termin?: number
+    admin_input_by?: number
+    admin_input_date?: string
 }
 
 export interface PurchasingFreightCostEntity {

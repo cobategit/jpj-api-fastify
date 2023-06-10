@@ -873,6 +873,13 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
+      if (res.remainQuantity) {
+        return ApiResponse.badRequest(request, reply, {
+          status: false,
+          message: 'Maaf quantity termin melebihi quantity utama'
+        })
+      }
+
       return ApiResponse.created(request, reply, {
         status: true,
         message: `Data pengajuan kontrak pks`,
@@ -1021,11 +1028,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const insert = await this.addTerminKontrakPksUseCase.execute(request.body)
 
-      if (insert?.remainQuantity) {
-        return ApiResponse.badRequest(request, reply, {
-          status: false,
-          menubar: 'Quantity melebihi dari ketentuan'
-        })
+      if (insert?.error) {
+        return ApiResponse.badRequest(request, reply, insert.dataError)
       }
 
       return ApiResponse.ok(request, reply, {

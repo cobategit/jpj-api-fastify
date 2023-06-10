@@ -1,5 +1,5 @@
 export interface HttpResponse<T> {
-    status: number
+    status: boolean
     message: string
-    data: T
+    data?: T
 }

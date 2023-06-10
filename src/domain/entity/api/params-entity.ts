@@ -22,4 +22,5 @@ export interface ParamsEntity {
     final_status?: number
     status?: number
     purchasing_detail_id?: number
+    options?: string
 }
