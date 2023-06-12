@@ -11,7 +11,7 @@ export class AddTerminKontrakPksUseCase implements IAddTerminKontrakPksUseCase {
 
     async execute(data?: TypePengajuanKontrakPks | undefined): Promise<any> {
         data!.termin = 0
-        const result = new Map<string, string | number | boolean | HttpResponse<null>>()
+        const result = new Map<string, string | number | boolean | HttpResponse>()
         const dataCheckQuantityTermin = new Map<string, Pick<TypePengajuanKontrakPks, 'purchasing_id'>>()
         const paramsLastDataTermin = new Map<string, Pick<ParamsEntity, 'columnKey' | 'columnValue' | 'options'>>()
 
@@ -51,9 +51,11 @@ export class AddTerminKontrakPksUseCase implements IAddTerminKontrakPksUseCase {
         data!.entry_date = `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
         const insert = await this.purchasingRepo.addTerminKontrakPks(data!)
 
-        result.set('remainQuantity', false)
-        result.set('lastTerminNotApprove', false)
-        result.set('dataInsert', insert[0].insertId)
+        result.set('dataSuccess', {
+            status: true,
+            message: 'Insert termin kontrak pks berhasil',
+            data: insert[0].insertId
+        })
         return result
     }
 }

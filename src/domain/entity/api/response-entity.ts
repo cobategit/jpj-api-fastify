@@ -1,5 +1,5 @@
-export interface HttpResponse<T> {
+export interface HttpResponse {
     status: boolean
     message: string
-    data?: T
+    data?: any
 }

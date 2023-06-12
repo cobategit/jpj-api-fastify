@@ -1032,11 +1032,7 @@ export class PurchasingHandler implements IPurchasingHandler {
         return ApiResponse.badRequest(request, reply, insert.dataError)
       }
 
-      return ApiResponse.ok(request, reply, {
-        status: true,
-        message: 'Insert termin kontrak pks berhasil',
-        id: insert?.dataInsert
-      })
+      return ApiResponse.ok(request, reply, insert.dataSuccess)
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
@@ -1046,25 +1042,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const update = await this.updateTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id, request.body)
 
-      if (update?.remainQuantity) {
-        return ApiResponse.badRequest(request, reply, {
-          status: false,
-          message: 'Quantity melebihi dari ketentuan'
-        })
+      if (update?.error) {
+        return ApiResponse.badRequest(request, reply, update.dataError)
       }
 
-      if (update?.allowUpdate || !update?.dataUpdate) {
-        return ApiResponse.badRequest(request, reply, {
-          status: false,
-          message: 'Update termin tidak bisa'
-        })
-      }
-
-      return ApiResponse.ok(request, reply, {
-        status: true,
-        message: 'Update termin kontrak pks berhasil',
-        id: request.params.purchasing_detail_id
-      })
+      return ApiResponse.ok(request, reply, update?.dataSuccess)
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
@@ -1074,18 +1056,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const delet = await this.deleteTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id)
 
-      if (delet.allowUpdate || !delet.dataUpdate) {
-        return ApiResponse.badRequest(request, reply, {
-          status: false,
-          message: 'Delete termin tidak bisa'
-        })
+      if (delet.error) {
+        return ApiResponse.badRequest(request, reply, delet?.dataError)
       }
 
-      return ApiResponse.ok(request, reply, {
-        status: true,
-        message: 'Delete termin kontrak pks berhasil',
-        id: request.params.purchasing_detail_id
-      })
+      return ApiResponse.ok(request, reply, delet.dataSuccess)
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
