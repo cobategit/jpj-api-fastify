@@ -176,21 +176,15 @@ export class PurchasingHandler implements IPurchasingHandler {
 
       const res = await this.registerUserPurchasingUseCase.execute(data)
 
-      if (res.invalidEmail)
-        throw new AppError(404, false, `Email tidak terdaftar`, '401')
+      if (res.get('error'))
+        throw new AppError(404, false, `${res.get('dataError').message}`, '401')
 
-      if (res.existDeviceId)
-        throw new AppError(404, false, `DeviceId anda sudah terdaftar`, '401')
-
-      return ApiResponse.created(request, reply, {
-        status: true,
-        message: 'Data deviced id berhasil diinput',
-        changed: res[0].changedRows,
-      })
+      return ApiResponse.created(request, reply, res.get('dataSuccess'))
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
   }
+
   async login(request: any, reply: any): Promise<void> {
     try {
       const dataUser: EntityUser = request.body!
@@ -200,34 +194,24 @@ export class PurchasingHandler implements IPurchasingHandler {
         EntityUser,
         'user_id' | 'user_email' | 'deviced_id'
       > = {
-        user_id: res?.user_id,
-        user_email: res?.user_email,
-        deviced_id: res?.deviced_id,
+        user_id: res.get('dataSuccess')['data']['user_id'],
+        user_email: res.get('dataSuccess')['data']['user_email'],
+        deviced_id: res.get('dataSuccess')['data']['deviced_id'],
       }
       const token = await TokenJWt.generateJwt(objectToken, null)
 
-      if (res === null) throw new AppError(404, false, `Data kosong`, '401')
-
-      if (res.deviced_id == 'Kosong') {
-        throw new AppError(404, false, `Data device id anda tidak ada`, '401')
-      }
-
-      if (res.deviced_id == 'Tidak cocok') {
-        throw new AppError(404, false, `Device id anda tidak cocok`, '401')
-      }
-
-      if (res.kode_akses == 'Salah')
-        throw new AppError(401, false, `Password anda salah`, '401')
+      if (res?.get('error'))
+        throw new AppError(404, false, `${res.get('dataError').message}`, '401')
 
       const user: Pick<
         EntityUser,
         'user_id' | 'user_email' | 'user_name' | 'deviced_id' | 'stockpile_id'
       > = {
-        user_id: res.user_id,
-        user_email: res.user_email,
-        deviced_id: res.deviced_id,
-        stockpile_id: res.stockpile_id,
-        user_name: res.user_name,
+        user_id: res.get('dataSuccess')['data']['user_id'],
+        user_email: res.get('dataSuccess')['data']['user_email'],
+        deviced_id: res.get('dataSuccess')['data']['deviced_id'],
+        stockpile_id: res.get('dataSuccess')['data']['stockpile_id'],
+        user_name: res.get('dataSuccess')['data']['user_name'],
       }
 
       return ApiResponse.ok(request, reply, {
@@ -873,18 +857,11 @@ export class PurchasingHandler implements IPurchasingHandler {
         data
       )
 
-      if (res.remainQuantity) {
-        return ApiResponse.badRequest(request, reply, {
-          status: false,
-          message: 'Maaf quantity termin melebihi quantity utama'
-        })
+      if (res.get('error')) {
+        return ApiResponse.badRequest(request, reply, res.get('dataError'))
       }
 
-      return ApiResponse.created(request, reply, {
-        status: true,
-        message: `Data pengajuan kontrak pks`,
-        id: res[0].insertId,
-      })
+      return ApiResponse.created(request, reply, res.get('dataSuccess'))
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
@@ -1028,11 +1005,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const insert = await this.addTerminKontrakPksUseCase.execute(request.body)
 
-      if (insert?.error) {
-        return ApiResponse.badRequest(request, reply, insert.dataError)
+      if (insert?.get('error')) {
+        return ApiResponse.badRequest(request, reply, insert.get('dataError'))
       }
 
-      return ApiResponse.ok(request, reply, insert.dataSuccess)
+      return ApiResponse.ok(request, reply, insert.get('dataSuccess'))
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
@@ -1042,11 +1019,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const update = await this.updateTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id, request.body)
 
-      if (update?.error) {
-        return ApiResponse.badRequest(request, reply, update.dataError)
+      if (update?.get('error')) {
+        return ApiResponse.badRequest(request, reply, update.get('dataError'))
       }
 
-      return ApiResponse.ok(request, reply, update?.dataSuccess)
+      return ApiResponse.ok(request, reply, update?.get('dataSuccess'))
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
@@ -1056,11 +1033,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const delet = await this.deleteTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id)
 
-      if (delet.error) {
-        return ApiResponse.badRequest(request, reply, delet?.dataError)
+      if (delet.get('error')) {
+        return ApiResponse.badRequest(request, reply, delet?.get('dataError'))
       }
 
-      return ApiResponse.ok(request, reply, delet.dataSuccess)
+      return ApiResponse.ok(request, reply, delet.get('dataSuccess'))
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }

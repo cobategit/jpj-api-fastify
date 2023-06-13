@@ -5,7 +5,7 @@ export interface IRegisterUserPurchasingUseCase {
 }
 
 export interface ILoginUserPurchasingUseCase {
-  execute(data: EntityUser): Promise<EntityUser | null>
+  execute(data: EntityUser): Promise<any>
 }
 
 export interface IChangedPasswordPurchasingUseCase {

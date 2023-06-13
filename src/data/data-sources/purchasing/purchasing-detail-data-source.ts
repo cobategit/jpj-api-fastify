@@ -50,7 +50,7 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
         }
 
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `SELECT (p.quantity - SUM(pd.quantity_payment)) AS remain_quantity_termin
+            `SELECT (p.quantity - SUM(pd.quantity_payment)) AS remain_quantity_termin, p.isTermin as isTermin
             FROM purchasing AS p
             INNER JOIN purchasing_detail AS pd
             ON pd.purchasing_id = p.purchasing_id ${whereKey}`,

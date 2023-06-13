@@ -374,16 +374,12 @@ export class PurchasingRepository implements IPurchasingRepo {
   }
 
   async pengajuanKontrakPks(user_id?: number, data?: TypePengajuanKontrakPks): Promise<any> {
-    let pricePoPks: number = data?.price!
+
     const resPurchasing = await this.purchasingDataSource.insert(data)
     const resPpn = await this.setupsDataSource.selectByNama(process.env.PPN_NAME)
 
-
     let jumlahPpn = Number(1) + Number(resPpn.nilai!)
-
-    if (data?.ppn == 1) {
-      pricePoPks = Number(data?.price!) / Number(jumlahPpn)
-    }
+    let pricePoPks: number = data?.ppn == 1 ? Number(data?.price!) / Number(jumlahPpn) : data?.price!
 
     let dataPoPks: PoPksEntity = {
       purchasing_id: resPurchasing[0].insertId,
@@ -415,9 +411,9 @@ export class PurchasingRepository implements IPurchasingRepo {
       if (tmpFreighCostId.length > 0)
         await Promise.all(
           tmpFreighCostId.map(async (val: number, i: number) => {
-            let dataVendorKontrak: VendorKontrakEntity = {}
-            let dataPurchasingFreightCost: PurchasingFreightCostEntity = {}
-            dataVendorKontrak = {
+            let dataVendorKontrak = new Map<string, VendorKontrakEntity>()
+            let dataPurchasingFreightCost = new Map<string, PurchasingFreightCostEntity>()
+            dataVendorKontrak.set('data', {
               freight_cost_id: val,
               po_pks_id: resPoPks[0].insertId,
               stockpile_contract_id: 0,
@@ -425,14 +421,14 @@ export class PurchasingRepository implements IPurchasingRepo {
               entry_date: data?.entry_date,
               entry_by: user_id,
               status: 1
-            }
-            dataPurchasingFreightCost = {
+            })
+            dataPurchasingFreightCost.set('data', {
               purchasing_id: resPurchasing[0].insertId,
               freight_cost_id: val,
               entry_date: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`
-            }
-            const resVendorKontrak = await this.vendorKontrakDataSource.insert(dataVendorKontrak)
-            const resPurchasingFreightCost = await this.purchasingFreightCostDataSource.insert(dataPurchasingFreightCost)
+            })
+            const resVendorKontrak = await this.vendorKontrakDataSource.insert(dataVendorKontrak.get('data'))
+            const resPurchasingFreightCost = await this.purchasingFreightCostDataSource.insert(dataPurchasingFreightCost.get('data'))
 
             const dataHistoryLogVendorKontrak: HistoryLogEntity = {
               tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
@@ -474,25 +470,27 @@ export class PurchasingRepository implements IPurchasingRepo {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       user_id: user_id
     })
-    const dataHistoryLogPurchasing: HistoryLogEntity = {
+    const dataHistoryLogPurchasing = new Map<string, HistoryLogEntity>()
+    dataHistoryLogPurchasing.set('data', {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${resPurchasing[0].insertId}`,
       cud: 'CREATE',
       isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table purchasing )`,
       user_id: user_id
-    }
-    const dataHistoryLogPoPks: HistoryLogEntity = {
+    })
+    const dataHistoryLogPoPks = new Map<string, HistoryLogEntity>()
+    dataHistoryLogPoPks.set('data', {
       tanggal: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       transaksi: `${resPoPks[0].insertId}`,
       cud: 'CREATE',
       isitransaksi_baru: `MENGAJUKAN KONTRAK PKS ( table po pks)`,
       user_id: user_id
-    }
+    })
 
     await Promise.all(
       [
-        this.historyLogDataSource.insert(dataHistoryLogPurchasing),
-        this.historyLogDataSource.insert(dataHistoryLogPoPks),
+        this.historyLogDataSource.insert(dataHistoryLogPurchasing.get('data')),
+        this.historyLogDataSource.insert(dataHistoryLogPoPks.get('data')),
         this.historyLogDataSource.insert(dataLogPurchasingDetail.get('data'))
       ]
     )
@@ -640,7 +638,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return insert
   }
 
-  async findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue'> | undefined): Promise<PurchasingDetailEntity[] | []> {
+  async findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue' | 'options'> | undefined): Promise<PurchasingDetailEntity[] | []> {
     const res = await this.purchasingDetailDataSource.selectOneDynamic(conf!)
     return res
   }
