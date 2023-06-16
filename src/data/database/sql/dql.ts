@@ -11,6 +11,7 @@ export class DataQueryLanguage implements IDql {
   async dataQueryLanguage(query: string, queryConfig: any[]): Promise<any> {
     try {
       const res = await this.db.query(`${query}`, queryConfig)
+      // await this.db.end()
       return res
     } catch (error) {
       await this.db.query('ROLLBACK')

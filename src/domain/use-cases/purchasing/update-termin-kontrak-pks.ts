@@ -35,7 +35,7 @@ export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUse
         })
         const allowUpdate = await this.purchasingRepo.findOneDynamicPurchasingDetail(paramsAllowUpdate.get('data'))
 
-        if (!allowUpdate[0].contract_id || allowUpdate[0]?.status != 0 || allowUpdate[0]?.admin_input_by) {
+        if (allowUpdate[0].contract_id || allowUpdate[0]?.status != 0 || allowUpdate[0]?.admin_input_by) {
             result.set('error', true)
             result.set('dataError', {
                 status: false,
@@ -50,7 +50,7 @@ export class UpdateTerminKontrakPksUseCase implements IUpdateTerminKontrakPksUse
         result.set('dataSuccess', {
             status: true,
             message: 'Update termin berhasil',
-            data: update[0].changedRows
+            id: id
         })
         return result
     }

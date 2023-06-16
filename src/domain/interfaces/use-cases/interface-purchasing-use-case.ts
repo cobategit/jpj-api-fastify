@@ -136,6 +136,18 @@ export interface IUpdateFilePurchasingUseCase {
   execute(id?: number, user_id?: number, status?: number, final_status?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'import2' | 'import2_date' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
 }
 
+export interface IFindTerminByPurchasingIdUseCase {
+  execute(id?: number): Promise<PurchasingDetailEntity[] | []>
+}
+
+export interface IFindOneTerminKontrakPksUseCase {
+  execute(id?: number): Promise<PurchasingDetailEntity[] | []>
+}
+
+export interface IRemindTerminKontrakPksUseCase {
+  execute(id?: number): Promise<any>
+}
+
 export interface IAddTerminKontrakPksUseCase {
   execute(data?: TypePengajuanKontrakPks): Promise<any>
 }

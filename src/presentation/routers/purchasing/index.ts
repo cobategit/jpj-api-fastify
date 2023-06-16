@@ -657,6 +657,57 @@ export function PurchasingRoute(
       purchasingHandler.findPlanPaymentDate.bind(purchasingHandler)
     )
 
+    //@find-termin-by-purchasing-id
+    fastify.get<{ Params: Pick<ParamsEntity, 'purchasing_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
+      '/termin/:purchasing_id',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findTerminByPurchasingId.bind(purchasingHandler)
+    )
+
+    //@find-termin-one
+    fastify.get<{ Params: Pick<ParamsEntity, 'purchasing_detail_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
+      '/termin/one/:purchasing_detail_id',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.findOneTerminKontrakPks.bind(purchasingHandler)
+    )
+
+    //@remind-termin-kontrak-pks
+    fastify.get<{ Params: Pick<ParamsEntity, 'purchasing_id'>, Headers: Pick<IHeaders, 'x-access-token'> }>(
+      '/termin/remind/:purchasing_id',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) =>
+            CheckAvailableUser(userDataSource, req, rep, done),
+        ],
+      },
+      purchasingHandler.remindTerminKontrakPks.bind(purchasingHandler)
+    )
+
     //@add-termin-kontrak-pks
     fastify.post<{
       Body: PurchasingDetailEntity,
@@ -687,7 +738,6 @@ export function PurchasingRoute(
         logLevel: 'info',
         schema: {
           headers: headersSchema,
-          params: updateParamsTerminKontrakPks
         },
         preHandler: [
           reqAuthToken,

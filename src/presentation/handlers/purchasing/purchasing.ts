@@ -48,6 +48,9 @@ import {
   IUpdateTerminKontrakPksUseCase,
   IDeleteTerminKontrakPksUseCase,
   IAddTerminKontrakPksUseCase,
+  IFindTerminByPurchasingIdUseCase,
+  IRemindTerminKontrakPksUseCase,
+  IFindOneTerminKontrakPksUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -89,6 +92,9 @@ export class PurchasingHandler implements IPurchasingHandler {
   private addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase
   private updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase
   private deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
+  private findTerminByPurchasingIdUseCase: IFindTerminByPurchasingIdUseCase
+  private remindTerminKontrakPksUseCase: IRemindTerminKontrakPksUseCase
+  private findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase
 
   constructor(
     registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
@@ -127,7 +133,10 @@ export class PurchasingHandler implements IPurchasingHandler {
     updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase,
     addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase,
     updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase,
-    deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
+    deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase,
+    findTerminByPurchasingIdUseCase: IFindTerminByPurchasingIdUseCase,
+    remindTerminKontrakPksUseCase: IRemindTerminKontrakPksUseCase,
+    findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase
 
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
@@ -167,6 +176,9 @@ export class PurchasingHandler implements IPurchasingHandler {
     this.addTerminKontrakPksUseCase = addTerminKontrakPksUseCase
     this.updateTerminKontrakPksUseCase = updateTerminKontrakPksUseCase
     this.deleteTerminKontrakPksUseCase = deleteTerminKontrakPksUseCase
+    this.findTerminByPurchasingIdUseCase = findTerminByPurchasingIdUseCase
+    this.remindTerminKontrakPksUseCase = remindTerminKontrakPksUseCase
+    this.findOneTerminKontrakPksUseCase = findOneTerminKontrakPksUseCase
   }
 
   async register(request: any, reply: any): Promise<void> {
@@ -235,18 +247,11 @@ export class PurchasingHandler implements IPurchasingHandler {
 
       const res = await this.changedPasswordPurchasingUseCase.execute(deviced_id, current_password, new_password);
 
-      if (res.checkComparePassword) {
-        throw new AppError(406, false, 'Password yang anda masukkan salah', '406')
+      if (res.get('error')) {
+        throw new AppError(400, false, `${res.get('dataError')['message']}`, '401')
       }
 
-      if (res.checkDevicedId) {
-        throw new AppError(404, false, `Data device id anda tidak ada`, '401')
-      }
-
-      return ApiResponse.ok(request, reply, {
-        status: true,
-        message: 'Update Password Berhasil',
-      })
+      return ApiResponse.ok(request, reply, res.get('dataSuccess'))
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
     }
@@ -258,18 +263,11 @@ export class PurchasingHandler implements IPurchasingHandler {
 
       const res = await this.forgotPasswordPurchasingUseCase.execute(deviced_id, email);
 
-      if (res.checkDevicedId) {
-        throw new AppError(404, false, `Data device id anda tidak ada`, '401')
+      if (res.get('error')) {
+        throw new AppError(404, false, `${res.get('dataError')['message']}`, '401')
       }
 
-      if (res.checkEmail) {
-        throw new AppError(404, false, `Data email anda tidak ada`, '401')
-      }
-
-      return ApiResponse.ok(request, reply, {
-        status: true,
-        message: 'Update Forgot Password Berhasil',
-      })
+      return ApiResponse.ok(request, reply, res.get('dataSuccess'))
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
     }
@@ -858,7 +856,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       )
 
       if (res.get('error')) {
-        return ApiResponse.badRequest(request, reply, res.get('dataError'))
+        throw new AppError(400, false, `${res.get('dataError')['message']}`, '401')
       }
 
       return ApiResponse.created(request, reply, res.get('dataSuccess'))
@@ -1001,12 +999,60 @@ export class PurchasingHandler implements IPurchasingHandler {
     }
   }
 
+  async findTerminByPurchasingId(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.findTerminByPurchasingIdUseCase.execute(
+        request.params.purchasing_id
+      )
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async findOneTerminKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.findOneTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id)
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res[0],
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
+  async remindTerminKontrakPks(request: any, reply: any): Promise<void> {
+    try {
+      const res = await this.remindTerminKontrakPksUseCase.execute(
+        request.params.purchasing_id
+      )
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data: res,
+      })
+    } catch (error) {
+      throw new AppError(400, false, `${error}`, '401')
+    }
+  }
+
   async addTerminKontrakPks(request: any, reply: any): Promise<void> {
     try {
-      const insert = await this.addTerminKontrakPksUseCase.execute(request.body)
+      const data: TypePengajuanKontrakPks = request.body
+      data.status = 0
+      const insert = await this.addTerminKontrakPksUseCase.execute(data)
 
       if (insert?.get('error')) {
-        return ApiResponse.badRequest(request, reply, insert.get('dataError'))
+        throw new AppError(404, false, `${insert.get('dataError')['message']}`, '401')
       }
 
       return ApiResponse.ok(request, reply, insert.get('dataSuccess'))
@@ -1020,7 +1066,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const update = await this.updateTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id, request.body)
 
       if (update?.get('error')) {
-        return ApiResponse.badRequest(request, reply, update.get('dataError'))
+        throw new AppError(404, false, `${update.get('dataError')['message']}`, '401')
       }
 
       return ApiResponse.ok(request, reply, update?.get('dataSuccess'))
@@ -1034,7 +1080,7 @@ export class PurchasingHandler implements IPurchasingHandler {
       const delet = await this.deleteTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id, request.user.user_id)
 
       if (delet.get('error')) {
-        return ApiResponse.badRequest(request, reply, delet?.get('dataError'))
+        throw new AppError(404, false, `${delet.get('dataError')['message']}`, '401')
       }
 
       return ApiResponse.ok(request, reply, delet.get('dataSuccess'))

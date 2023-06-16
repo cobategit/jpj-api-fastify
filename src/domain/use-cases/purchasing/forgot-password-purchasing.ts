@@ -3,7 +3,7 @@ import { IForgotPasswordPurchasingUseCase, IPurchasingRepo } from "../../interfa
 import { IUsersDataSource } from "../../../data";
 import bcryptjs from 'bcryptjs'
 import { generatePassword } from "../../../external";
-import { OptionsEmail, TranspoterOptions } from "../../entity";
+import { HttpResponse, OptionsEmail, TranspoterOptions } from "../../entity";
 
 export class ForgotPasswordPurchasingUseCase implements IForgotPasswordPurchasingUseCase {
     private purchasingRepo: IPurchasingRepo
@@ -16,15 +16,26 @@ export class ForgotPasswordPurchasingUseCase implements IForgotPasswordPurchasin
 
     async execute(deviced_id?: string, email?: string): Promise<any> {
         try {
-            let checkDevicedId = await this.userDataSource.selectByDeviceId(deviced_id!);
-            let checkEmail = await this.userDataSource.selectByEmail(email!);
+            const result = new Map<string, boolean | HttpResponse>()
+            const checkDevicedId = await this.userDataSource.selectByDeviceId(deviced_id!);
+            const checkEmail = await this.userDataSource.selectByEmail(email!);
 
-            if (checkDevicedId == null || !checkDevicedId) {
-                return { checkDevicedId: true }
+            if (!checkDevicedId) {
+                result.set('error', true)
+                result.set('dataError', {
+                    status: false,
+                    message: 'Data deviced id tidak ada'
+                })
+                return result
             }
 
-            if (checkEmail == null || !checkEmail) {
-                return { checkEmail: true }
+            if (!checkEmail) {
+                result.set('error', true)
+                result.set('dataError', {
+                    status: false,
+                    message: 'Data email tidak ada'
+                })
+                return result
             }
 
             let genPass = await generatePassword();
@@ -50,7 +61,12 @@ export class ForgotPasswordPurchasingUseCase implements IForgotPasswordPurchasin
             let hashPass = await bcryptjs.hash(genPass, saltPass)
             const res = await this.purchasingRepo.updateKodeAksesUser(deviced_id!, hashPass!)
 
-            return { updatedPassword: res }
+            result.set('dataSuccess', {
+                status: true,
+                message: 'Cek email anda untuk melakukan perubahan password',
+                data: res
+            })
+            return result
         } catch (error) {
             throw new AppError(500, false, `${error}`, '5001')
         }

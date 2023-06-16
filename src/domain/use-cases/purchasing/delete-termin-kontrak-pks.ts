@@ -19,7 +19,7 @@ export class DeleteTerminKontrakPksUseCase implements IDeleteTerminKontrakPksUse
         })
         const allowDelet = await this.purchasingRepo.findOneDynamicPurchasingDetail(paramsAllowDelet.get('data'))
 
-        if (!allowDelet[0].contract_id || allowDelet[0]?.status != 0 || allowDelet[0]?.admin_input_by) {
+        if (allowDelet[0].contract_id || allowDelet[0]?.status != 0 || allowDelet[0]?.admin_input_by) {
             result.set('error', true)
             result.set('dataError', {
                 status: false,
@@ -34,7 +34,7 @@ export class DeleteTerminKontrakPksUseCase implements IDeleteTerminKontrakPksUse
         result.set('dataSuccess', {
             status: true,
             message: 'Delete termin berhasil',
-            data: delet[0].changedRows
+            id: delet[0].changedRows
         })
 
         return result

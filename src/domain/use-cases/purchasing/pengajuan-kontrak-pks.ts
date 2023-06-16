@@ -28,8 +28,8 @@ export class PengajuanKontrakPksUseCase implements IPengajuanKontrakPksUseCase {
             const res = await this.purchasingRepo.pengajuanKontrakPks(user_id, data)
             result.set('dataSuccess', {
                 status: true,
-                message: '',
-                data: res[0].insertId
+                message: 'Berhasil pengajuan kontrak pks',
+                id: res[0].insertId
             })
 
             return result

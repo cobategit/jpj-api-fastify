@@ -16,6 +16,7 @@ export class DataManipulationLanguage implements IDml {
     try {
       const dbRes = await this.db.query(`${query}`, queryConfig)
       await this.db.query('COMMIT')
+      // await this.db.end()
       return dbRes
     } catch (error) {
       await this.db.query('ROLLBACK')

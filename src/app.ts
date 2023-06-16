@@ -68,10 +68,13 @@ import {
   ForgotPasswordPurchasingUseCase,
   UpdateTerminKontrakPksUseCase,
   DeleteTerminKontrakPksUseCase,
-  AddTerminKontrakPksUseCase
+  AddTerminKontrakPksUseCase,
+  FindTerminByPurchasingIdUseCase,
+  RemindTerminKontrakPksUseCase
 } from './domain'
 import cluster from 'cluster'
 import os from 'os'
+import { FindOneTerminKontrakPksUseCase } from './domain/use-cases/purchasing/find-one-termin-kontrak-pks'
 
 const app = async () => {
   dotenv.config()
@@ -235,6 +238,15 @@ const app = async () => {
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
       ),
       new DeleteTerminKontrakPksUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
+      ),
+      new FindTerminByPurchasingIdUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
+      ),
+      new RemindTerminKontrakPksUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
+      ),
+      new FindOneTerminKontrakPksUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
       ),
     ),

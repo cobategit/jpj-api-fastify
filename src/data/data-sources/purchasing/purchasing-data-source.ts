@@ -25,9 +25,9 @@ export class PurchasingDataSource implements IPurchasingDataSource {
     const res = await this.dml.dataManipulation(
       `insert purchasing`,
       `insert into ${process.env.TABLE_PURCHASING} 
-            (stockpile_id, contract_type, vendor_id, upload_file, approval_file, upload_file1, upload_file2, upload_file3, upload_file4, entry_by, entry_date, quantity, price, ppn, freight, admin_input, status, company, ho, link, payment_id, payment_type, plan_payment_date, type, logbook_status) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [data?.stockpile_id, data?.contract_type, data?.vendor_id, data?.upload_file, data?.approval_file, data?.upload_file1, data?.upload_file2, data?.upload_file3, data?.upload_file4, data?.entry_by, data?.entry_date, data?.quantity, data?.price, data?.ppn, data?.freight, data?.admin_input, data?.status, data?.company, data?.ho, data?.link, data?.payment_id, data?.payment_type, data?.plan_payment_date, data?.type, data?.logbook_status]
+            (stockpile_id, contract_type, vendor_id, upload_file, approval_file, upload_file1, upload_file2, upload_file3, upload_file4, entry_by, entry_date, quantity, price, ppn, freight, admin_input, status, company, ho, link, payment_id, payment_type, plan_payment_date, type, logbook_status, isTermin) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [data?.stockpile_id, data?.contract_type, data?.vendor_id, data?.upload_file, data?.approval_file, data?.upload_file1, data?.upload_file2, data?.upload_file3, data?.upload_file4, data?.entry_by, data?.entry_date, data?.quantity, data?.price, data?.ppn, data?.freight, data?.admin_input, data?.status, data?.company, data?.ho, data?.link, data?.payment_id, data?.payment_type, data?.plan_payment_date, data?.type, data?.logbook_status, data?.isTermin]
     )
 
     return res
@@ -116,7 +116,8 @@ export class PurchasingDataSource implements IPurchasingDataSource {
             p.type as type_id,
             popks.notes2,
             popks.final_status as status_popks,
-            popks.reject_status as reject_popks
+            popks.reject_status as reject_popks,
+            pd.quantity_payment
           FROM
           ${process.env.TABLE_PURCHASING} AS p
             LEFT JOIN ${process.env.TABLE_STOCKPILE} AS s
@@ -125,6 +126,8 @@ export class PurchasingDataSource implements IPurchasingDataSource {
               ON v.vendor_id = p.vendor_id
             LEFT JOIN ${process.env.TABLE_POPKS} popks
               ON popks.purchasing_id = p.purchasing_id
+            LEFT JOIN ${process.env.TABLE_PURCHASING_DETAIL} pd
+              ON pd.purchasing_id = p.purchasing_id
           ${where}
           ORDER BY popks.final_status DESC ${orderBy}
           ${limit};
@@ -164,7 +167,8 @@ export class PurchasingDataSource implements IPurchasingDataSource {
             p.type as type_id,
             popks.notes2,
             popks.final_status as status_popks,
-            popks.reject_status as reject_popks
+            popks.reject_status as reject_popks,
+            pd.quantity_payment
           FROM
           ${process.env.TABLE_PURCHASING} AS p
             LEFT JOIN ${process.env.TABLE_STOCKPILE} AS s
@@ -173,6 +177,8 @@ export class PurchasingDataSource implements IPurchasingDataSource {
               ON v.vendor_id = p.vendor_id
             LEFT JOIN ${process.env.TABLE_POPKS} popks
               ON popks.purchasing_id = p.purchasing_id
+            LEFT JOIN ${process.env.TABLE_PURCHASING_DETAIL} pd
+              ON pd.purchasing_id = p.purchasing_id
             where p.purchasing_id = ?`,
       [id]
     )

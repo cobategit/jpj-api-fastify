@@ -80,6 +80,7 @@ export interface IPurchasingRepo {
   updateFilePurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'upload_file' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4'>): Promise<any>
   updateFileSpbPurchasing(id?: number, user_id?: number, data?: Pick<PurchasingEntity, 'import2' | 'approval_file' | 'upload_file1' | 'upload_file2' | 'upload_file3' | 'upload_file4' | 'import2_date'>): Promise<any>
   addTerminKontrakPks(data?: PurchasingDetailEntity): Promise<any>
+  findOneTerminKontrakPks(id?: number): Promise<PurchasingDetailEntity | null>
   findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, "columnKey" | "columnValue" | "options">): Promise<PurchasingDetailEntity[] | []>
   checkQuantityTerminKontrakPks(type?: string, data?: TypePengajuanKontrakPks): Promise<any>
   updateTerminKontrakPks(id?: number, user_id?: number, data?: PurchasingDetailEntity): Promise<any>

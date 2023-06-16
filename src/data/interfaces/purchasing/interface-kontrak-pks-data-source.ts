@@ -18,6 +18,7 @@ export interface IPurchasingDetailDataSource {
     count(): Promise<any>
     insert(data?: PurchasingDetailEntity): Promise<any>
     selectOneDynamic(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue' | 'options'>): Promise<PurchasingDetailEntity[] | []>
+    selectOne(id?: number): Promise<PurchasingDetailEntity | null>
     update(id?: number, data?: PurchasingDetailEntity): Promise<any>
     delete(id?: number): Promise<any>
     availableQuantity(type?: string, data?: TypePengajuanKontrakPks): Promise<any>

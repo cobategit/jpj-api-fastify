@@ -455,6 +455,7 @@ export class PurchasingRepository implements IPurchasingRepo {
       purchasing_id: resPurchasing[0].insertId,
       quantity_payment: data?.quantity_payment,
       payment_type: data?.payment_type,
+      payment_date: data?.plan_payment_date,
       entry_by: user_id,
       entry_date: `${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}`,
       termin: 1,
@@ -636,6 +637,11 @@ export class PurchasingRepository implements IPurchasingRepo {
     await this.historyLogDataSource.insert(logInsertPurchasingDetail.get('data'))
 
     return insert
+  }
+
+  async findOneTerminKontrakPks(id?: number | undefined): Promise<PurchasingEntity | null> {
+    const rows = await this.purchasingDetailDataSource.selectOne(id)
+    return rows
   }
 
   async findOneDynamicPurchasingDetail(conf?: Pick<ParamsEntity, 'columnKey' | 'columnValue' | 'options'> | undefined): Promise<PurchasingDetailEntity[] | []> {

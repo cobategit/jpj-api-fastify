@@ -27,7 +27,7 @@ export class AddTerminKontrakPksUseCase implements IAddTerminKontrakPksUseCase {
                 message: 'Maaf tidak ada data purchasing, anda tidak bisa menambahkan termin'
             })
         }
-        if (lastDataTermin.length > 0 && !lastDataTermin[0]?.admin_input_by) {
+        if (lastDataTermin.length > 0 && lastDataTermin[0]?.status == 0) {
             result.set('error', true)
             result.set('dataError', {
                 message: 'Maaf tidak bisa buat termin, termin terakhir belum di approved',
@@ -58,7 +58,7 @@ export class AddTerminKontrakPksUseCase implements IAddTerminKontrakPksUseCase {
         result.set('dataSuccess', {
             status: true,
             message: 'Insert termin kontrak pks berhasil',
-            data: insert[0].insertId
+            id: insert[0].insertId
         })
         return result
     }

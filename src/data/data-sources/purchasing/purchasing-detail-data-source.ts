@@ -1,5 +1,5 @@
 import { DataManipulationLanguage, DataQueryLanguage, IPurchasingDetailDataSource } from "../..";
-import { ParamsEntity, PurchasingDetailEntity, TypePengajuanKontrakPks } from "../../../domain";
+import { ParamsEntity, PurchasingDetailEntity, PurchasingEntity, TypePengajuanKontrakPks } from "../../../domain";
 
 export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
     private dql: DataQueryLanguage
@@ -23,9 +23,9 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
         const res = await this.dml.dataManipulation(
             `insert purchasing detail`,
             `insert into ${process.env.TABLE_PURCHASING_DETAIL}
-            (purchasing_id, quantity_payment, entry_date, entry_by, payment_date, payment_type, contract_id, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [data?.purchasing_id, data?.quantity_payment, data?.entry_date, data?.entry_by, data?.payment_date, data?.payment_type, data?.contract_id, data?.status]
+            (purchasing_id, quantity_payment, entry_date, entry_by, payment_date, payment_type, contract_id, status, termin)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [data?.purchasing_id, data?.quantity_payment, data?.entry_date, data?.entry_by, data?.payment_date, data?.payment_type, data?.contract_id, data?.status, data?.termin]
         )
 
         return res
@@ -33,7 +33,7 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
 
     async selectOneDynamic(conf?: Pick<ParamsEntity, "columnKey" | "columnValue" | "options"> | undefined): Promise<PurchasingDetailEntity[] | []> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
-            `select * from ${process.env.TABLE_PURCHASING_DETAIL} where ${conf?.columnKey} = ? ${conf?.options}`,
+            `select * from ${process.env.TABLE_PURCHASING_DETAIL} where ${conf?.columnKey} = ? ${conf?.options ?? ''}`,
             [conf?.columnValue]
         )
 
@@ -41,11 +41,11 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
     }
 
     async availableQuantity(type?: string | undefined, data?: TypePengajuanKontrakPks | undefined): Promise<any> {
-        let whereKey: string = "where purchasing_id = ?"
+        let whereKey: string = "where p.purchasing_id = ?"
         let whereValue: Array<string | number | boolean> = [data?.purchasing_id!]
 
         if (type == 'update') {
-            whereKey += 'and purchasing_detail_id = ?'
+            whereKey += 'and pd.purchasing_detail_id = ?'
             whereValue.push(data?.purchasing_detail_id!)
         }
 
@@ -55,6 +55,15 @@ export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
             INNER JOIN purchasing_detail AS pd
             ON pd.purchasing_id = p.purchasing_id ${whereKey}`,
             whereValue
+        )
+
+        return rows[0]
+    }
+
+    async selectOne(id?: number | undefined): Promise<PurchasingDetailEntity | null> {
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `select * from ${process.env.TABLE_PURCHASING_DETAIL} where purchasing_detail_id = ?`,
+            [id]
         )
 
         return rows[0]
