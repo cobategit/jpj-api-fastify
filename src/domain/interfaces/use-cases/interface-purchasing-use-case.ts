@@ -1,4 +1,4 @@
-import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, PaginationEntity, ParamsEntity, PkhoaEntity, PksCurahEntity, PurchasingDetailEntity, PurchasingEntity, StockpileEntity, TypePengajuanKontrakPks } from '../../entity'
+import { CurrencyEntity, EntityUser, FreightBankEntity, FreightEntity, HttpResponse, PaginationEntity, ParamsEntity, PkhoaEntity, PksCurahEntity, PurchasingDetailEntity, PurchasingEntity, StockpileEntity, TypePengajuanKontrakPks } from '../../entity'
 
 export interface IRegisterUserPurchasingUseCase {
   execute(data: EntityUser): Promise<any>
@@ -141,7 +141,7 @@ export interface IFindTerminByPurchasingIdUseCase {
 }
 
 export interface IFindOneTerminKontrakPksUseCase {
-  execute(id?: number): Promise<PurchasingDetailEntity[] | []>
+  execute(id?: number): Promise<Map<string, HttpResponse>>
 }
 
 export interface IRemindTerminKontrakPksUseCase {

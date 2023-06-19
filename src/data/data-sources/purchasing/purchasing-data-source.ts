@@ -37,13 +37,13 @@ export class PurchasingDataSource implements IPurchasingDataSource {
     throw new Error("Method not implemented.");
   }
 
-  async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id' | 'final_status'>): Promise<PurchasingEntity[]> {
+  async selectAll(conf: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'kontrak_type' | 'pks_type' | 'stockpile_id' | 'final_status' | 'user_id'>): Promise<PurchasingEntity[]> {
     let limit = ''
-    let where = ``
+    let where = `where us.user_id = ?`
     let orderBy = `, p.purchasing_id DESC`
 
     if (conf!.pks_type == 'PKS-Contract') {
-      where = `where p.type = 1 and p.contract_type = 1`
+      where = `where p.type = 1 and p.contract_type = 1 and us.user_id = ?`
       if (conf!.stockpile_id) {
         where += ` and s.stockpile_id = ${conf!.stockpile_id}`
       }
@@ -53,7 +53,7 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
       }
     } else if (conf!.pks_type == 'PKS-Curah') {
-      where = `where p.type = 2 and p.contract_type = 1`
+      where = `where p.type = 2 and p.contract_type = 1 and us.user_id = ?`
       if (conf!.stockpile_id) {
         where += ` and s.stockpile_id = ${conf!.stockpile_id}`
       }
@@ -63,7 +63,7 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
       }
     } else if (conf!.kontrak_type == 'PKS-Spb') {
-      where = `where (p.type = 2 or p.type = 1) and p.contract_type = 2`
+      where = `where (p.type = 2 or p.type = 1) and p.contract_type = 2 and us.user_id = ?`
       if (conf!.stockpile_id) {
         where += ` and s.stockpile_id = ${conf!.stockpile_id}`
       }
@@ -73,14 +73,14 @@ export class PurchasingDataSource implements IPurchasingDataSource {
         orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
       }
     } else if (conf!.stockpile_id) {
-      where = `where s.stockpile_id = ${conf!.stockpile_id}`
+      where = `where s.stockpile_id = ${conf!.stockpile_id} and us.user_id = ?`
       if (conf!.search) where += ` and (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
       if (conf!.final_status) {
         where += ` and popks.final_status = ${conf?.final_status}`
         orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
       }
     } else if (conf!.search) {
-      where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%')`
+      where = `where (v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%') and us.user_id = ?`
       if (conf!.final_status) {
         where += ` and popks.final_status = ${conf?.final_status}`
         orderBy = conf!.final_status == 2 || conf!.final_status == 3 ? `, p.purchasing_id ASC` : `, p.purchasing_id DESC`
@@ -128,10 +128,12 @@ export class PurchasingDataSource implements IPurchasingDataSource {
               ON popks.purchasing_id = p.purchasing_id
             LEFT JOIN ${process.env.TABLE_PURCHASING_DETAIL} pd
               ON pd.purchasing_id = p.purchasing_id
+            LEFT JOIN ${process.env.TABLE_USER_STOCKPILE} as us
+              ON p.stockpile_id = us.stockpile_id
           ${where}
           ORDER BY popks.final_status DESC ${orderBy}
           ${limit};
-            `, []
+            `, [conf?.user_id]
     )
 
     return rows

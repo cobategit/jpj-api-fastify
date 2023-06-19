@@ -56,7 +56,7 @@ export interface IPurchasingRepo {
   ): Promise<{ count: number; rows: StockpileEntity[] }>
   findBankByFreightId(id?: number[]): Promise<FreightBankEntity[]>
   pengajuanPkhoa(user_id?: number, data?: PkhoaEntity): Promise<any>
-  findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number; rows: PkhoaEntity[] }>
+  findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'user_id'>): Promise<{ count: number; rows: PkhoaEntity[] }>
   findOnePkhoa(id?: number): Promise<PkhoaEntity | null>
   updatePkhoa(
     id: number,

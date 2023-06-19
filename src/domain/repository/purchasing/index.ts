@@ -299,7 +299,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return rows
   }
 
-  async findAllStockpile(conf?: Pick<ParamsEntity, 'limit' | 'offset'>): Promise<{ count: number, rows: StockpileEntity[] }> {
+  async findAllStockpile(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'user_id'>): Promise<{ count: number, rows: StockpileEntity[] }> {
     const count = await this.stockpileDataSource.count()
     const rows = await this.stockpileDataSource.selectAll(conf)
     return { count: count.count, rows }
@@ -321,7 +321,7 @@ export class PurchasingRepository implements IPurchasingRepo {
     return res
   }
 
-  async findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search'>): Promise<{ count: number, rows: PkhoaEntity[] }> {
+  async findAllPkhoa(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'user_id'>): Promise<{ count: number, rows: PkhoaEntity[] }> {
     const count = await this.pkhoaDataSource.count()
     const rows = await this.pkhoaDataSource.selectAll(conf)
     return { count: count.count, rows }

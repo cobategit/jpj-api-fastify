@@ -23,4 +23,5 @@ export interface ParamsEntity {
     status?: number
     purchasing_detail_id?: number
     options?: string
+    user_id?: number
 }

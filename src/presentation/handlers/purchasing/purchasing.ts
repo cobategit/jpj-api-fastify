@@ -657,6 +657,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllStockpile(request: any, reply: any): Promise<void> {
     try {
+      request.query.user_id = request.user.user_id
       const data = await this.getAllStockpileUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
@@ -728,6 +729,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllPkhoa(request: any, reply: any): Promise<void> {
     try {
+      request.query.user_id = request.user.user_id
       const data = await this.getAllPkhoaUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
@@ -867,6 +869,7 @@ export class PurchasingHandler implements IPurchasingHandler {
 
   async findAllKontrakPks(request: any, reply: any): Promise<void> {
     try {
+      request.query.user_id = request.user.user_id
       const data = await this.getAllKontrakPksUseCase.execute(request.query)
 
       return ApiResponse.ok(request, reply, {
@@ -1019,11 +1022,11 @@ export class PurchasingHandler implements IPurchasingHandler {
     try {
       const res = await this.findOneTerminKontrakPksUseCase.execute(request.params.purchasing_detail_id)
 
-      return ApiResponse.ok(request, reply, {
-        status: true,
-        message: 'Data ditemukan',
-        data: res[0],
-      })
+      if (!res.get('dataError')!['status']) {
+        throw new AppError(400, false, `${res.get('dataError')!['message']}`, '401')
+      }
+
+      return ApiResponse.ok(request, reply, res.get('dataSuccess'))
     } catch (error) {
       throw new AppError(400, false, `${error}`, '401')
     }

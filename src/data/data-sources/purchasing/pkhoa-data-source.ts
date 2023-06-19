@@ -42,16 +42,16 @@ export class PkhoaDataSource implements IPkhoaDataSource {
     return res
   }
 
-  async selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'filter'>): Promise<PkhoaEntity[]> {
+  async selectAll(conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'search' | 'filter' | 'user_id'>): Promise<PkhoaEntity[]> {
     let limit = ``
-    let where = ``
+    let where = `where us.user_id = ?`
 
     if (conf!.filter) {
-      where = `where s.stockpile_name = ${conf?.filter}`
+      where = `where s.stockpile_name = ${conf?.filter} and us.user_id = ?`
     } else if (conf!.search) {
-      where = `where (f.freight_supplier LIKE '%${conf!.search}%' or v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%' or fc.price LIKE '%${conf!.search}%')`
+      where = `where (f.freight_supplier LIKE '%${conf!.search}%' or v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%' or fc.price LIKE '%${conf!.search}%') and us.user_id = ?`
     } else if (conf!.filter && conf!.search) {
-      where = `where s.stockpile_name = ${conf?.filter} and (f.freight_supplier LIKE '%${conf!.search}%' or v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%' or fc.price LIKE '%${conf!.search}%')`
+      where = `where s.stockpile_name = ${conf?.filter} and (f.freight_supplier LIKE '%${conf!.search}%' or v.vendor_name LIKE '%${conf!.search}%' or s.stockpile_name LIKE '%${conf!.search}%' or fc.price LIKE '%${conf!.search}%') and us.user_id = ?`
     }
 
     if (conf!.offset || conf!.limit) limit = `limit ${conf?.offset}, ${conf?.limit}`
@@ -76,10 +76,12 @@ export class PkhoaDataSource implements IPkhoaDataSource {
                 ON fc.stockpile_id = s.stockpile_id
               LEFT JOIN ${process.env.TABLE_CURRENCY} AS c
                 ON fc.currency_id = c.currency_id
+              LEFT JOIN ${process.env.TABLE_USER_STOCKPILE} as us
+                ON fc.stockpile_id = us.stockpile_id
             ${where}
             GROUP BY f.freight_id
             ORDER BY fc.active_from DESC ${limit}`,
-      []
+      [conf?.user_id]
     )
 
     return rows

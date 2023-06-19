@@ -19,6 +19,7 @@ export class GetAllStockpileUseCase implements IGetAllStockpileUseCase {
                     limit,
                     offset,
                     search: conf?.search,
+                    user_id: conf?.user_id
                 }
                 limitNumber = limit
             }

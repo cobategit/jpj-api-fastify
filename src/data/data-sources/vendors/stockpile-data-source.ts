@@ -46,11 +46,13 @@ export class StockpileDataSource implements IStockpileDataSource {
     let limit = ''
     let where = ``
 
-    if (conf.search) where = `and stockpile_name LIKE '%${conf.search}%'`
+    if (conf.search) where = `and s.stockpile_name LIKE '%${conf.search}%'`
     if (conf.offset || conf.limit) limit = `limit ${conf.offset}, ${conf.limit}`
     const [rows, fields] = await this.dql.dataQueryLanguage(
-      `select * from ${process.env.TABLE_STOCKPILE} where stockpile_id != 19 ${where} order by stockpile_name asc ${limit}`,
-      []
+      `select * from ${process.env.TABLE_STOCKPILE} as s
+       left join ${process.env.TABLE_USER_STOCKPILE} as us on s.stockpile_id = us.stockpile_id
+       where s.stockpile_id != 19 and us.user_id = ? ${where} order by s.stockpile_name asc ${limit}`,
+      [conf.user_id]
     )
 
     return rows

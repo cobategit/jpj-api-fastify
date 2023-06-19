@@ -19,6 +19,7 @@ export class GetAllPkhoaUseCase implements IGetAllPkhoaUseCase {
                     limit,
                     offset,
                     search: conf?.search,
+                    user_id: conf?.user_id
                 }
                 limitNumber = limit
             }
