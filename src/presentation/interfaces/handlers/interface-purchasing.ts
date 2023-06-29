@@ -39,4 +39,5 @@ export interface IPurchasingHandler {
   addTerminKontrakPks(request: any, reply: any): Promise<void>
   updateTerminKontrakPks(request: any, reply: any): Promise<void>
   deleteTerminKontrakPks(request: any, reply: any): Promise<void>
+  reportsPks(request: any, reply: any): Promise<void>
 }

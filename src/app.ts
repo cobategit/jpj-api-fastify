@@ -70,7 +70,8 @@ import {
   DeleteTerminKontrakPksUseCase,
   AddTerminKontrakPksUseCase,
   FindTerminByPurchasingIdUseCase,
-  RemindTerminKontrakPksUseCase
+  RemindTerminKontrakPksUseCase,
+  ReportsPksUseCase
 } from './domain'
 import cluster from 'cluster'
 import os from 'os'
@@ -247,6 +248,9 @@ const app = async () => {
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
       ),
       new FindOneTerminKontrakPksUseCase(
+        new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
+      ),
+      new ReportsPksUseCase(
         new PurchasingRepository(new UsersDataSource(sourcesDml, sourcesDql), new PksCurahDataSource(sourcesDml, sourcesDql), new FreightDataSource(sourcesDml, sourcesDql), new HistoryLogDataSource(sourcesDml, sourcesDql), new CurrencyDataSource(sourcesDml, sourcesDql), new StockpileDataSource(sourcesDml, sourcesDql), new PkhoaDataSource(sourcesDml, sourcesDql), new PurchasingDataSource(sourcesDml, sourcesDql), new PoPksDataSource(sourcesDml, sourcesDql), new VendorKontrakDataSource(sourcesDml, sourcesDql), new SetupsDataSource(sourcesDml, sourcesDql), new PurchasingFreightCostDataSource(sourcesDml, sourcesDql), new PurchasingDetailDataSource(sourcesDml, sourcesDql))
       ),
     ),

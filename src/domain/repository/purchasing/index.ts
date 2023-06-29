@@ -686,4 +686,14 @@ export class PurchasingRepository implements IPurchasingRepo {
     return delet
   }
 
+  async reportsPks(isOa?: boolean | undefined, conf?: ParamsEntity): Promise<{ count: number, rows: any }> {
+    if (conf!.stockpile_name!) conf!.stockpile_name! = `'${conf!.stockpile_name!.join("','")}'`
+
+    if (conf!.vendor_name!) conf!.vendor_name! = `'${conf!.vendor_name!.join("','")}'`
+
+    const count = await this.pksCurahDataSource.summaryPks(isOa!, { period_from: conf?.period_from, period_to: conf?.period_from, stockpile_name: conf?.stockpile_name, vendor_name: conf?.vendor_name })
+    const rows = await this.pksCurahDataSource.summaryPks(isOa!, conf!)
+    return { count: count.length, rows }
+  }
+
 }

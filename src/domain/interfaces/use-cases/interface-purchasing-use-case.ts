@@ -159,3 +159,7 @@ export interface IUpdateTerminKontrakPksUseCase {
 export interface IDeleteTerminKontrakPksUseCase {
   execute(id?: number, user_id?: number): Promise<any>
 }
+
+export interface IReportsPksUseCase {
+  execute(body?: any, queryString?: any): Promise<any>
+}

@@ -769,6 +769,25 @@ export function PurchasingRoute(
       purchasingHandler.deleteTerminKontrakPks.bind(purchasingHandler)
     )
 
+    fastify.post<{
+      Body: any,
+      Querystring: ParamsEntity
+      Headers: Pick<IHeaders, 'x-access-token'>
+    }>(
+      '/reports/pks',
+      {
+        logLevel: 'info',
+        schema: {
+          headers: headersSchema,
+        },
+        preHandler: [
+          reqAuthToken,
+          (req: any, rep: any, done: any) => CheckAvailableUser(userDataSource, req, rep, done),
+        ]
+      },
+      purchasingHandler.reportsPks.bind(purchasingHandler)
+    )
+
     done()
   }
 

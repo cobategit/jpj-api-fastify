@@ -24,4 +24,8 @@ export interface ParamsEntity {
     purchasing_detail_id?: number
     options?: string
     user_id?: number
+    period_from?: string
+    period_to?: string
+    stockpile_name?: any
+    vendor_name?: any
 }

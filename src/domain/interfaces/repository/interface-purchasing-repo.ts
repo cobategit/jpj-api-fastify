@@ -85,4 +85,5 @@ export interface IPurchasingRepo {
   checkQuantityTerminKontrakPks(type?: string, data?: TypePengajuanKontrakPks): Promise<any>
   updateTerminKontrakPks(id?: number, user_id?: number, data?: PurchasingDetailEntity): Promise<any>
   deleteTerminKontrakPks(id?: number, user_id?: number): Promise<any>
+  reportsPks(isOa?: boolean, conf?: ParamsEntity): Promise<{ count: any; rows: any }>
 }

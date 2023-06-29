@@ -131,4 +131,52 @@ export class PksCurahDataSource implements IPksCurahDataSource {
 
         return res
     }
+
+    async summaryPks(isOa?: boolean | undefined, conf?: Pick<ParamsEntity, "limit" | "offset" | "period_from" | "period_to" | "stockpile_name" | "vendor_name"> | undefined): Promise<any> {
+        let limit = ``
+        let whereKey = ``
+        let select = `pp.entry_date as contract_date,s.stockpile_name, pp.contract_no,v.vendor_name,pp.quantity AS qty_contract,COALESCE(pp.price_converted,0) AS price, 
+        c.po_no, sc.quantity AS qty_po,(SELECT IFNULL(SUM(t.send_weight),0) FROM transaction t WHERE t.stockpile_contract_id = sc.stockpile_contract_id) AS qty_received,
+        (sc.quantity - (SELECT IFNULL(SUM(t.send_weight),0) FROM transaction t WHERE t.stockpile_contract_id = sc.stockpile_contract_id)) AS os_pks`
+
+        if (isOa) {
+            select = `pp.entry_date as contract_date,s.stockpile_name, c.contract_no,v.vendor_name,pp.quantityas qty_contract,COALESCE(c.price_converted,0) AS price, 
+            COALESCE(f.freight_supplier,'CONTRACT SHARING') as freight,COALESCE(fc.price_converted,0) AS price_oa`
+        }
+
+        if (conf!.period_from && conf!.period_to) {
+            whereKey += ` AND c.entry_date BETWEEN STR_TO_DATE('${conf!.period_from}', '%Y-%m-%d') AND STR_TO_DATE('${conf!.period_to}', '%Y-%m-%d') `
+        }
+
+        if (conf!.stockpile_name) {
+            whereKey += ` AND (SELECT s.stockpile_name FROM stockpile s WHERE stockpile_id = sc.stockpile_id) IN (${conf!.stockpile_name}) `
+        }
+
+        if (conf!.vendor_name) {
+            whereKey += ` AND (SELECT v.vendor_name FROM vendor v WHERE v.vendor_id = c.vendor_id) IN (${conf!.vendor_name}) `
+        }
+
+        if (conf!.offset || conf!.limit) limit = `limit ${conf?.offset}, ${conf?.limit}`
+
+        const [rows, fields] = await this.dql.dataQueryLanguage(
+            `
+            SELECT ${select}
+            FROM ${process.env.TABLE_CONTRACT} c
+            LEFT JOIN ${process.env.TABLE_PO_CONTRACT} pc ON c.contract_id = pc.contract_id
+            LEFT JOIN ${process.env.TABLE_POPKS} pp ON pp.po_pks_id = pc.po_pks_id
+            LEFT JOIN ${process.env.TABLE_STOCKPILE_CONTRACT} sc ON sc.contract_id=c.contract_id
+            LEFT JOIN ${process.env.TABLE_TRANSACTION} t ON t.stockpile_contract_id=sc.stockpile_contract_id
+            LEFT JOIN ${process.env.TABLE_STOCKPILE} s ON s.stockpile_id=sc.stockpile_id
+            LEFT JOIN ${process.env.TABLE_VENDOR} v ON v.vendor_id= c.vendor_id
+            LEFT JOIN ${process.env.TABLE_FREIGHT_COST} fc ON fc.freight_cost_id=t.freight_cost_id
+            LEFT JOIN ${process.env.TABLE_FREIGHT} f ON f.freight_id=fc.freight_id
+            WHERE 1=1 ${whereKey}
+            and c.contract_type='P'
+            GROUP BY c.contract_no ORDER BY pp.entry_date ASC ${limit}
+            `,
+            []
+        )
+
+        return rows
+    }
 }

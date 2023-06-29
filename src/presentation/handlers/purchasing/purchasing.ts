@@ -51,6 +51,7 @@ import {
   IFindTerminByPurchasingIdUseCase,
   IRemindTerminKontrakPksUseCase,
   IFindOneTerminKontrakPksUseCase,
+  IReportsPksUseCase,
 } from '../../../domain'
 import { IPurchasingHandler } from '../../interfaces'
 
@@ -136,8 +137,8 @@ export class PurchasingHandler implements IPurchasingHandler {
     deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase,
     findTerminByPurchasingIdUseCase: IFindTerminByPurchasingIdUseCase,
     remindTerminKontrakPksUseCase: IRemindTerminKontrakPksUseCase,
-    findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase
-
+    findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase,
+    private readonly reportsPksUseCase: IReportsPksUseCase
   ) {
     this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
     this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
@@ -1087,6 +1088,24 @@ export class PurchasingHandler implements IPurchasingHandler {
       }
 
       return ApiResponse.ok(request, reply, delet.get('dataSuccess'))
+    } catch (error) {
+      throw new AppError(500, false, `${error}`, '501')
+    }
+  }
+
+  async reportsPks(request: any, reply: any): Promise<void> {
+    try {
+      if (!request.body) {
+        throw new AppError(500, false, `Required body: period_from and period_to, stockpile_name, vendor_name`, '501')
+      }
+
+      const data = await this.reportsPksUseCase.execute(request.body, request.query)
+
+      return ApiResponse.ok(request, reply, {
+        status: true,
+        message: 'Data ditemukan',
+        data,
+      })
     } catch (error) {
       throw new AppError(500, false, `${error}`, '501')
     }
