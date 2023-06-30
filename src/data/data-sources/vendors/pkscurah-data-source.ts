@@ -140,7 +140,7 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         (sc.quantity - (SELECT IFNULL(SUM(t.send_weight),0) FROM transaction t WHERE t.stockpile_contract_id = sc.stockpile_contract_id)) AS os_pks`
 
         if (isOa) {
-            select = `pp.entry_date as contract_date,s.stockpile_name, c.contract_no,v.vendor_name,pp.quantityas qty_contract,COALESCE(c.price_converted,0) AS price, 
+            select = `pp.entry_date as contract_date,s.stockpile_name, c.contract_no,v.vendor_name,pp.quantity as qty_contract,COALESCE(c.price_converted,0) AS price, 
             COALESCE(f.freight_supplier,'CONTRACT SHARING') as freight,COALESCE(fc.price_converted,0) AS price_oa`
         }
 
