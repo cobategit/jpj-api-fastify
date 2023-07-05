@@ -132,9 +132,9 @@ export class PksCurahDataSource implements IPksCurahDataSource {
         return res
     }
 
-    async summaryPks(isOa?: boolean | undefined, conf?: Pick<ParamsEntity, "limit" | "offset" | "period_from" | "period_to" | "stockpile_name" | "vendor_name"> | undefined): Promise<any> {
+    async summaryPks(isOa?: boolean | undefined, conf?: Pick<ParamsEntity, "limit" | "offset" | "period_from" | "period_to" | "stockpile_name" | "vendor_name" | "user_id"> | undefined): Promise<any> {
         let limit = ``
-        let whereKey = ``
+        let whereKey = ` AND us.user_id = ? `
         let select = `pp.entry_date as contract_date,s.stockpile_name, pp.contract_no,v.vendor_name,pp.quantity AS qty_contract,COALESCE(pp.price_converted,0) AS price, 
         c.po_no, sc.quantity AS qty_po,(SELECT IFNULL(SUM(t.send_weight),0) FROM transaction t WHERE t.stockpile_contract_id = sc.stockpile_contract_id) AS qty_received,
         (sc.quantity - (SELECT IFNULL(SUM(t.send_weight),0) FROM transaction t WHERE t.stockpile_contract_id = sc.stockpile_contract_id)) AS os_pks`
@@ -170,11 +170,12 @@ export class PksCurahDataSource implements IPksCurahDataSource {
             LEFT JOIN ${process.env.TABLE_VENDOR} v ON v.vendor_id= c.vendor_id
             LEFT JOIN ${process.env.TABLE_FREIGHT_COST} fc ON fc.freight_cost_id=t.freight_cost_id
             LEFT JOIN ${process.env.TABLE_FREIGHT} f ON f.freight_id=fc.freight_id
+            LEFT JOIN ${process.env.TABLE_USER_STOCKPILE} as us ON us.stockpile_id = s.stockpile_id
             WHERE 1=1 ${whereKey}
-            and c.contract_type='P'
+            AND c.contract_type='P'
             GROUP BY c.contract_no ORDER BY pp.entry_date ASC ${limit}
             `,
-            []
+            [conf?.user_id]
         )
 
         return rows

@@ -9,7 +9,7 @@ export class ReportsPksUseCase implements IReportsPksUseCase {
 
     async execute(body?: any, queryString?: any): Promise<any> {
         let limitNumber: number = 0
-        let conf: ParamsEntity = {}
+        let conf: ParamsEntity = { ...body, ...queryString }
 
         try {
             if (queryString!.page || queryString!.size) {
@@ -18,9 +18,10 @@ export class ReportsPksUseCase implements IReportsPksUseCase {
                     limit,
                     offset,
                     period_from: body?.period_from,
-                    period_to: body?.period_from,
+                    period_to: body?.period_to,
                     stockpile_name: body?.stockpile_name,
                     vendor_name: body?.vendor_name,
+                    user_id: queryString?.user_id
                 }
                 limitNumber = limit
             }

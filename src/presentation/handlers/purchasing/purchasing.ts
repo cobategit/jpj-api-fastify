@@ -1099,6 +1099,8 @@ export class PurchasingHandler implements IPurchasingHandler {
         throw new AppError(500, false, `Required body: period_from and period_to, stockpile_name, vendor_name`, '501')
       }
 
+      request.query.user_id = request.user.user_id
+
       const data = await this.reportsPksUseCase.execute(request.body, request.query)
 
       return ApiResponse.ok(request, reply, {

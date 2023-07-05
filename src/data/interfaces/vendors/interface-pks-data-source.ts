@@ -12,5 +12,5 @@ export interface IPksCurahDataSource {
     selectBankByPksCurahId(id?: number[], conf?: Record<string, any>): Promise<PksCurahBankEntity[]>
     selectOne(id?: number): Promise<PksCurahEntity | null>
     delete(id?: number): Promise<any>
-    summaryPks(isOa?: boolean, conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'period_from' | 'period_to' | 'stockpile_name' | 'vendor_name'>): Promise<any>
+    summaryPks(isOa?: boolean, conf?: Pick<ParamsEntity, 'limit' | 'offset' | 'period_from' | 'period_to' | 'stockpile_name' | 'vendor_name' | "user_id">): Promise<any>
 }
