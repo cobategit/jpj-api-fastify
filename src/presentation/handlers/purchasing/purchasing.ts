@@ -56,131 +56,49 @@ import {
 import { IPurchasingHandler } from '../../interfaces'
 
 export class PurchasingHandler implements IPurchasingHandler {
-  private registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase
-  private loginUserPurchasingUseCase: ILoginUserPurchasingUseCase
-  private changedPasswordPurchasingUseCase: IChangedPasswordPurchasingUseCase
-  private forgotPasswordPurchasingUseCase: IForgotPasswordPurchasingUseCase
-  private pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase
-  private getAllPksCurahUseCase: IGetAllPksCurahUseCase
-  private getOnePksCurahUseCase: IGetOnePksCurahUseCase
-  private pengajuanFreightUseCase: IPengajuanFreightUseCase
-  private updatePksCurahUseCase: IUpdatePksCurahUseCase
-  private getAllFreightUseCase: IGetAllFreightUseCase
-  private getOneFreightUseCase: IGetOneFreightUseCase
-  private updateFreightUseCase: IUpdateFreightUseCase
-  private getAllCurrencyUseCase: IGetAllCurrencyUseCase
-  private getAllFreightBankUseCase: IGetAllFreightBankUseCase
-  private getAllStockpileUseCase: IGetAllStockpileUseCase
-  private getBankByFreightIdUseCase: IGetBankByFreightIdUseCase
-  private pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase
-  private getAllPkhoaUseCase: IGetAllPkhoaUseCase
-  private updatePkhoaUseCase: IUpdatePkhoaUseCase
-  private getOnePkhoaUseCase: IGetOnePkhoaUseCase
-  private getOneStockpileUseCase: IGetOneStockpileUseCase
-  private getOneCurrencyUseCase: IGetOneCurrencyUseCase
-  private pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase
-  private getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase
-  private deletePksCurahUseCase: IDeletePksCurahUseCase
-  private deleteFreightUseCase: IDeleteFreightUseCase
-  private deletePkhoaUseCase: IDeletePkhoaUseCase
-  private getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase
-  private getAllKontrakPksUseCase: IGetAllKontrakPksUseCase
-  private getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase
-  private getPlanPaymentDateUseCase: IGetPlanPaymentDateUseCase
-  private getOneKontrakPksUseCase: IGetOneKontrakPksUseCase
-  private deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase
-  private updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase
-  private addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase
-  private updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase
-  private deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase
-  private findTerminByPurchasingIdUseCase: IFindTerminByPurchasingIdUseCase
-  private remindTerminKontrakPksUseCase: IRemindTerminKontrakPksUseCase
-  private findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase
-
   constructor(
-    registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
-    loginUserPurchasingUseCase: ILoginUserPurchasingUseCase,
-    changedPasswordPurchasingUseCase: IChangedPasswordPurchasingUseCase,
-    forgotPasswordPurchasingUseCase: IForgotPasswordPurchasingUseCase,
-    pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase,
-    getAllPksCurahUseCase: IGetAllPksCurahUseCase,
-    getOnePksCurahUseCase: IGetOnePksCurahUseCase,
-    pengajuanFreightUseCase: IPengajuanFreightUseCase,
-    updatePksCurahUseCase: IUpdatePksCurahUseCase,
-    getAllFreightUseCase: IGetAllFreightUseCase,
-    getOneFreightUseCase: IGetOneFreightUseCase,
-    updateFreightUseCase: IUpdateFreightUseCase,
-    getAllCurrencyUseCase: IGetAllCurrencyUseCase,
-    getAllFreightBankUseCase: IGetAllFreightBankUseCase,
-    getAllStockpileUseCase: IGetAllStockpileUseCase,
-    getBankByFreightIdUseCase: IGetBankByFreightIdUseCase,
-    pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase,
-    getAllPkhoaUseCase: IGetAllPkhoaUseCase,
-    updatePkhoaUseCase: IUpdatePkhoaUseCase,
-    getOnePkhoaUseCase: IGetOnePkhoaUseCase,
-    getOneStockpileUseCase: IGetOneStockpileUseCase,
-    getOneCurrencyUseCase: IGetOneCurrencyUseCase,
-    pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase,
-    getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase,
-    deletePksCurahUseCase: IDeletePksCurahUseCase,
-    deleteFreightUseCase: IDeleteFreightUseCase,
-    deletePkhoaUseCase: IDeletePkhoaUseCase,
-    getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase,
-    getAllKontrakPksUseCase: IGetAllKontrakPksUseCase,
-    getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase,
-    getPlanPaymentDateUseCase: IGetPlanPaymentDateUseCase,
-    getOneKontrakPksUseCase: IGetOneKontrakPksUseCase,
-    deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase,
-    updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase,
-    addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase,
-    updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase,
-    deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase,
-    findTerminByPurchasingIdUseCase: IFindTerminByPurchasingIdUseCase,
-    remindTerminKontrakPksUseCase: IRemindTerminKontrakPksUseCase,
-    findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase,
+    private readonly registerUserPurchasingUseCase: IRegisterUserPurchasingUseCase,
+    private readonly loginUserPurchasingUseCase: ILoginUserPurchasingUseCase,
+    private readonly changedPasswordPurchasingUseCase: IChangedPasswordPurchasingUseCase,
+    private readonly forgotPasswordPurchasingUseCase: IForgotPasswordPurchasingUseCase,
+    private readonly pengajuanPksCurahUseCase: IPengajuanPksCurahUseCase,
+    private readonly getAllPksCurahUseCase: IGetAllPksCurahUseCase,
+    private readonly getOnePksCurahUseCase: IGetOnePksCurahUseCase,
+    private readonly pengajuanFreightUseCase: IPengajuanFreightUseCase,
+    private readonly updatePksCurahUseCase: IUpdatePksCurahUseCase,
+    private readonly getAllFreightUseCase: IGetAllFreightUseCase,
+    private readonly getOneFreightUseCase: IGetOneFreightUseCase,
+    private readonly updateFreightUseCase: IUpdateFreightUseCase,
+    private readonly getAllCurrencyUseCase: IGetAllCurrencyUseCase,
+    private readonly getAllFreightBankUseCase: IGetAllFreightBankUseCase,
+    private readonly getAllStockpileUseCase: IGetAllStockpileUseCase,
+    private readonly getBankByFreightIdUseCase: IGetBankByFreightIdUseCase,
+    private readonly pengajuanPkhoaUseCase: IPengajuanPkhoaUseCase,
+    private readonly getAllPkhoaUseCase: IGetAllPkhoaUseCase,
+    private readonly updatePkhoaUseCase: IUpdatePkhoaUseCase,
+    private readonly getOnePkhoaUseCase: IGetOnePkhoaUseCase,
+    private readonly getOneStockpileUseCase: IGetOneStockpileUseCase,
+    private readonly getOneCurrencyUseCase: IGetOneCurrencyUseCase,
+    private readonly pengajuanKontrakPksUseCase: IPengajuanKontrakPksUseCase,
+    private readonly getAllPksCurahBankUseCase: IGetAllPksCurahBankUseCase,
+    private readonly deletePksCurahUseCase: IDeletePksCurahUseCase,
+    private readonly deleteFreightUseCase: IDeleteFreightUseCase,
+    private readonly deletePkhoaUseCase: IDeletePkhoaUseCase,
+    private readonly getBankByPksCurahIdUseCase: IGetBankByPksCurahIdUseCase,
+    private readonly getAllKontrakPksUseCase: IGetAllKontrakPksUseCase,
+    private readonly getPkhoaExcludeUseCase: IGetPkhoaExcludeUseCase,
+    private readonly getPlanPaymentDateUseCase: IGetPlanPaymentDateUseCase,
+    private readonly getOneKontrakPksUseCase: IGetOneKontrakPksUseCase,
+    private readonly deletePengajuanKontrakPksUseCase: IDeletePengajuanKontrakPksUseCase,
+    private readonly updateFilePurchasingUseCase: IUpdateFilePurchasingUseCase,
+    private readonly addTerminKontrakPksUseCase: IAddTerminKontrakPksUseCase,
+    private readonly updateTerminKontrakPksUseCase: IUpdateTerminKontrakPksUseCase,
+    private readonly deleteTerminKontrakPksUseCase: IDeleteTerminKontrakPksUseCase,
+    private readonly findTerminByPurchasingIdUseCase: IFindTerminByPurchasingIdUseCase,
+    private readonly remindTerminKontrakPksUseCase: IRemindTerminKontrakPksUseCase,
+    private readonly findOneTerminKontrakPksUseCase: IFindOneTerminKontrakPksUseCase,
     private readonly reportsPksUseCase: IReportsPksUseCase
-  ) {
-    this.registerUserPurchasingUseCase = registerUserPurchasingUseCase
-    this.loginUserPurchasingUseCase = loginUserPurchasingUseCase
-    this.changedPasswordPurchasingUseCase = changedPasswordPurchasingUseCase
-    this.forgotPasswordPurchasingUseCase = forgotPasswordPurchasingUseCase
-    this.pengajuanPksCurahUseCase = pengajuanPksCurahUseCase
-    this.getAllPksCurahUseCase = getAllPksCurahUseCase
-    this.pengajuanFreightUseCase = pengajuanFreightUseCase
-    this.getOnePksCurahUseCase = getOnePksCurahUseCase
-    this.updatePksCurahUseCase = updatePksCurahUseCase
-    this.getAllFreightUseCase = getAllFreightUseCase
-    this.getOneFreightUseCase = getOneFreightUseCase
-    this.updateFreightUseCase = updateFreightUseCase
-    this.getAllCurrencyUseCase = getAllCurrencyUseCase
-    this.getAllFreightBankUseCase = getAllFreightBankUseCase
-    this.getAllStockpileUseCase = getAllStockpileUseCase
-    this.getBankByFreightIdUseCase = getBankByFreightIdUseCase
-    this.pengajuanPkhoaUseCase = pengajuanPkhoaUseCase
-    this.getAllPkhoaUseCase = getAllPkhoaUseCase
-    this.updatePkhoaUseCase = updatePkhoaUseCase
-    this.getOnePkhoaUseCase = getOnePkhoaUseCase
-    this.getOneStockpileUseCase = getOneStockpileUseCase
-    this.getOneCurrencyUseCase = getOneCurrencyUseCase
-    this.pengajuanKontrakPksUseCase = pengajuanKontrakPksUseCase
-    this.getAllPksCurahBankUseCase = getAllPksCurahBankUseCase
-    this.deletePksCurahUseCase = deletePksCurahUseCase
-    this.deleteFreightUseCase = deleteFreightUseCase
-    this.deletePkhoaUseCase = deletePkhoaUseCase
-    this.getBankByPksCurahIdUseCase = getBankByPksCurahIdUseCase
-    this.getAllKontrakPksUseCase = getAllKontrakPksUseCase
-    this.getPkhoaExcludeUseCase = getPkhoaExcludeUseCase
-    this.getPlanPaymentDateUseCase = getPlanPaymentDateUseCase
-    this.getOneKontrakPksUseCase = getOneKontrakPksUseCase
-    this.deletePengajuanKontrakPksUseCase = deletePengajuanKontrakPksUseCase
-    this.updateFilePurchasingUseCase = updateFilePurchasingUseCase
-    this.addTerminKontrakPksUseCase = addTerminKontrakPksUseCase
-    this.updateTerminKontrakPksUseCase = updateTerminKontrakPksUseCase
-    this.deleteTerminKontrakPksUseCase = deleteTerminKontrakPksUseCase
-    this.findTerminByPurchasingIdUseCase = findTerminByPurchasingIdUseCase
-    this.remindTerminKontrakPksUseCase = remindTerminKontrakPksUseCase
-    this.findOneTerminKontrakPksUseCase = findOneTerminKontrakPksUseCase
-  }
+  ) { }
 
   async register(request: any, reply: any): Promise<void> {
     try {
