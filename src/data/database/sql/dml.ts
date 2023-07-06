@@ -2,11 +2,8 @@ import { IDml, IMysqlWrapper } from '../../interfaces'
 import { LoggersApp, AppError } from '@jpj-common/module'
 
 export class DataManipulationLanguage implements IDml {
-  private db: IMysqlWrapper
 
-  constructor(db: IMysqlWrapper) {
-    this.db = db
-  }
+  constructor(private readonly db: IMysqlWrapper) { }
   async dataManipulation(
     type: string,
     query: string,

@@ -2,11 +2,8 @@ import { LoggersApp, AppError } from '@jpj-common/module'
 import { IDql, IMysqlWrapper } from '../../interfaces'
 
 export class DataQueryLanguage implements IDql {
-  private db: IMysqlWrapper
 
-  constructor(db: IMysqlWrapper) {
-    this.db = db
-  }
+  constructor(private readonly db: IMysqlWrapper) { }
 
   async dataQueryLanguage(query: string, queryConfig: any[]): Promise<any> {
     try {

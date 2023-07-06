@@ -2,13 +2,7 @@ import { DataManipulationLanguage, DataQueryLanguage, IHistoryLogDataSource } fr
 import { HistoryLogEntity } from "../../../domain";
 
 export class HistoryLogDataSource implements IHistoryLogDataSource {
-    private dml: DataManipulationLanguage
-    private dql: DataQueryLanguage
-
-    constructor(dml: DataManipulationLanguage, dql: DataQueryLanguage) {
-        this.dml = dml
-        this.dql = dql
-    }
+    constructor(private readonly dml: DataManipulationLanguage, private readonly dql: DataQueryLanguage) { }
 
     async insert(data?: HistoryLogEntity | undefined): Promise<any> {
         const res = await this.dml.dataManipulation(

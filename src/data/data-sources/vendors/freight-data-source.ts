@@ -2,13 +2,8 @@ import { DataManipulationLanguage, DataQueryLanguage, IFreighDataSource } from "
 import { FreightBankEntity, FreightEntity, ParamsEntity } from "../../../domain";
 
 export class FreightDataSource implements IFreighDataSource {
-    private dml: DataManipulationLanguage
-    private dql: DataQueryLanguage
+    constructor(private readonly dml: DataManipulationLanguage, private readonly dql: DataQueryLanguage) { }
 
-    constructor(dml: DataManipulationLanguage, dql: DataQueryLanguage) {
-        this.dml = dml
-        this.dql = dql
-    }
     async count(): Promise<any> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
             `select count(1) as count from ${process.env.TABLE_FREIGHT}`,

@@ -6,13 +6,8 @@ import {
 } from '../..'
 
 export class UsersDataSource implements IUsersDataSource {
-  private dml: DataManipulationLanguage
-  private dql: DataQueryLanguage
+  constructor(private readonly dml: DataManipulationLanguage, private readonly dql: DataQueryLanguage) { }
 
-  constructor(dml: DataManipulationLanguage, dql: DataQueryLanguage) {
-    this.dml = dml
-    this.dql = dql
-  }
   async registerUserPurchasing(data: EntityUser): Promise<any> {
     const res = await this.dml.dataManipulation(
       `insert mobile device`,

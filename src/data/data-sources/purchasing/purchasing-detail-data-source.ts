@@ -2,13 +2,7 @@ import { DataManipulationLanguage, DataQueryLanguage, IPurchasingDetailDataSourc
 import { ParamsEntity, PurchasingDetailEntity, PurchasingEntity, TypePengajuanKontrakPks } from "../../../domain";
 
 export class PurchasingDetailDataSource implements IPurchasingDetailDataSource {
-    private dql: DataQueryLanguage
-    private dml: DataManipulationLanguage
-
-    constructor(dml: DataManipulationLanguage, dql: DataQueryLanguage) {
-        this.dml = dml
-        this.dql = dql
-    }
+    constructor(private readonly dml: DataManipulationLanguage, private readonly dql: DataQueryLanguage) { }
 
     async count(): Promise<any> {
         const [rows, fileds] = await this.dql.dataQueryLanguage(

@@ -3,13 +3,7 @@ import { SetupsEntity } from "../../../domain";
 import { ISetupsDataSource } from "../../interfaces/master";
 
 export class SetupsDataSource implements ISetupsDataSource {
-    private dml: DataManipulationLanguage
-    private dql: DataQueryLanguage
-
-    constructor(dml: DataManipulationLanguage, dql: DataQueryLanguage) {
-        this.dml = dml
-        this.dql = dql
-    }
+    constructor(private readonly dml: DataManipulationLanguage, private readonly dql: DataQueryLanguage) { }
 
     async count(): Promise<any> {
         const [rows, fields] = await this.dql.dataQueryLanguage(
